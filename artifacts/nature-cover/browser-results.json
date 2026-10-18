@@ -1,0 +1,187 @@
+{
+  "testedAt": "2026-10-18T18:19:44.187Z",
+  "browser": "155.0.8059.80",
+  "checks": [
+    {
+      "name": "mobile continuous motion and pause",
+      "status": "PASS",
+      "details": {
+        "looping": 14,
+        "pauseAndResume": true
+      }
+    },
+    {
+      "name": "mobile layout and direct transition",
+      "status": "PASS",
+      "details": {
+        "width": 390,
+        "height": 844,
+        "button": {
+          "x": 83.53125,
+          "y": 584.75,
+          "width": 222.921875,
+          "height": 56
+        },
+        "measuredTransitionMs": 1410,
+        "heroVisibleWithoutScroll": true,
+        "horizontalOverflow": false,
+        "scroll": {
+          "overflows": false,
+          "scrollY": 0
+        },
+        "resources": {
+          "fontsLoaded": true,
+          "transferredBytes": 2901100,
+          "firstContentfulPaintMs": 792
+        }
+      }
+    },
+    {
+      "name": "small-mobile continuous motion and pause",
+      "status": "PASS",
+      "details": {
+        "looping": 14,
+        "pauseAndResume": true
+      }
+    },
+    {
+      "name": "small-mobile layout and direct transition",
+      "status": "PASS",
+      "details": {
+        "width": 320,
+        "height": 568,
+        "button": {
+          "x": 48.53125,
+          "y": 400.953125,
+          "width": 222.921875,
+          "height": 56
+        },
+        "measuredTransitionMs": 1436,
+        "heroVisibleWithoutScroll": true,
+        "horizontalOverflow": false,
+        "scroll": {
+          "overflows": true,
+          "scrollY": 86
+        },
+        "resources": {
+          "fontsLoaded": true,
+          "transferredBytes": 2900791,
+          "firstContentfulPaintMs": 288
+        }
+      }
+    },
+    {
+      "name": "mobile-wide continuous motion and pause",
+      "status": "PASS",
+      "details": {
+        "looping": 14,
+        "pauseAndResume": true
+      }
+    },
+    {
+      "name": "mobile-wide layout and direct transition",
+      "status": "PASS",
+      "details": {
+        "width": 430,
+        "height": 932,
+        "button": {
+          "x": 103.53125,
+          "y": 628.75,
+          "width": 222.921875,
+          "height": 56
+        },
+        "measuredTransitionMs": 1401,
+        "heroVisibleWithoutScroll": true,
+        "horizontalOverflow": false,
+        "scroll": {
+          "overflows": false,
+          "scrollY": 0
+        },
+        "resources": {
+          "fontsLoaded": true,
+          "transferredBytes": 2900791,
+          "firstContentfulPaintMs": 612
+        }
+      }
+    },
+    {
+      "name": "desktop 768: shared mobile layout",
+      "status": "PASS",
+      "details": {
+        "desktop": {
+          "width": 430,
+          "x": 338,
+          "names": "53px",
+          "columns": "1fr"
+        },
+        "mobile": {
+          "width": 430,
+          "x": 0,
+          "names": "53px",
+          "columns": "1fr"
+        },
+        "heroMatches": true,
+        "screenshots": "not captured by request"
+      }
+    },
+    {
+      "name": "desktop 1440: shared mobile layout",
+      "status": "PASS",
+      "details": {
+        "desktop": {
+          "width": 430,
+          "x": 1010,
+          "names": "53px",
+          "columns": "1fr"
+        },
+        "mobile": {
+          "width": 430,
+          "x": 0,
+          "names": "53px",
+          "columns": "1fr"
+        },
+        "heroMatches": true,
+        "screenshots": "not captured by request"
+      }
+    },
+    {
+      "name": "keyboard Enter",
+      "status": "PASS",
+      "details": {
+        "visibleFocus": {
+          "style": "solid",
+          "width": "2px"
+        },
+        "focusTransferredToHero": true
+      }
+    },
+    {
+      "name": "keyboard Space",
+      "status": "PASS",
+      "details": {
+        "visibleFocus": {
+          "style": "solid",
+          "width": "2px"
+        },
+        "focusTransferredToHero": true
+      }
+    },
+    {
+      "name": "reduced motion",
+      "status": "PASS",
+      "details": {
+        "measuredHandoffMs": 135,
+        "activeAnimations": 0,
+        "staticImageSelected": true
+      }
+    },
+    {
+      "name": "runtime page errors",
+      "status": "PASS",
+      "details": {
+        "errors": []
+      }
+    }
+  ],
+  "errors": []
+}

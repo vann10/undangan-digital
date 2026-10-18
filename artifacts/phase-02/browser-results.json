@@ -1,0 +1,174 @@
+{
+  "testedAt": "2026-10-18T14:29:10.196Z",
+  "browser": "155.0.8059.80",
+  "checks": [
+    {
+      "name": "desktop layout and direct transition",
+      "status": "PASS",
+      "details": {
+        "width": 1440,
+        "height": 900,
+        "button": {
+          "x": 608.53125,
+          "y": 629.8125,
+          "width": 222.921875,
+          "height": 56
+        },
+        "measuredTransitionMs": 1410,
+        "heroVisibleWithoutScroll": true,
+        "horizontalOverflow": false,
+        "scroll": {
+          "overflows": false,
+          "scrollY": 0
+        },
+        "resources": {
+          "fontsLoaded": true,
+          "transferredBytes": 219998,
+          "firstContentfulPaintMs": 768
+        }
+      }
+    },
+    {
+      "name": "mobile layout and direct transition",
+      "status": "PASS",
+      "details": {
+        "width": 390,
+        "height": 844,
+        "button": {
+          "x": 83.53125,
+          "y": 556.109375,
+          "width": 222.921875,
+          "height": 56
+        },
+        "measuredTransitionMs": 1402,
+        "heroVisibleWithoutScroll": true,
+        "horizontalOverflow": false,
+        "scroll": {
+          "overflows": false,
+          "scrollY": 0
+        },
+        "resources": {
+          "fontsLoaded": true,
+          "transferredBytes": 219689,
+          "firstContentfulPaintMs": 132
+        }
+      }
+    },
+    {
+      "name": "small-mobile layout and direct transition",
+      "status": "PASS",
+      "details": {
+        "width": 320,
+        "height": 568,
+        "button": {
+          "x": 48.53125,
+          "y": 416.609375,
+          "width": 222.921875,
+          "height": 56
+        },
+        "measuredTransitionMs": 1423,
+        "heroVisibleWithoutScroll": true,
+        "horizontalOverflow": false,
+        "scroll": {
+          "overflows": true,
+          "scrollY": 86
+        },
+        "resources": {
+          "fontsLoaded": true,
+          "transferredBytes": 219689,
+          "firstContentfulPaintMs": 128
+        }
+      }
+    },
+    {
+      "name": "tablet layout and direct transition",
+      "status": "PASS",
+      "details": {
+        "width": 768,
+        "height": 1024,
+        "button": {
+          "x": 272.53125,
+          "y": 668.046875,
+          "width": 222.921875,
+          "height": 56
+        },
+        "measuredTransitionMs": 1428,
+        "heroVisibleWithoutScroll": true,
+        "horizontalOverflow": false,
+        "scroll": {
+          "overflows": false,
+          "scrollY": 0
+        },
+        "resources": {
+          "fontsLoaded": true,
+          "transferredBytes": 219689,
+          "firstContentfulPaintMs": 132
+        }
+      }
+    },
+    {
+      "name": "landscape layout and direct transition",
+      "status": "PASS",
+      "details": {
+        "width": 844,
+        "height": 390,
+        "button": {
+          "x": 385.53125,
+          "y": 240.46875,
+          "width": 222.921875,
+          "height": 48
+        },
+        "measuredTransitionMs": 1379,
+        "heroVisibleWithoutScroll": true,
+        "horizontalOverflow": false,
+        "scroll": {
+          "overflows": true,
+          "scrollY": 251
+        },
+        "resources": {
+          "fontsLoaded": true,
+          "transferredBytes": 219689,
+          "firstContentfulPaintMs": 152
+        }
+      }
+    },
+    {
+      "name": "keyboard Enter",
+      "status": "PASS",
+      "details": {
+        "visibleFocus": {
+          "style": "solid",
+          "width": "2px"
+        },
+        "focusTransferredToHero": true
+      }
+    },
+    {
+      "name": "keyboard Space",
+      "status": "PASS",
+      "details": {
+        "visibleFocus": {
+          "style": "solid",
+          "width": "2px"
+        },
+        "focusTransferredToHero": true
+      }
+    },
+    {
+      "name": "reduced motion",
+      "status": "PASS",
+      "details": {
+        "measuredHandoffMs": 210,
+        "activeAnimations": 0
+      }
+    },
+    {
+      "name": "runtime page errors",
+      "status": "PASS",
+      "details": {
+        "errors": []
+      }
+    }
+  ],
+  "errors": []
+}

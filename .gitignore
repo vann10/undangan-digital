@@ -1,0 +1,10 @@
+node_modules/
+.npm-cache/
+.next/
+out/
+*.tsbuildinfo
+.env*
+!.env.example
+data/private/*
+!data/private/.gitkeep
+test-results/

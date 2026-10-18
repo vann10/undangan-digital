@@ -1,0 +1,12 @@
+{
+  "testedAt": "2026-10-18T18:03:34.198Z",
+  "browser": "155.0.8059.80",
+  "checks": [
+    {
+      "name": "verification interrupted",
+      "status": "FAIL",
+      "details": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/\", waiting until \"networkidle\"\u001b[22m\n"
+    }
+  ],
+  "errors": []
+}

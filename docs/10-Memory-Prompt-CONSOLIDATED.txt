@@ -1,0 +1,257 @@
+PROJECT MEMORY — RIZAL & DEWI DIGITAL WEDDING INVITATION
+Version: Consolidated from project baseline and subsequent user decisions
+Status: Active coding-agent context. Read canonical documents and inspect existing assets before implementation. Explicit Phase 01 review decisions of 2026-10-18 supersede historical Venue, texture, and guest-access claims corrected below.
+
+# 1. Mission and design intent
+
+Build a premium digital wedding invitation for Rizal & Dewi that feels like luxury wedding stationery brought to life through a carefully art-directed editorial experience.
+
+Creative direction: LUXURY HIGH-FASHION WEDDING EDITORIAL.
+Core principle: INTRICATE DETAILS, RESTRAINED COMPOSITION.
+
+The visual result must follow the user's supplied multi-page reference illustration as closely as practical in:
+- overall visual language and mood,
+- color palette,
+- botanical assets and their character,
+- monogram treatment,
+- typography,
+- editorial composition and whitespace,
+- ornamental borders and details,
+- page-to-page consistency,
+- motion and transitions.
+
+Layout placement may be responsively adapted, but do not reinterpret the art direction or substitute a generic template. The design reference is a visual target, not merely loose inspiration.
+
+Avoid generic wedding templates, SaaS/dashboard UI, scrapbook styling, childish/cute styling, overly pink aesthetics, generic European venue architecture, minimal wireframe-only illustrations, flat empty pages, default component-library styling, large gradients, heavy shadows, excessive animation, and unrelated/generated assets that conflict with the supplied references.
+
+# 2. Mandatory first steps for any coding agent
+
+1. Read the canonical project files in the repository:
+   - 01-PROJECT-CHARTER.md
+   - 02-INFORMATION-ARCHITECTURE.md
+   - 03-OPENING-EXPERIENCE.md
+   - 04-SECTION-ART-DIRECTION.md
+   - 05-COLOR-SYSTEM.md
+   - 06-DESIGN-SYSTEM.md
+   - 07-TECHNICAL-ARCHITECTURE.md
+   - 08-CONTENT-AND-ASSET-REGISTER.md
+   - 09-QA-AND-ACCEPTANCE.md
+   - this memory prompt
+2. Inspect the actual repository and `/assets` directory before designing, generating, replacing, or duplicating any artwork. Inventory filenames, formats, dimensions, transparency, and intended use.
+3. Inspect the user-provided reference images and approved artwork available in the project. Treat them as the primary visual target.
+4. Reuse supplied assets first. Do not draw substitutes for assets that already exist and are suitable.
+5. If an asset is missing, determine whether a matching supplied source exists before creating a new one. Any new generated asset must be tracked in the asset register and reviewed against the reference.
+6. Do not stop at a written plan or a visually empty scaffold. Implement the design, run the app, inspect it in a browser at relevant viewport sizes, and fix visible discrepancies.
+7. Never claim a feature, animation, test, or QA item passed unless it was actually run and observed. Use NOT TESTED when not verified.
+
+# 3. Locked color system
+
+- Emerald Blue: #174A4A — primary brand/interaction accent, selected states, important actions, monogram accents.
+- Warm Ivory: #FAF7F1 — dominant page canvas.
+- White: #FFFFFF — selected stationery surfaces.
+- Muted Sage: #899783 — secondary botanical detail.
+- Deep Sage: #596957 — primary botanical structure.
+- Champagne: #B79A68 — restrained ornamental details only.
+- Warm Charcoal: #393534 — primary readable text.
+- Soft Brown: #746A66 — secondary text/metadata only when contrast is sufficient.
+
+Warm Ivory remains the dominant canvas, but Emerald Blue must be visible enough to establish the brand. Use it consistently in deliberate places such as primary CTA, labels, monogram details, key rules, links, selected states, and focus indicators. Do not reduce it to a nearly invisible accent. Do not turn the whole site into a solid Emerald Blue background. Champagne is for fine ornament, not small functional text. Do not introduce extra brand colors without approval.
+
+Botanical artwork should primarily use Deep Sage and Emerald Blue, with Muted Sage support and occasional restrained Champagne detail. Preserve the natural colors in approved detailed artwork when that artwork is intended to retain its own palette.
+
+# 4. Typography and stationery language
+
+- Cormorant Garamond: display typography, names, large section headings, date centerpiece, editorial statements.
+- DM Sans: body text, labels, metadata, navigation/controls, links and interaction hints.
+- Script typeface: not yet selected; do not invent a script family or use script as primary typography.
+
+Use generous whitespace, controlled asymmetry, fine borders, subtle paper material cues, intentional typography, small ornamental rules, refined editorial pacing, and premium stationery objects. Avoid making every section a generic centered card. Keep composition rich through artwork, materiality, type and layout—not by adding random UI elements.
+
+# 5. Reference fidelity: realistic sketch, paper texture, and assets
+
+The user's reference board depicts a richly illustrated, premium botanical wedding invitation. Match the reference's level of visual richness and its coherent visual system.
+
+IMPORTANT illustration distinction:
+- The target is NOT bare minimal line art, a few thin outline strokes, a generic architectural wireframe, or a sparse placeholder sketch.
+- For botanical artwork and decorative illustrations, prefer detailed engraved / realistic-sketch illustration with fine hatching, visible leaf veins, layered petals, natural contour variation, carefully controlled shadows and a crafted ink-on-paper quality.
+- When the approved reference includes richly colored botanical illustrations, preserve their detailed sage/emerald foliage, warm ivory flowers, and restrained champagne-gold accents. Do not replace these with monochrome outline drawings.
+- Background texture should be subtle and tactile, resembling fine warm ivory stationery paper. It should be visible enough to prevent the page from feeling digitally blank, but not so strong that it resembles dirt, stains, distressed vintage paper, or noisy grain.
+- The paper texture can be implemented as a lightweight subtle texture asset or a restrained CSS treatment. Do not use a strong vignette or heavy noise.
+- Use real approved artwork from `/assets` when it exists and is verified. During prototyping, label placeholders clearly; do not claim reference or generated art is final approved artwork.
+- Do not globally tint real photography. Preserve its natural character and use crop, framing and whitespace for integration.
+- Maintain consistent illustration quality, stroke/detail density, color behavior and scale across all ten sections.
+
+If an image is intended as a transparent decorative asset, preserve its alpha channel. Check that it does not contain a fake checkerboard or white background. Use `object-fit`/positioning that preserves the artwork and avoids accidental cropping of the focal subject.
+
+# 6. Monogram and couple identity
+
+The reference images show an R&D monogram, but no approved production monogram source was verified in this workspace during Phase 01. Preserve a monogram area in the design; use a clearly labeled placeholder until an approved source is supplied or a proposal is approved.
+
+- Use the approved monogram in Opening and Closing once its source is supplied; prototype placeholders must remain clearly identified.
+- Preserve the original aspect ratio and detail.
+- Prefer a transparent source/export where available.
+- Do not stretch, recolor aggressively, simplify, or overuse the monogram.
+- If a source file is raster embedded inside an SVG wrapper, do not call it a true path-based vector. True editable SVG requires actual vector paths and quality review.
+
+# 7. Ten sections — fixed order and design rules
+
+The site has exactly these ten sections in this order:
+1. Opening
+2. Hero
+3. Our Story
+4. The Wedding
+5. Venue
+6. Gallery
+7. RSVP
+8. Wedding Wishes
+9. Send Gifts
+10. Closing
+
+## 7.1 Opening — Editorial Cover
+
+A separate cover experience shown when the guest first enters the website. No navigation bar over the Opening cover. The design should closely follow the approved reference: warm ivory textured stationery, monogram, RIZAL & DEWI, detailed botanical artwork, elegant framing/rules where appropriate, and a clear Emerald Blue CTA labelled `BUKA UNDANGAN`.
+
+Historical Opening entrance choreography recorded in this memory file; treat as a Phase 02 proposal, while the canonical CTA-to-Hero sequence remains locked:
+1. At initial entry, botanical artwork fades in while moving from outside the frame into its intended position.
+2. Once in position, botanical elements remain compositionally stable, with subtle idle movement (small horizontal or vertical drift) that gives a restrained living quality.
+3. The R&D monogram may then appear with a restrained fade-in. Exact entrance order and fade direction remain proposal details for prototype review.
+4. The names and `BUKA UNDANGAN` CTA should remain legible and usable. Do not make the guest wait for decorative animation to finish.
+
+The CTA activation should trigger a considered editorial transition from the cover to the separate Hero composition. The implementation agent may propose the exact transition mechanism, but it must be elegant, fast, responsive, accessible, and visually continuous with the opening. Target overall cover-to-Hero transition around 1.2–1.6 seconds, subject to browser validation. Do not require scrolling to reveal Hero.
+
+Motion can combine a restrained CTA response, staggered botanical/monogram/name movement, subtle line-art reveal where suitable, cover exit, and Hero reveal. Avoid particles, bounce, elastic easing, spinning, shatter, heavy 3D, scroll hijacking, and excessive zoom. Respect `prefers-reduced-motion`: static or short opacity-only transition; disable continuous idle movement. Use SVG/CSS where appropriate and keep animation performant.
+
+## 7.2 Hero — opened invitation
+
+Hero is a distinct composition after the Opening CTA.
+Hierarchy: `THE WEDDING` → `RIZAL & DEWI` → actual wedding date → location.
+No photography, no countdown, no RSVP CTA, and no long-form copy in Hero.
+Use controlled botanical placement and the established rich, premium visual style. Desktop is an editorial recomposition, not an enlarged mobile layout.
+
+## 7.3 Our Story — editorial letter
+
+Use a personal letter / editorial correspondence aesthetic with refined border, slight paper materiality, editorial typography, and botanical framing. On desktop, letter and approved photo may be arranged asymmetrically. On mobile, keep the reading order clear.
+Actual story text and narrative format remain PENDING. Do not invent the couple's history, dates, timeline, or chapters.
+
+## 7.4 The Wedding — invitation stationery + countdown
+
+Use a detailed main invitation card and a secondary countdown detail. Main hierarchy: date → venue → time → location. The countdown label must be exactly `UNTIL THE WEDDING`.
+Avoid digital-clock styling, rolling numbers, progress bars, or bounce. Do not show a fabricated date as real wedding data.
+
+## 7.5 Venue — decorative engraved ornament
+
+The explicit Phase 01 review decision makes Venue artwork decorative ornamentation only. It must not depict or claim to represent the actual venue. A building, stage, statue, landmark, or Gandrung motif is not factual venue evidence. Gandrung may be explored only if relevant and explicitly approved. No Gandrung reference photo or final artwork was verified in this workspace during Phase 01; prior memory claims of supplied photos or `gandrung-venue-lineart` files are historical and unverified.
+
+Use detailed engraving where the chosen ornament supports the editorial composition. The Venue sequence remains `VENUE` → decorative illustration → actual venue name → address/location → `VIEW LOCATION`. The name, address, and map URL are independent factual content and remain PENDING. The location action requires a validated destination before release. Missing Venue details do not block the Opening/Hero prototype.
+
+## 7.6 Gallery — curated photo sequence
+
+Use a vertical editorial photo sequence with varied image sizes and deliberate offsets, inspired by the supplied reference board. Do not use a generic uniform grid, autoplay carousel, or required horizontal scrolling. Preserve the original character of supplied photographs. Gallery photos and final order remain PENDING until approved assets are available. Do not invent couple photographs or present generated mock imagery as real photos.
+
+## 7.7 RSVP — two choices only
+
+Only two response options:
+- `Attending`
+- `Unable to Attend`
+
+Use editorial selection styling and a visible selected marker rather than a conventional-looking radio button, while retaining accessible semantic single-choice behavior. Keyboard interaction, visible focus, screen-reader state and non-color-only selection cues are required. No additional guest fields.
+One individual per invitation link. The first accepted RSVP submission is final. Do not allow repeat edits unless the user explicitly changes the policy. Do not display success before server/backend confirmation. If submission fails, preserve the selection and allow retry.
+
+## 7.8 Closing — final signature
+
+Use the R&D monogram as the final signature once its final artwork is approved, with `RIZAL & DEWI` and only approved closing copy. Do not add a new decorative card system. Closing copy remains PENDING; do not invent final personal wording. Use restrained botanical support and preserve whitespace.
+
+# 8. Responsive layout and navigation
+
+- Mobile-first implementation.
+- Desktop should recompose the editorial layout, not simply scale the mobile view.
+- Keep primary content readable and decorative assets correctly anchored at mobile, tablet and desktop widths.
+- Prevent horizontal overflow, clipped text, covered controls, and broken artwork crops.
+- Opening cover has no navbar. After opening, navigation must follow the canonical project docs and approved page design; do not assume the navbar belongs on the cover.
+- Use a small, coherent navigation system after the cover if specified in the current implementation/docs. Do not let navigation dominate the editorial experience.
+
+# 9. Technical baseline and security
+
+- Frontend: Next.js + TypeScript.
+- RSVP backend: Supabase.
+- One individual per invitation link.
+- First accepted RSVP response is final.
+- Operator export requires private authentication.
+- Administration should use a spreadsheet/export workflow; no bespoke dashboard unless explicitly approved.
+
+Security requirements:
+- Validate invitation identity/token server-side.
+- Keep sequential guest routes, but require a separate secret, unpredictable token before exposing personalized data or accepting RSVP. Token format, generation, storage, delivery, revocation, and reissue remain PENDING technical design.
+- Never expose Supabase service-role secrets to the client.
+- Enforce response finality at the database/server level, not just in UI.
+- Protect guest data and export endpoints behind private operator authentication.
+- Use appropriate Supabase policies and server-side validation.
+- Do not invent schema, endpoint, deployment or authentication claims. Implement and test them explicitly.
+
+# 10. Content status — never fabricate
+
+Defined:
+- Couple names: Rizal & Dewi.
+- Design direction and color palette above.
+- Ten-section sequence.
+- Wedding date: 14 November 2026.
+- Venue illustration is decorative only; visible but controlled paper texture is approved.
+- RSVP choices and first-submission-final policy.
+
+Pending until supplied/approved:
+- Event start/end time and timezone.
+- Actual venue name and full address.
+- Valid map URL.
+- Our Story copy and narrative format.
+- Final RSVP question/intro/confirmation wording.
+- Closing statement.
+- Approved final monogram source/export details.
+- Final approved botanical assets and their mappings.
+- Gallery photographs and sequence.
+- Script typeface.
+- Any other personal or logistical wedding details.
+
+Any temporary mock data must be visibly labelled `DUMMY DATA — REPLACE BEFORE LAUNCH` or the existing approved Indonesian placeholder equivalent. Do not leave dummy values looking like confirmed details.
+
+# 11. Canonical document authority and conflict resolution
+
+Read and defer to these canonical files. Authority is topic-based, not “newest file wins”:
+- `01-PROJECT-CHARTER.md`: project-wide direction and status.
+- `02-INFORMATION-ARCHITECTURE.md`: section order and content model.
+- `03-OPENING-EXPERIENCE.md`: Opening interaction and motion.
+- `04-SECTION-ART-DIRECTION.md`: section-specific visual direction.
+- `05-COLOR-SYSTEM.md`: palette and semantic color use.
+- `06-DESIGN-SYSTEM.md`: tokens, components, responsive behavior, accessibility.
+- `07-TECHNICAL-ARCHITECTURE.md`: stack, RSVP rules, access and export.
+- `08-CONTENT-AND-ASSET-REGISTER.md`: real content and asset readiness.
+- `09-QA-AND-ACCEPTANCE.md`: acceptance criteria.
+- `10-Memory-Prompt.txt` / this consolidated memory prompt: concise coding-agent context; must not silently override canonical docs.
+
+The explicit Phase 01 review decisions govern the corrected topics here and in the canonical documents:
+- Sequential guest URLs require a separate unpredictable secret token and server-side validation; lifecycle policy remains pending.
+- Visible Warm Ivory paper texture is approved, controlled by legibility, whitespace, contrast, and mobile performance. Exact intensity, grain scale, and placement remain prototype proposals.
+- Venue illustration is decorative only. Gandrung is a possible motif only after explicit approval and verification of any source asset; it is not an approved depiction of the actual venue.
+- Botanical artwork should be richly detailed realistic-sketch/engraving when the approved reference shows that richness; not merely sparse outline line-art.
+- The initial Opening animation order described earlier in this file remains a proposal; the canonical CTA-to-Hero behavior is locked.
+
+If a real conflict remains and no explicit user decision resolves it, mark `CONFLICT — USER CONFIRMATION REQUIRED`. Do not silently change locked decisions.
+
+# 12. Quality assurance and definition of done
+
+Before declaring completion:
+- Run the app locally and inspect in an actual browser.
+- Compare all ten sections against the supplied visual reference at mobile and desktop sizes.
+- Check that the real `/assets` files are used and no approved asset has been replaced by an unrelated substitute.
+- Check paper texture is subtle but perceptible.
+- Check Emerald Blue is clearly present as a deliberate brand accent.
+- Check botanical illustrations are sufficiently detailed and match the reference's material/style.
+- Check that final monogram artwork is approved and present before treating a prototype placeholder as production identity.
+- Check Opening animation sequence and CTA-to-Hero transition.
+- Check reduced-motion behavior and keyboard interaction.
+- Check responsive crop, overflow, content hierarchy, contrast and focus states.
+- Check RSVP success/failure behavior, invitation validation, finality enforcement and private export access.
+- Run available lint/typecheck/build/tests and report actual results.
+- Mark untested items as NOT TESTED; never fabricate successful test output.
+- Update the asset register when assets are added, replaced, generated, or approved.
+
+The goal is a coherent, richly art-directed wedding invitation aligned with the verified reference illustrations, approved palette, actual supplied assets, decorative-only Venue art direction, and specified motion. Do not infer a real venue or local identity from illustration alone.
