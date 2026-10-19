@@ -5,6 +5,8 @@
 **Overall status:** Scoped Chrome checks PASS; broader production QA NOT TESTED. See ART-DIRECTION-REVIEW.md.
 
 ## Current objective
+Latest approved scope execution: reverted the last three added upper botanical layers, then added a continuous static vine border on all four sides and a generated cloud/tree/bird engraving upper background. Corner flowers and butterflies retain motion; date remains absent from Opening, guest greeting remains transparent. Evidence: `FULL-FRAME-REVIEW.md`, `artifacts/full-frame/`. Await review; no new phase authorized.
+
 Latest correction: Opening botanicals now originate from four border corners; standalone right sprig removed, upper corners filled with medium sprays. Guest greeting has no background; Opening date removed (Hero date unchanged). Evidence: `BORDER-COVER-REVIEW.md` and `artifacts/border-cover/`. Await review.
 
 Current Opening revision: nature engraving background, denser botanical framing, two articulated butterflies. Wind cycles 3.8–5s and wing flaps 0.9s; infinite with pause and reduced motion. Evidence and generation provenance: `NATURE-COVER-REVIEW.md`. Await visual/motion review; no next-phase authorization implied.
@@ -71,3 +73,14 @@ Await review of `ART-DIRECTION-REVIEW.md` and actual screenshots. No Phase 03 or
 - Three visual reference images are included under `assets/references/`.
 - Historical checkpoint: Phase 01 discovery/reconciliation and its review resolution were documented on 2026-10-18. The subsequent user approval authorized Phase 02; current implementation status above supersedes the old approval wait.
 - Important pending inputs: exact event start/end time and timezone; venue/address/map URL; approved story/closing copy; final photos/monogram; bank and gift-delivery details; Wedding Wishes publication/moderation policy; hosting/repository access.
+
+## Latest checkpoint — 2026-10-19, Opening lock / Hero morph
+Opening visual composition is user-approved and locked; see docs/OPENING-ART-DIRECTION-LOCK.md. Exact user monogram selected. User uploaded the Hero portrait; prior statements that no photo is available are superseded for this Hero only. New Hero hierarchy: portrait, names, date. Current work is the authorized Phase 02 revision; no Phase 03, backend or deployment. Verification and remaining limitations: HERO-MORPH-REVIEW.md. Earlier test tables describe earlier revisions only.
+## Latest checkpoint — 2026-10-19, complete invitation implementation
+
+The user subsequently authorized completion of the full invitation and changed the deployment target from GitHub Pages to **Vercel**. The earlier phase stop, Supabase plan, and morph transition notes above are historical. The current Opening-to-Hero effect is the user-approved paper reveal, and the two floral Page 2 backgrounds remain intact.
+
+The site now contains Opening, Hero, Mempelai, countdown, event information, venue, RSVP, live-polled wishes, gifts, and closing. The RSVP API route proxies server-to-server to Google Apps Script, which writes one row per submission to Google Sheets. Source and setup instructions are in `google-apps-script/Code.gs` and `README.md`. Calendar and Maps links activate only when official time, timezone, and venue details are supplied. Google Sheets, Apps Script, and Vercel are **not yet connected or deployed**; credentials and pending event details require owner input.
+
+Local verification: `npm run typecheck` PASS, `npm run build` PASS, `npm run test:google` PASS with mocked Sheet and date/Calendar checks, `npm run test:browser` PASS at 320, 390, and 430 px including mocked RSVP, unavailable-integration state, no horizontal overflow, and a WCAG 2 A/AA + WCAG 2.1 A/AA automated audit on mobile. The earlier Opening/Hero regression script also passed at three mobile viewports, reduced motion, and desktop panel geometry. Real Google Sheet, Vercel deployment, physical devices, Safari/Firefox, and screen reader have not yet been verified.
+

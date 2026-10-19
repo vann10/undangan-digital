@@ -7,8 +7,8 @@ import "@fontsource/dm-sans/500.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Rizal & Dewi — Prototipe Undangan",
-  description: "Prototipe Editorial Cover dan Hero. 14 November 2026.",
+  title: "Undangan Pernikahan Rizal & Dewi",
+  description: "Undangan pernikahan Rizal & Dewi, 14 November 2026.",
   robots: { index: false, follow: false },
 };
 

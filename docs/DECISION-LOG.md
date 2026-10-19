@@ -54,3 +54,6 @@ Record decisions with dates and evidence. Do not use this file to duplicate the 
 | Invitation token lifecycle | PENDING | Define token format, generation, storage, delivery, revocation and reissue before backend implementation; do not infer policy |
 | Paper texture treatment | PENDING | Review prototype proposals for intensity, grain scale and placement against legibility and mobile performance |
 | Venue ornament subject | PENDING | Gandrung or any specific motif requires explicit approval; no Gandrung reference/artwork verified in workspace |
+
+## 2026-10-19 — Opening lock and portrait Hero
+User explicitly locks the full-frame Opening. Canonical recipe: OPENING-ART-DIRECTION-LOCK.md. Hero now uses framed uploaded photo, names, confirmed date, without perimeter decoration. Native shared-element morph with fade fallback and reduced-motion bypass. No further sections or backend authorized.

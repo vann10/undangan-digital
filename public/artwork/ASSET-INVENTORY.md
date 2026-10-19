@@ -1,5 +1,10 @@
 # Decorative artwork inventory
 
+## Full-frame revision — 2026-10-19
+- `edge-vine-review.webp`: new built-in imagegen candidate, alpha-preserving WebP, static four-sided border; original `assets/edge-vine-review-master.png`.
+- `cloud-canopy-review.webp`: new built-in imagegen candidate, 900×600, upper background clouds/branches/distant birds; original `assets/cloud-canopy-review-master.png`.
+- Both pending visual approval. Exact prompts, use and verification in FULL-FRAME-REVIEW.md. These replace the most recent three additional upper botanical layers, not the established four-corner composition.
+
 ## Nature cover additions — 2026-10-19
 - `lake-landscape-review.webp`: generated decorative imaginary lake/mountains, 900×1350, no venue claim. PNG master in assets/lake-landscape-review-master.png.
 - `butterfly-spread-review.webp`: generated symmetric butterfly, 500px wide; split into clipped left/right wing layers and body in code, 0.9s flap loop. PNG master in assets/butterfly-spread-review-master.png.

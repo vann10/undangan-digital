@@ -10,6 +10,8 @@ The website should feel like premium wedding stationery brought to life digitall
 
 ## 01 — Opening: Editorial Cover
 
+**Locked implementation, 19 October 2026:** see `OPENING-ART-DIRECTION-LOCK.md` for the approved full-frame composition, asset recipe and reuse rules.
+
 **Primary composition:** refined editorial cover with a deliberate, typography-led layout.
 
 **Visual focus:** couple monogram, `RIZAL & DEWI`, complex botanical engraving/fine line-art, generous whitespace, and the CTA `BUKA UNDANGAN`.
@@ -22,11 +24,12 @@ The website should feel like premium wedding stationery brought to life digitall
 
 ## 02 — Hero: Opened Editorial Invitation
 
-**Primary object:** opened invitation/editorial spread.  
-**Content hierarchy:** `THE WEDDING` → `RIZAL & DEWI` → date → location.  
-**Mobile:** centered hierarchy; botanical density controlled.  
-**Desktop:** controlled asymmetry, botanical overflow where useful, generous negative space.  
-**Photography:** none.  
+**Primary object:** framed couple portrait, following the locked Opening print language without a perimeter botanical border.  
+**Content hierarchy:** framed photo → `Rizal & Dewi` → `14 November 2026`.  
+**Mobile:** centered hierarchy; one restrained floral accent at the portrait.  
+**Desktop:** same mobile composition in the right-hand panel; separate static artwork on the left.  
+**Photography:** user-uploaded `assets/Seon-ho Youn-jung.jpg`, natural color, neutral descriptive alternative text.  
+**Decision history:** the user instruction of 19 October 2026 supersedes the earlier no-photography, location-led editorial-spread specification.  
 **Explicit exclusions:** no countdown, RSVP CTA, or long-form copy.  
 **Avoid:** generic hero banner, full-screen wedding photo, conventional UI card, large gradient, excessive floral background.
 

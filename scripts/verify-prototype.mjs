@@ -2,7 +2,7 @@ import { chromium } from '@playwright/test';
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 
-const directory = 'artifacts/full-frame';
+const directory = 'artifacts/hero-morph';
 await mkdir(directory, { recursive: true });
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 const results = { testedAt: new Date().toISOString(), browser: await browser.version(), checks: [], errors: [] };
@@ -11,10 +11,11 @@ try {
   for (const [name, width, height] of [['mobile',390,844],['small-mobile',320,568],['mobile-wide',430,932]]) {
     const page = await browser.newPage({ viewport: { width, height } });
     page.on('pageerror', error => results.errors.push(error.message));
-    await page.goto('http://127.0.0.1:3005', { waitUntil: 'networkidle' });
+    await page.goto('http://127.0.0.1:3006', { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts.ready);
     assert(await page.locator('img').evaluateAll(images => images.every(img => img.complete && img.naturalWidth > 0)), `${name}: decorative image load`);
-    assert(await page.locator('img').evaluateAll(images => images.every(img => img.alt === '')), `${name}: decorative alternatives`);
+    assert(await page.locator('img:not(.portrait-photo)').evaluateAll(images => images.every(img => img.alt === '')), `${name}: decorative alternatives`);
+    assert(await page.locator('.portrait-photo').getAttribute('alt'), 'Meaningful photo has alternative text');
     const button = page.getByRole('button', { name: 'BUKA UNDANGAN', exact: true });
     const bounds = await button.boundingBox();
     assert.equal(await page.locator('.guest-greeting').textContent(), 'Yth. [nama tamu]');
@@ -53,7 +54,13 @@ try {
     const start = Date.now();
     await button.click();
     await page.locator('#invitation-hero').waitFor({ state: 'visible' });
-    await page.waitForFunction(() => document.getAnimations().every(a => a.playState === 'finished'));
+    if (name === 'mobile') { await page.waitForTimeout(200); await page.screenshot({ path: `${directory}/mobile-morph.png`, fullPage: true }); }
+    await page.waitForFunction(() => !document.documentElement.classList.contains('morphing') && document.getAnimations().every(a => a.playState === 'finished'));
+    assert.equal(await page.locator('.couple-portrait').count(), 1);
+    const photoBox = await page.locator('.couple-portrait').boundingBox();
+    const nameBox = await page.locator('#hero-heading').boundingBox();
+    const dateBox = await page.locator('.wedding-date').boundingBox();
+    assert(photoBox.y + photoBox.height <= nameBox.y && nameBox.y + nameBox.height <= dateBox.y, 'Photo > names > date hierarchy');
     const duration = Date.now() - start;
     assert.equal(await page.evaluate(() => window.scrollY), 0);
     assert.equal(await page.locator('.cover').count(), 0);
@@ -61,7 +68,7 @@ try {
     assert.equal(await page.locator('#hero-heading').evaluate(el => el === document.activeElement), true);
     assert.equal(await page.locator('.wedding-date').textContent(), '14 November 2026');
     assert.equal(await page.locator('.art-date').count(), 0);
-    assert.equal(await page.locator('.hero-art').evaluate(el => getComputedStyle(el).overflow), 'visible');
+    assert.equal(await page.locator('.hero .vine-frame').count(), 0);
     await page.locator('#hero-heading').evaluate(el => el.blur());
     await page.screenshot({ path: `${directory}/${name}-hero.png`, fullPage: true });
     const scroll = await page.evaluate(() => {
@@ -77,7 +84,7 @@ try {
   for (const width of [768, 1440]) {
     const pc = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
     const phone = await browser.newPage({ viewport: { width: 430, height: 900 }, reducedMotion: 'reduce' });
-    await Promise.all([pc.goto('http://127.0.0.1:3005', { waitUntil: 'networkidle' }), phone.goto('http://127.0.0.1:3005', { waitUntil: 'networkidle' })]);
+    await Promise.all([pc.goto('http://127.0.0.1:3006', { waitUntil: 'networkidle' }), phone.goto('http://127.0.0.1:3006', { waitUntil: 'networkidle' })]);
     const metrics = page => page.evaluate(() => ({ width: document.querySelector('main').getBoundingClientRect().width, x: document.querySelector('main').getBoundingClientRect().x, names: getComputedStyle(document.querySelector('.cover-names')).fontSize, columns: getComputedStyle(document.querySelector('.hero-layout')).gridTemplateColumns }));
     const desktop = await metrics(pc), mobile = await metrics(phone);
     assert.equal(desktop.width, 430); assert.equal(desktop.x, width - 430);
@@ -94,7 +101,7 @@ try {
   }
   for (const key of ['Enter', 'Space']) {
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
-    await page.goto('http://127.0.0.1:3005');
+    await page.goto('http://127.0.0.1:3006');
     await page.keyboard.press('Tab');
     assert.equal(await page.getByRole('button', { name: 'BUKA UNDANGAN', exact: true }).evaluate(el => el === document.activeElement), true);
     const focus = await page.locator('.open-button').evaluate(el => ({ style: getComputedStyle(el).outlineStyle, width: getComputedStyle(el).outlineWidth }));
@@ -108,7 +115,7 @@ try {
     await page.close();
   }
   const reduced = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await reduced.goto('http://127.0.0.1:3005');
+  await reduced.goto('http://127.0.0.1:3006');
   assert.equal(await reduced.evaluate(() => document.getAnimations().length), 0);
   const start = Date.now();
   await reduced.getByRole('button', { name: 'BUKA UNDANGAN', exact: true }).click();

@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "tsc --noEmit",
-    "test:prototype": "node scripts/verify-prototype.mjs"
+    "test:prototype": "node scripts/verify-prototype.mjs",
+    "test:google": "node scripts/test-google-apps-script.mjs && node scripts/test-wedding-config.mjs",
+    "test:browser": "node scripts/verify-complete.mjs"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",
@@ -17,6 +19,7 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "^1.64.1",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
