@@ -8,7 +8,7 @@
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test:prototype": "node scripts/verify-prototype.mjs",
-    "test:google": "node scripts/test-google-apps-script.mjs && node scripts/test-wedding-config.mjs",
+    "test:google": "node scripts/test-google-apps-script.mjs && node scripts/test-guest-import.mjs && node scripts/test-wedding-config.mjs",
     "test:browser": "node scripts/verify-complete.mjs"
   },
   "dependencies": {

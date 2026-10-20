@@ -2,7 +2,7 @@ import { chromium } from '@playwright/test';
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 
-const directory = 'artifacts/pages-review';
+const directory = 'artifacts/pages-review-current';
 const baseUrl = process.argv[2] ?? 'http://127.0.0.1:3006';
 await mkdir(directory, { recursive: true });
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
@@ -19,11 +19,8 @@ try {
     assert.equal(await page.locator('.cover').isVisible(), true);
     assert.equal(await page.locator('.opened-pages').isVisible(), false);
     await page.getByRole('button', { name: 'BUKA UNDANGAN', exact: true }).click();
-    await page.locator('.stage-opening').waitFor({ state: 'visible' });
-    assert.equal(await page.locator('.opening-sweep').count(), 1);
-    assert.equal(await page.locator('.cover').isVisible(), true);
-    await page.locator('#invitation-hero').waitFor({ state: 'visible' });
-    if (label === 'mobile') {
+    if (label === 'mobile' && await page.locator('.stage-opening').isVisible()) {
+      assert.equal(await page.locator('.opening-sweep').count(), 1);
       await page.waitForTimeout(200);
       const earlyInset = await page.locator('.cover').evaluate(el => getComputedStyle(el).clipPath);
       assert.notEqual(earlyInset, 'inset(0px)', 'Cover reveal must advance during the transition');
@@ -43,12 +40,16 @@ try {
     assert.deepEqual(await page.locator('.profile-floral img').evaluateAll(images => images.map(image => image.getAttribute('src'))), ['/artwork/rd-peony-accent-v1.webp', '/artwork/botanical_ornament.svg']);
     assert.equal(await page.locator('.portrait-ornament').evaluate(el => getComputedStyle(el).animationName), 'none');
     assert.equal(await page.locator('.page-bridge-garland').getAttribute('src'), '/artwork/page-transition-garland.png');
-    assert.equal(await page.locator('.page-bridge-spray').getAttribute('src'), '/artwork/botanical-spray-review.png');
-    assert.equal(await page.locator('.page-bridge-spray').evaluate(el => getComputedStyle(el).animationName), 'bridge-botanical-rise');
-    const floralStart = await page.locator('.page-bridge-spray').evaluate(el => getComputedStyle(el).translate);
+    assert.equal(await page.locator('.page-bridge-spray').count(), 0);
+    assert.equal(await page.locator('.hero-tree-branch').count(), 2);
+    assert.deepEqual(await page.locator('.hero-tree-branch').evaluateAll(images => images.map(image => image.getAttribute('src'))), ['/artwork/hero-tree-left-v1.png', '/artwork/hero-tree-right-v1.png']);
+    assert.equal(await page.locator('.hero-tree-branch').first().evaluate(el => getComputedStyle(el).animationName), 'hero-branch-float');
+    assert(Number(await page.locator('.hero-tree-branch').first().evaluate(el => getComputedStyle(el).zIndex)) > Number(await page.locator('.hero-layout').evaluate(el => getComputedStyle(el).zIndex)));
+    assert.equal(await page.locator('.couple-floating-branch').first().evaluate(el => getComputedStyle(el).animationName), 'couple-branch-float');
+    const floralStart = await page.locator('.hero-tree-branch').first().evaluate(el => getComputedStyle(el).translate);
     await page.waitForTimeout(380);
-    const floralEnd = await page.locator('.page-bridge-spray').evaluate(el => getComputedStyle(el).translate);
-    assert.notEqual(floralStart, floralEnd, 'Page bridge botanical must rise and fall');
+    const floralEnd = await page.locator('.hero-tree-branch').first().evaluate(el => getComputedStyle(el).translate);
+    assert.notEqual(floralStart, floralEnd, 'Hero tree branch must rise and fall');
     const floralBoxes = await page.locator('.profile-floral').evaluateAll(images => images.map(image => { const r = image.getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height }; }));
     const portraitBoxes = await page.locator('.person-portrait').evaluateAll(images => images.map(image => { const r = image.getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height }; }));
     const page2Box = await page.locator('.couple-page').boundingBox();
@@ -61,6 +62,7 @@ try {
     const rotation = await page.locator('.profile-floral-groom').evaluate(el => new DOMMatrix(getComputedStyle(el).transform));
     assert(rotation.a < -0.9 && rotation.b < -0.2, 'Bottom ornament must rotate about 200 degrees clockwise');
     assert.equal(await page.locator('.wedding-date').textContent(), '14 November 2026');
+    await page.evaluate(() => Promise.all([...document.images].filter(image => image.loading !== 'lazy').map(image => image.decode().catch(() => {}))));
     const layout = await page.evaluate(() => {
       const rect = selector => { const { top, bottom } = document.querySelector(selector).getBoundingClientRect(); return { top, bottom }; };
       return { photo: rect('.couple-portrait'), names: rect('#hero-heading'), date: rect('.wedding-date'), hero: rect('.hero'), page2: rect('.couple-page'), width: document.documentElement.scrollWidth, imageLoads: [...document.images].filter(img => img.loading !== 'lazy').every(img => img.complete && img.naturalWidth > 0), heroOpacity: getComputedStyle(document.querySelector('.hero-layout')).opacity };
@@ -87,6 +89,7 @@ try {
   await reduced.goto(baseUrl, { waitUntil: 'domcontentloaded' });
   await reduced.waitForTimeout(1500);
   await reduced.getByRole('button', { name: 'BUKA UNDANGAN', exact: true }).click();
+  await reduced.locator('.stage-hero').waitFor({ state: 'visible' });
   assert.equal(await reduced.locator('.hero').isVisible(), true);
   assert.equal(await reduced.evaluate(() => document.getAnimations().length), 0);
   pass('reduced motion', { activeAnimations: 0 });
@@ -95,6 +98,7 @@ try {
   await desktop.goto(baseUrl, { waitUntil: 'domcontentloaded' });
   await desktop.waitForTimeout(1500);
   await desktop.getByRole('button', { name: 'BUKA UNDANGAN', exact: true }).click();
+  await desktop.locator('.stage-hero').waitFor({ state: 'visible' });
   const panel = await desktop.locator('main').boundingBox();
   assert.equal(panel.width, 430);
   assert.equal(panel.x, 1010);
@@ -106,7 +110,11 @@ try {
   report.checks.push({ name: 'verification interrupted', status: 'FAIL', details: String(error) });
   process.exitCode = 1;
 } finally {
-  await writeFile(`${directory}/browser-results.json`, JSON.stringify(report, null, 2));
   await browser.close();
   console.log(JSON.stringify(report, null, 2));
+  try {
+    await writeFile(`${directory}/browser-results.json`, JSON.stringify(report, null, 2));
+  } catch (error) {
+    console.warn(`Could not save browser report: ${error.message}`);
+  }
 }

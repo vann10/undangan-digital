@@ -1,14 +1,13 @@
 /**
- * RSVP backend for the Rizal & Dewi invitation.
+ * Private Google Sheets backend. Deploy as a web app (execute as owner).
  * Script properties: SPREADSHEET_ID and RSVP_API_TOKEN.
- * Deploy as a Web app: Execute as me; Who has access: Anyone.
  */
-const SHEET_NAME = 'RSVP';
-const HEADERS = ['Submission ID', 'Submitted at (UTC)', 'Full name', 'Attendance', 'Guest count', 'Wishes & messages'];
+const GUEST_HEADERS = ['Invitation ID', 'Full name', 'Token SHA-256', 'Active'];
+const RSVP_HEADERS = ['Invitation ID', 'Submitted at (UTC)', 'Attendance'];
+const WISH_HEADERS = ['Wish ID', 'Invitation ID', 'Submitted at (UTC)', 'Full name', 'Message'];
 
 function output_(value) {
-  return ContentService.createTextOutput(JSON.stringify(value))
-    .setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(value)).setMimeType(ContentService.MimeType.JSON);
 }
 
 function settings_() {
@@ -19,27 +18,51 @@ function settings_() {
   return { id, token };
 }
 
-function sheet_(id) {
-  const book = SpreadsheetApp.openById(id);
-  let sheet = book.getSheetByName(SHEET_NAME);
-  if (!sheet) sheet = book.insertSheet(SHEET_NAME);
+function sheet_(book, name, headers) {
+  let sheet = book.getSheetByName(name);
+  if (!sheet) sheet = book.insertSheet(name);
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(HEADERS);
+    sheet.appendRow(headers);
     sheet.setFrozenRows(1);
-    sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
+  } else if (JSON.stringify(sheet.getRange(1, 1, 1, headers.length).getValues()[0].map(String)) !== JSON.stringify(headers)) {
+    throw new Error(`${name} has an incompatible header. Move the old tab before setup.`);
   }
   return sheet;
 }
 
 function setupSheet() {
-  sheet_(settings_().id);
+  const book = SpreadsheetApp.openById(settings_().id);
+  sheet_(book, 'Guests', GUEST_HEADERS);
+  sheet_(book, 'RSVP', RSVP_HEADERS);
+  sheet_(book, 'Wishes', WISH_HEADERS);
+}
+
+function rows_(sheet, width) {
+  const last = sheet.getLastRow();
+  return last < 2 ? [] : sheet.getRange(2, 1, last - 1, width).getValues();
+}
+
+function hash_(token) {
+  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, token, Utilities.Charset.UTF_8)
+    .map(byte => ('0' + (byte & 255).toString(16)).slice(-2)).join('');
+}
+
+function guest_(book, id, token) {
+  if (typeof id !== 'string' || !/^[1-9]\d{0,9}$/.test(id)
+    || typeof token !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(token)) return null;
+  const digest = hash_(token);
+  const matches = rows_(sheet_(book, 'Guests', GUEST_HEADERS), 4).filter(row => String(row[0]) === id);
+  if (matches.length !== 1 || String(matches[0][2]).toLowerCase() !== digest
+    || String(matches[0][3]).toLowerCase() !== 'true') return null;
+  const name = String(matches[0][1]).trim();
+  return name.length >= 2 && name.length <= 100 ? { id, name } : null;
 }
 
 function safeText_(value, max) {
   if (typeof value !== 'string') return null;
   const text = value.trim();
-  if (text.length < 2 || text.length > max) return null;
-  // Keep untrusted guest text from becoming a Google Sheets formula.
+  if (text.length < 2 || text.length > max || /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(text)) return null;
   return /^[=+\-@]/.test(text) ? "'" + text : text;
 }
 
@@ -51,18 +74,18 @@ function publicText_(value) {
 function doGet(e) {
   try {
     const settings = settings_();
-    if (!e || !e.parameter || e.parameter.token !== settings.token) return output_({ ok: false, error: 'Unauthorized' });
-    const sheet = sheet_(settings.id);
+    if (!e || !e.parameter || e.parameter.token !== settings.token) return output_({ ok: false, code: 'unauthorized' });
+    const book = SpreadsheetApp.openById(settings.id);
+    const sheet = sheet_(book, 'Wishes', WISH_HEADERS);
     const last = sheet.getLastRow();
-    if (last < 2) return output_({ ok: true, wishes: [] });
-    const rows = sheet.getRange(2, 1, last - 1, HEADERS.length).getValues();
-    const wishes = rows.reverse().filter(row => row[5]).map(row => ({
-      id: String(row[0]), createdAt: String(row[1]), name: publicText_(row[2]), message: publicText_(row[5]),
+    const count = Math.min(100, last - 1);
+    const wishes = (count ? sheet.getRange(last - count + 1, 1, count, 5).getValues() : []).reverse().map(row => ({
+      id: String(row[0]), createdAt: String(row[2]), name: publicText_(row[3]), message: publicText_(row[4]),
     }));
     return output_({ ok: true, wishes });
   } catch (error) {
     console.error(error);
-    return output_({ ok: false, error: 'Unable to read wishes' });
+    return output_({ ok: false, code: 'unavailable' });
   }
 }
 
@@ -71,29 +94,40 @@ function doPost(e) {
   try {
     const settings = settings_();
     const data = JSON.parse(e.postData.contents);
-    if (data.token !== settings.token) return output_({ ok: false, error: 'Unauthorized' });
-    if (!/^[a-f0-9-]{36}$/i.test(data.submissionId || '')) return output_({ ok: false, error: 'Invalid ID' });
-    const name = safeText_(data.name, 100);
-    const message = safeText_(data.message, 1000);
-    const attendance = data.attendance;
-    const count = data.guestCount;
-    if (!name || !message || !['attending', 'not_attending'].includes(attendance)
-      || !Number.isInteger(count) || (attendance === 'attending' && (count < 1 || count > 10))
-      || (attendance === 'not_attending' && count !== 0)) return output_({ ok: false, error: 'Invalid RSVP' });
+    if (data.serviceToken !== settings.token) return output_({ ok: false, code: 'unauthorized' });
+    const book = SpreadsheetApp.openById(settings.id);
+    const guest = guest_(book, data.invitationId, data.invitationToken);
+    if (!guest) return output_({ ok: false, code: 'invalid_invitation' });
+    if (data.action === 'guest') {
+      const existing = rows_(sheet_(book, 'RSVP', RSVP_HEADERS), 3).find(row => String(row[0]) === guest.id);
+      return output_({ ok: true, name: guest.name, attendance: existing ? String(existing[2]) : null });
+    }
+    if (data.action !== 'rsvp' && data.action !== 'wish') return output_({ ok: false, code: 'invalid_request' });
     lock = LockService.getScriptLock();
     lock.waitLock(20000);
-    const sheet = sheet_(settings.id);
-    const last = sheet.getLastRow();
-    if (last >= 2) {
-      const existing = sheet.getRange(2, 1, last - 1, 1).createTextFinder(data.submissionId).matchEntireCell(true).findNext();
-      if (existing) return output_({ ok: true, duplicate: true });
+    if (!guest_(book, data.invitationId, data.invitationToken)) return output_({ ok: false, code: 'invalid_invitation' });
+    if (data.action === 'rsvp') {
+      if (!['attending', 'not_attending'].includes(data.attendance)) return output_({ ok: false, code: 'invalid_request' });
+      const sheet = sheet_(book, 'RSVP', RSVP_HEADERS);
+      const existing = rows_(sheet, 3).find(row => String(row[0]) === guest.id);
+      if (existing) return output_({ ok: false, code: 'already_submitted', attendance: String(existing[2]) });
+      sheet.appendRow([guest.id, new Date().toISOString(), data.attendance]);
+      SpreadsheetApp.flush();
+      return output_({ ok: true, attendance: data.attendance });
     }
-    sheet.appendRow([data.submissionId, new Date().toISOString(), name, attendance, count, message]);
+    if (typeof data.wishId !== 'string' || !/^[a-f0-9-]{36}$/i.test(data.wishId)) return output_({ ok: false, code: 'invalid_request' });
+    const message = safeText_(data.message, 1000);
+    if (!message) return output_({ ok: false, code: 'invalid_request' });
+    const sheet = sheet_(book, 'Wishes', WISH_HEADERS);
+    const existing = rows_(sheet, 5);
+    if (existing.some(row => String(row[0]) === data.wishId && String(row[1]) === guest.id)) return output_({ ok: true, duplicate: true });
+    if (existing.some(row => String(row[1]) === guest.id)) return output_({ ok: false, code: 'wish_already_submitted' });
+    sheet.appendRow([data.wishId, guest.id, new Date().toISOString(), safeText_(guest.name, 100), message]);
     SpreadsheetApp.flush();
     return output_({ ok: true });
   } catch (error) {
     console.error(error);
-    return output_({ ok: false, error: 'Unable to save RSVP' });
+    return output_({ ok: false, code: 'unavailable' });
   } finally {
     if (lock && lock.hasLock()) lock.releaseLock();
   }

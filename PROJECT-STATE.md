@@ -1,8 +1,18 @@
 # PROJECT STATE — Rizal & Dewi Digital Invitation
 
-**Last updated:** 2026-10-19
-**Current phase:** Phase 02 Opening & Hero implemented with user approval; illustration overhaul awaiting review
-**Overall status:** Scoped Chrome checks PASS; broader production QA NOT TESTED. See ART-DIRECTION-REVIEW.md.
+## Backend checkpoint — 2026-10-20
+
+User memilih Google Sheets + Apps Script sebagai penyimpanan utama, tautan pribadi per tamu, RSVP pertama final, dan ucapan langsung tampil. Kode backend kini mempunyai tab `Guests`/`RSVP`/`Wishes`, validasi token pribadi di server, generator tautan CSV/JSON, revokasi/reissue, serta formulir RSVP dan ucapan terpisah. Implementasi lokal masih perlu dihubungkan ke Sheet dan Apps Script nyata; jangan anggap integrasi live selesai. Detail: `docs/BACKEND-GOOGLE-SHEETS.md`.
+
+Daftar privat `data/private/daftar_nama.json` memuat 193 nama valid tanpa duplikat. `guests.csv` dan `links.csv` telah dibuat di folder yang diabaikan Git; 193 pasangan token/hash cocok. `links.csv` masih berupa URL relatif karena domain belum ditentukan. Jangan membagikannya sebelum `finalize-links` dan uji live.
+
+Koneksi Apps Script/Sheet nyata telah diverifikasi secara baca saja pada 2026-10-20: tiga tautan sampel mengembalikan identitas tepat, token salah dan payload tulis tidak valid ditolak, dan daftar ucapan dapat dibaca. Tamu uji ID 194 disiapkan di `data/private/test-guest.csv` untuk pengujian penulisan terpisah. Domain final tetap belum ada.
+
+Uji tulis live kemudian PASS pada tamu sintetis ID 194: RSVP tersimpan, respons berbeda kedua ditolak, ucapan tersimpan dan terbaca publik, pengulangan Wish ID tidak menggandakan baris. Baris ID 194 di `Guests` dan `RSVP`, serta satu baris ID 194 di `Wishes`, adalah data uji yang perlu dibersihkan sebelum tautan dibagikan. Pengujian Vercel dan domain final tetap PENDING.
+
+**Last updated:** 2026-10-20
+**Current phase:** Backend implementation; live Google Sheets connection pending owner setup
+**Overall status:** Local backend mocks, build, and scoped browser checks PASS; live integration and broader production QA NOT TESTED.
 
 ## Current objective
 Latest approved scope execution: reverted the last three added upper botanical layers, then added a continuous static vine border on all four sides and a generated cloud/tree/bird engraving upper background. Corner flowers and butterflies retain motion; date remains absent from Opening, guest greeting remains transparent. Evidence: `FULL-FRAME-REVIEW.md`, `artifacts/full-frame/`. Await review; no new phase authorized.
@@ -75,7 +85,7 @@ Await review of `ART-DIRECTION-REVIEW.md` and actual screenshots. No Phase 03 or
 - Important pending inputs: exact event start/end time and timezone; venue/address/map URL; approved story/closing copy; final photos/monogram; bank and gift-delivery details; Wedding Wishes publication/moderation policy; hosting/repository access.
 
 ## Latest checkpoint — 2026-10-19, Opening lock / Hero morph
-Opening visual composition is user-approved and locked; see docs/OPENING-ART-DIRECTION-LOCK.md. Exact user monogram selected. User uploaded the Hero portrait; prior statements that no photo is available are superseded for this Hero only. New Hero hierarchy: portrait, names, date. Current work is the authorized Phase 02 revision; no Phase 03, backend or deployment. Verification and remaining limitations: HERO-MORPH-REVIEW.md. Earlier test tables describe earlier revisions only.
+Opening visual composition is user-approved and locked; see docs/OPENING-ART-DIRECTION-LOCK.md. Exact user monogram selected. User uploaded the Hero portrait; prior statements that no photo is available are superseded for this Hero only. New Hero hierarchy: portrait, names, date. Current work is the authorized Phase 02 revision; no Phase 03, backend or deployment. Verification and remaining limitations: HERO-MORPH-REVIEW.md. Earlier test tables describe earlier revisions only.
 ## Latest checkpoint — 2026-10-19, complete invitation implementation
 
 The user subsequently authorized completion of the full invitation and changed the deployment target from GitHub Pages to **Vercel**. The earlier phase stop, Supabase plan, and morph transition notes above are historical. The current Opening-to-Hero effect is the user-approved paper reveal, and the two floral Page 2 backgrounds remain intact.
@@ -83,4 +93,16 @@ The user subsequently authorized completion of the full invitation and changed t
 The site now contains Opening, Hero, Mempelai, countdown, event information, venue, RSVP, live-polled wishes, gifts, and closing. The RSVP API route proxies server-to-server to Google Apps Script, which writes one row per submission to Google Sheets. Source and setup instructions are in `google-apps-script/Code.gs` and `README.md`. Calendar and Maps links activate only when official time, timezone, and venue details are supplied. Google Sheets, Apps Script, and Vercel are **not yet connected or deployed**; credentials and pending event details require owner input.
 
 Local verification: `npm run typecheck` PASS, `npm run build` PASS, `npm run test:google` PASS with mocked Sheet and date/Calendar checks, `npm run test:browser` PASS at 320, 390, and 430 px including mocked RSVP, unavailable-integration state, no horizontal overflow, and a WCAG 2 A/AA + WCAG 2.1 A/AA automated audit on mobile. The earlier Opening/Hero regression script also passed at three mobile viewports, reduced motion, and desktop panel geometry. Real Google Sheet, Vercel deployment, physical devices, Safari/Firefox, and screen reader have not yet been verified.
+
+## Visual revision — 2026-10-19
+
+The user confirmed the event starts at **09.00 WIB** on 14 November 2026. Opening botanical overlays, vine frame, and cloud canopy were restored. The Hero has separate left and right reference-style woody tree branch assets emerging from its upper corners in the topmost layer, each animated with smooth vertical motion. The `botanical-spray-review` decoration was removed from the Hero–Mempelai boundary; the page transition garland remains. The small "RIZAL & DEWI" label above "Mempelai" was removed. Separate floating branches animate within Page 2; portrait-frame ornaments remain static. The `ornament-review` asset is no longer rendered anywhere. A fixed bottom-right play/stop control plays the locally hosted CC BY 4.0 track "Reverie" by Scott Buckley, with attribution in the closing section.
+
+## Follow-up — 2026-10-19
+
+The countdown now uses individually rolling odometer digits on first view and on digit changes, with reduced-motion support. The existing floral garland divider also separates Mempelai and Countdown. A Gallery using the three supplied photographs follows RSVP and precedes Wedding Wishes. Music attempts autoplay on load, retries synchronously when the guest opens the invitation, and keeps the fixed Play/Stop control. Browser autoplay restrictions can delay sound until user interaction. Production build, TypeScript check, and browser checks at 320/390/430 px passed; the browser check includes mocked RSVP, audio control, odometer motion, and an automated WCAG audit.
+
+The countdown intro now uses a separate overlay of randomized two-digit values updated every 10 ms for about 2.8 seconds. The actual unpadded value stays underneath and becomes visible when the overlay disappears, eliminating transient leading zeros. Normal subsequent digit changes retain the shorter odometer roll.
+
+The user later requested distinct backgrounds for each invitation page and a realistic architectural line-art Venue backdrop. Section backgrounds now have separate gradients and restrained artwork treatments while retaining the established ivory/emerald/gold palette. Venue uses `public/artwork/venue-architectural-blueprint.svg`, a transparent, stroke-only conceptual building drawing without solid fill. It does not claim to depict the still-unconfirmed real venue. TypeScript, production build, and browser checks at 320/390/430 px passed; the browser check verifies distinct section backgrounds and the Venue asset.
 

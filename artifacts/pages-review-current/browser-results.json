@@ -1,0 +1,131 @@
+{
+  "browser": "155.0.8059.80",
+  "checks": [
+    {
+      "name": "small hero and profile page",
+      "status": "PASS",
+      "details": {
+        "width": 320,
+        "height": 568,
+        "layout": {
+          "photo": {
+            "top": 22,
+            "bottom": 284.5
+          },
+          "names": {
+            "top": 324.5,
+            "bottom": 368.65625
+          },
+          "date": {
+            "top": 378.65625,
+            "bottom": 404.65625
+          },
+          "hero": {
+            "top": 0,
+            "bottom": 568
+          },
+          "page2": {
+            "top": 568,
+            "bottom": 1993.109375
+          },
+          "width": 320,
+          "imageLoads": true,
+          "heroOpacity": "1"
+        },
+        "transition": "opening-paper-reveal"
+      }
+    },
+    {
+      "name": "mobile hero and profile page",
+      "status": "PASS",
+      "details": {
+        "width": 390,
+        "height": 844,
+        "layout": {
+          "photo": {
+            "top": 34,
+            "bottom": 384
+          },
+          "names": {
+            "top": 434,
+            "bottom": 480
+          },
+          "date": {
+            "top": 495,
+            "bottom": 525
+          },
+          "hero": {
+            "top": 0,
+            "bottom": 844
+          },
+          "page2": {
+            "top": 844,
+            "bottom": 2269.109375
+          },
+          "width": 390,
+          "imageLoads": true,
+          "heroOpacity": "1"
+        },
+        "transition": "opening-paper-reveal"
+      }
+    },
+    {
+      "name": "wide hero and profile page",
+      "status": "PASS",
+      "details": {
+        "width": 430,
+        "height": 932,
+        "layout": {
+          "photo": {
+            "top": 34,
+            "bottom": 384
+          },
+          "names": {
+            "top": 434,
+            "bottom": 481.453125
+          },
+          "date": {
+            "top": 496.453125,
+            "bottom": 526.453125
+          },
+          "hero": {
+            "top": 0,
+            "bottom": 932
+          },
+          "page2": {
+            "top": 932,
+            "bottom": 2357.109375
+          },
+          "width": 430,
+          "imageLoads": true,
+          "heroOpacity": "1"
+        },
+        "transition": "opening-paper-reveal"
+      }
+    },
+    {
+      "name": "reduced motion",
+      "status": "PASS",
+      "details": {
+        "activeAnimations": 0
+      }
+    },
+    {
+      "name": "desktop panel geometry",
+      "status": "PASS",
+      "details": {
+        "width": 430,
+        "x": 1010,
+        "screenshots": "mobile only"
+      }
+    },
+    {
+      "name": "runtime errors",
+      "status": "PASS",
+      "details": {
+        "errors": []
+      }
+    }
+  ],
+  "errors": []
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { Botanical } from "./botanical";
 import InvitationDetails from "./invitation-details";
 
@@ -10,6 +10,19 @@ function Monogram({ light = false }: { light?: boolean }) {
 
 function Butterfly({ className }: { className: string }) {
   return <div className={`flutter ${className}`} aria-hidden="true"><div className="butterfly-wings"><span className="wing wing-left"/><span className="wing wing-right"/><span className="butterfly-body"/></div></div>;
+}
+
+function MusicControl({ audio, playing, error, toggle, onPlaying, onPause, onError }: {
+  audio: RefObject<HTMLAudioElement | null>; playing: boolean; error: string;
+  toggle: () => void; onPlaying: () => void; onPause: () => void; onError: () => void;
+}) {
+  return <>
+    <audio ref={audio} src="/audio/reverie-scott-buckley.mp3" preload="auto" loop onPlay={onPlaying} onPause={onPause} onError={onError} />
+    <button className="music-control" type="button" onClick={toggle} aria-label={playing ? "Hentikan musik" : "Putar musik"} aria-pressed={playing} title={playing ? "Hentikan musik" : "Putar musik"}>
+      {playing ? <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1" /></svg> : <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5 19 12 8 18.5Z" /></svg>}
+    </button>
+    <span className="music-error" role="status">{error}</span>
+  </>;
 }
 
 function PersonProfile({ person, image, alt }: { person: "Dewi" | "Rizal"; image: string; alt: string }) {
@@ -33,18 +46,41 @@ function PersonProfile({ person, image, alt }: { person: "Dewi" | "Rizal"; image
   </article>;
 }
 
-export default function Invitation() {
+export default function Invitation({ invitationId }: { invitationId?: string }) {
   const [stage, setStage] = useState<"cover" | "opening" | "hero">("cover");
+  const [hydrated, setHydrated] = useState(false);
   const [motionPaused, setMotionPaused] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [musicError, setMusicError] = useState("");
   const [guestName, setGuestName] = useState("Tamu Undangan");
+  const [invitationToken, setInvitationToken] = useState<string | null>(null);
+  const [attendance, setAttendance] = useState<"attending" | "not_attending" | null>(null);
+  const [guestError, setGuestError] = useState("");
+  const audio = useRef<HTMLAudioElement>(null);
+  const musicStopped = useRef(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const opening = useRef(false);
+  useEffect(() => { setHydrated(true); }, []);
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
   useEffect(() => {
-    const name = new URLSearchParams(window.location.search).get("to")?.trim().slice(0, 80);
-    if (name) setGuestName(name);
-  }, []);
+    if (!invitationId) return;
+    const token = window.location.hash.slice(1);
+    if (!/^[A-Za-z0-9_-]{43}$/.test(token)) { setGuestError("Tautan undangan tidak valid."); return; }
+    const controller = new AbortController();
+    void fetch("/api/invitation", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ invitationId, invitationToken: token }), signal: controller.signal,
+    }).then(async response => {
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Undangan belum dapat dibuka.");
+      setGuestName(data.name);
+      setAttendance(data.attendance);
+      setInvitationToken(token);
+      setGuestError("");
+    }).catch(cause => { if (!controller.signal.aborted) setGuestError(cause instanceof Error ? cause.message : "Undangan belum dapat dibuka."); });
+    return () => controller.abort();
+  }, [invitationId]);
   useEffect(() => {
     void Promise.all([
       "/artwork/couple-user-upload.jpg",
@@ -57,9 +93,36 @@ export default function Invitation() {
   }, []);
   useEffect(() => { if (stage === "hero") heading.current?.focus({ preventScroll: true }); }, [stage]);
 
+  async function startMusic(showError: boolean) {
+    const player = audio.current;
+    if (!player || musicStopped.current || !player.paused) return;
+    try {
+      player.volume = 0.45;
+      await player.play();
+      setMusicError("");
+    } catch {
+      if (showError) setMusicError("Musik tidak dapat diputar pada perangkat ini.");
+    }
+  }
+  useEffect(() => { void startMusic(false); }, []);
+
+  function toggleMusic() {
+    const player = audio.current;
+    if (!player) return;
+    if (!player.paused) {
+      musicStopped.current = true;
+      player.pause();
+      player.currentTime = 0;
+      return;
+    }
+    musicStopped.current = false;
+    void startMusic(true);
+  }
+
   function openInvitation() {
     if (stage !== "cover" || opening.current) return;
     opening.current = true;
+    void startMusic(false);
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) { setStage("hero"); window.scrollTo({ top: 0, behavior: "instant" }); return; }
     setStage("opening");
@@ -68,6 +131,7 @@ export default function Invitation() {
 
   return <div className="invitation-shell">
     <aside className="desktop-artwork" aria-hidden="true" />
+    <MusicControl audio={audio} playing={playing} error={musicError} toggle={toggleMusic} onPlaying={() => setPlaying(true)} onPause={() => setPlaying(false)} onError={() => { setPlaying(false); setMusicError("Musik tidak dapat dimuat."); }} />
     <main className={`invitation stage-${stage}${motionPaused ? " motion-paused" : ""}`}>
     {stage !== "hero" && <section className="cover paper" aria-label="Sampul undangan">
       <div className="cover-border" aria-hidden="true" />
@@ -86,9 +150,10 @@ export default function Invitation() {
         <Monogram />
         <p className="eyebrow cover-eyebrow">YOU’RE INVITED TO THE WEDDING OF</p>
         <h1 className="cover-names">Rizal <em>&</em> Dewi</h1>
-        <div className="fine-ornament" aria-hidden="true"><img src="/artwork/ornament-review.webp" alt="" width={2172} height={724}/></div>
+        <div className="fine-ornament gold-divider" aria-hidden="true" />
         <p className="guest-greeting">Yth. <span>{guestName}</span></p>
-        <button className="open-button" onClick={openInvitation} disabled={stage === "opening"} aria-controls="invitation-hero">
+        {guestError && <p className="form-status" role="alert">{guestError}</p>}
+        <button className="open-button" onClick={openInvitation} disabled={!hydrated || stage === "opening"} aria-controls="invitation-hero">
           <span>{stage === "opening" ? "MEMBUKA UNDANGAN" : "BUKA UNDANGAN"}</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-5-5 5 5-5 5"/></svg>
         </button>
@@ -102,6 +167,8 @@ export default function Invitation() {
     <section id="invitation-hero" className="hero paper" aria-labelledby="hero-heading">
       <div className="hero-atmosphere" aria-hidden="true" />
       <div className="hero-landscape" aria-hidden="true"><img src="/artwork/lake-landscape-review.webp" width={900} height={1350} alt="" /></div>
+      <img className="hero-tree-branch hero-tree-left" src="/artwork/hero-tree-left-v1.png" width={1320} height={1192} alt="" aria-hidden="true" />
+      <img className="hero-tree-branch hero-tree-right" src="/artwork/hero-tree-right-v1.png" width={1254} height={1254} alt="" aria-hidden="true" />
       <div className="hero-layout">
         <figure className="couple-portrait">
           <img className="portrait-photo" src="/artwork/couple-user-upload.jpg" width={735} height={987} alt="Potret dua orang berdiri bersama dengan buket bunga" />
@@ -110,21 +177,25 @@ export default function Invitation() {
         <div className="hero-content">
           <p className="hero-kicker">THE WEDDING OF</p>
           <h1 id="hero-heading" ref={heading} tabIndex={-1}>Rizal<br/><em>&</em> Dewi</h1>
-          <div className="hero-details"><p className="wedding-date">14 November 2026</p><div className="hero-divider" aria-hidden="true"><img src="/artwork/ornament-review.webp" width={2172} height={724} alt="" /></div></div>
+          <div className="hero-details"><p className="wedding-date">14 November 2026</p><div className="hero-divider gold-divider" aria-hidden="true" /></div>
         </div>
       </div>
     </section>
     <div className="page-bridge" aria-hidden="true">
       <img className="page-bridge-garland" src="/artwork/page-transition-garland.png" width={2172} height={724} alt="" />
-      <img className="page-bridge-spray" src="/artwork/botanical-spray-review.png" width={1536} height={1024} alt="" />
     </div>
     <section className="couple-page" aria-labelledby="couple-heading">
       <div className="couple-page-background" aria-hidden="true" />
-      <header className="couple-page-header"><p>RIZAL & DEWI</p><h2 id="couple-heading">Mempelai</h2><img src="/artwork/ornament-review.webp" width={2172} height={724} alt="" aria-hidden="true" /></header>
+      <img className="couple-floating-branch couple-floating-branch-top" src="/artwork/rd-connecting-branch-v1.webp" width={640} height={960} alt="" aria-hidden="true" loading="lazy" />
+      <img className="couple-floating-branch couple-floating-branch-bottom" src="/artwork/rd-connecting-branch-v1.webp" width={640} height={960} alt="" aria-hidden="true" loading="lazy" />
+      <header className="couple-page-header"><h2 id="couple-heading">Mempelai</h2><span className="gold-divider" aria-hidden="true" /></header>
       <PersonProfile person="Dewi" image="/artwork/brides-user-upload.jpg" alt="Potret seorang wanita mengenakan gaun dan veil putih" />
       <PersonProfile person="Rizal" image="/artwork/bridesgroom-user-upload.jpg" alt="Potret seorang pria mengenakan setelan hitam" />
     </section>
-    <InvitationDetails />
+    <div className="page-bridge page-bridge-after-couple" aria-hidden="true">
+      <img className="page-bridge-garland" src="/artwork/page-transition-garland.png" width={2172} height={724} alt="" loading="lazy" />
+    </div>
+    <InvitationDetails identity={invitationId && invitationToken ? { invitationId, invitationToken } : null} initialAttendance={attendance} />
     </div>
     </main>
   </div>;

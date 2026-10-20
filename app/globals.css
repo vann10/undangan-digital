@@ -146,8 +146,6 @@
 /* A single branch crosses the paper-to-emerald page boundary. */
 .page-bridge{position:relative;z-index:8;height:0;pointer-events:none}
 .page-bridge-garland{position:absolute;width:100%;height:auto;left:0;top:-67px;filter:drop-shadow(0 5px 8px #0a292622)}
-.page-bridge-spray{position:absolute;width:245px;height:auto;right:-65px;top:-125px;transform:rotate(-20deg);filter:drop-shadow(0 5px 8px #0a292622);animation:bridge-botanical-rise 5s ease-in-out infinite alternate}
-@keyframes bridge-botanical-rise{from{translate:0 0}to{translate:0 -16px}}
 .couple-page{position:relative;z-index:5;min-height:100svh;padding:78px 32px 90px;background:radial-gradient(circle at 50% 0%,#205454 0%,var(--emerald) 46%,#103638 100%);color:var(--ivory);overflow:visible;isolation:isolate}
 .couple-page-background{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .couple-page-background:before,.couple-page-background:after{content:"";position:absolute;left:0;width:100%;height:44%;background-image:url('/artwork/page-two-botanical-background.png');background-size:100% 100%;background-repeat:no-repeat}
@@ -173,9 +171,8 @@
 .person-rule{height:1px;width:65px;margin:20px auto;background:#c9ad79}
 .person-bio,.person-social{font:16px/1.35 var(--display);margin:0 0 13px;color:#f3eadd}
 .person-social{font-family:var(--sans);font-size:11px;letter-spacing:.04em;color:#e2d7c6}
-@media(max-width:360px){.hero{padding-top:21px;padding-bottom:106px}.hero .hero-layout{gap:14px}.hero-landscape{height:180px}.hero-landscape img{bottom:-75px}.portrait-ornament{width:105px;right:-30px;bottom:-45px}.couple-page{padding-inline:24px}.page-bridge-spray{width:205px;top:-105px}}
-@media(max-height:680px){.hero{padding-top:18px;padding-bottom:100px}.hero .hero-content h1{font-size:48px;margin:7px 0 10px}.hero .wedding-date{font-size:22px}.hero-divider{height:22px;margin-top:2px}.hero-kicker{margin-top:7px}.hero-landscape{height:155px}.hero-landscape img{bottom:-88px}.portrait-ornament{width:105px;right:-29px;bottom:-37px}.page-bridge-spray{top:-105px}}
-@media(prefers-reduced-motion:reduce){.page-bridge-spray{animation:none}}
+@media(max-width:360px){.hero{padding-top:21px;padding-bottom:106px}.hero .hero-layout{gap:14px}.hero-landscape{height:180px}.hero-landscape img{bottom:-75px}.portrait-ornament{width:105px;right:-30px;bottom:-45px}.couple-page{padding-inline:24px}}
+@media(max-height:680px){.hero{padding-top:18px;padding-bottom:100px}.hero .hero-content h1{font-size:48px;margin:7px 0 10px}.hero .wedding-date{font-size:22px}.hero-divider{height:22px;margin-top:2px}.hero-kicker{margin-top:7px}.hero-landscape{height:155px}.hero-landscape img{bottom:-88px}.portrait-ornament{width:105px;right:-29px;bottom:-37px}}
 
 /* The following pages retain the invitation's paper, emerald and engraved details. */
 html{scroll-behavior:smooth}
@@ -188,7 +185,14 @@ html{scroll-behavior:smooth}
 .countdown-section:before,.rsvp-section:before,.gift-section:before{content:"";position:absolute;inset:0;pointer-events:none;background:url('/artwork/page-two-botanical-background.png') center top/100% auto no-repeat;opacity:.11;mask-image:linear-gradient(#000,transparent 62%)}
 .countdown-grid{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-width:370px;margin:35px auto 0}
 .countdown-unit{min-width:0;padding:16px 2px 13px;border:1px solid #b79a6880;background:#faf7f1d9;color:var(--emerald)}
-.countdown-unit span{display:block;font:400 clamp(27px,8cqw,43px)/1 var(--display);font-variant-numeric:tabular-nums}
+.countdown-number{position:relative;display:flex;align-items:center;justify-content:center;min-height:1em;font:400 clamp(27px,8cqw,43px)/1 var(--display);font-variant-numeric:tabular-nums}
+.odometer-digit{display:inline-block;position:relative;height:1em;line-height:1;overflow:hidden;font:inherit;font-variant-numeric:tabular-nums}
+.odometer-strip{display:block;animation:odometer-roll 620ms cubic-bezier(.2,.7,.18,1) both}
+.odometer-strip>span{display:block;height:1em;line-height:1;overflow:hidden}
+@keyframes odometer-roll{from{transform:translateY(calc(var(--odometer-from) * -1em))}to{transform:translateY(calc(var(--odometer-to) * -1em))}}
+.countdown-intro{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:0;background:#faf7f1;color:var(--emerald)}
+.countdown-intro-digit{display:inline-block;animation:odometer-random-step 10ms linear both}
+@keyframes odometer-random-step{from{transform:translateY(-.45em);opacity:.45}to{transform:translateY(0);opacity:1}}
 .countdown-unit small{display:block;margin-top:8px;font-size:9px;letter-spacing:.05em}
 .pending-note{position:relative;max-width:320px;margin:21px auto 0;font-size:12px;line-height:1.6;color:var(--secondary)}
 .event-section,.wishes-section{background:var(--emerald);color:var(--ivory)}
@@ -227,6 +231,14 @@ html{scroll-behavior:smooth}
 .form-status{margin:-7px 0 0;min-height:20px;font-size:12px;line-height:1.5;color:var(--emerald)}
 .honeypot{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
 .wishes-section{padding-top:80px;min-height:330px}
+.gallery-section{position:relative;padding:84px 22px 88px;overflow:hidden;text-align:center;background:var(--ivory)}
+.gallery-section:before{content:"";position:absolute;inset:0;pointer-events:none;background:url('/artwork/page-two-botanical-background.png') center top/100% auto no-repeat;opacity:.1;mask-image:linear-gradient(#000,transparent 70%)}
+.gallery-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:13px;max-width:370px;margin:32px auto 0}
+.gallery-photo{min-width:0;margin:0;padding:5px;border:1px solid #b79a6880;background:#fffdf8;box-shadow:0 10px 25px #10363817}
+.gallery-photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 24%;filter:saturate(.8)}
+.gallery-photo-1{grid-column:1 / -1;aspect-ratio:1.32}
+.gallery-photo-1 img{object-position:center 39%}
+.gallery-photo-2,.gallery-photo-3{aspect-ratio:.72}
 .wishes-list{position:relative;display:grid;gap:15px;max-width:360px;margin:0 auto}
 .wish-card{margin:0;padding:23px 23px 20px;border:1px solid #d2b98787;background:#0c38388a;text-align:left}
 .wish-card p{margin:0 0 14px;font:italic 23px/1.15 var(--display);overflow-wrap:anywhere}
@@ -246,4 +258,39 @@ html{scroll-behavior:smooth}
 .closing-section h2 em{font-size:.65em}
 .closing-section span{font-size:10px;letter-spacing:.16em;color:#e8dcc8}
 @media(max-width:360px){.countdown-section,.event-section,.venue-section,.rsvp-section,.wishes-section,.gift-section,.closing-section{padding-left:23px;padding-right:23px}.event-list>div{grid-template-columns:41% 59%}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.odometer-strip{animation:none;transform:translateY(calc(var(--odometer-to) * -1em))}.countdown-intro-digit{animation:none}}
+
+/* Updated botanical placement and CSS-only gold separators. */
+.gold-divider{display:block;position:relative;width:115px;height:21px;margin-inline:auto;background:linear-gradient(90deg,transparent,#b79a68 22%,#b79a68 100%) left center/44% 1px no-repeat,linear-gradient(270deg,transparent,#b79a68 22%,#b79a68 100%) right center/44% 1px no-repeat}
+.gold-divider:after{content:"";position:absolute;width:7px;height:7px;left:50%;top:50%;border:1px solid var(--champagne);transform:translate(-50%,-50%) rotate(45deg)}
+.fine-ornament.gold-divider{height:25px}
+.hero-divider.gold-divider{width:114px;height:22px}
+.section-ornament.gold-divider{width:112px;height:25px;margin:9px auto 0}
+.couple-page-header .gold-divider{margin:11px auto 0}
+.hero-tree-branch{position:absolute;z-index:9;width:310px;height:auto;pointer-events:none;opacity:.9;filter:drop-shadow(0 5px 9px #092d2d33);animation:hero-branch-float 3.8s ease-in-out infinite alternate;will-change:translate}
+.hero-tree-left{left:-70px;top:-110px}
+.hero-tree-right{right:-100px;top:-55px;animation-delay:-1.9s}
+@keyframes hero-branch-float{from{translate:0 -6px}to{translate:0 12px}}
+.couple-floating-branch{position:absolute;z-index:1;width:132px;height:auto;pointer-events:none;opacity:.58;animation:couple-branch-float 4.6s ease-in-out infinite alternate;will-change:translate}
+.couple-floating-branch-top{top:270px;right:-70px;transform:scaleX(-1) rotate(-12deg)}
+.couple-floating-branch-bottom{top:850px;left:-75px;transform:rotate(-14deg);animation-delay:-2.3s}
+@keyframes couple-branch-float{from{translate:0 -8px}to{translate:0 11px}}
+.music-control{position:fixed;z-index:40;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));display:grid;place-items:center;width:52px;height:52px;padding:0;border:1px solid #d7bb87;border-radius:50%;background:var(--emerald);color:var(--ivory);box-shadow:0 0 0 3px #174a4acc,0 5px 18px #092d2d55;cursor:pointer;transition:transform .2s,background .2s}
+.music-control:hover{background:#235b5b;transform:translateY(-2px)}
+.music-control svg{width:21px;height:21px;fill:currentColor}
+.music-control:focus-visible{outline:2px solid var(--champagne);outline-offset:6px}
+.music-error{position:fixed;z-index:40;right:18px;bottom:82px;max-width:190px;padding:8px 10px;background:var(--ivory);color:var(--emerald);font-size:11px;box-shadow:0 2px 12px #092d2d33}
+.music-error:empty{display:none}
+.music-credit{position:relative;display:block;margin-top:37px;color:#d5cbb9;font:10px/1.5 var(--sans)}
+.music-credit a{color:inherit;text-underline-offset:3px}
+.motion-paused .hero-tree-branch,.motion-paused .couple-floating-branch{animation-play-state:paused}
+@media(max-width:360px){.hero-tree-branch{width:275px}.hero-tree-left{left:-62px;top:-98px}.hero-tree-right{right:-88px;top:-48px}.couple-floating-branch{width:112px}}
+@media(prefers-reduced-motion:reduce){.hero-tree-branch,.couple-floating-branch{animation:none}.music-control:hover{transform:none}}
+
+/* Venue keeps its illustrated blueprint behind the overlapping address card. */
+.venue-section{background:#f2eee3}
+.venue-section{min-height:620px}
+.venue-section:before{content:none}
+.venue-architecture{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center center;pointer-events:none}
+.venue-panel{z-index:1;margin-top:120px;background:#faf7f1f2;box-shadow:0 13px 32px #173d3d26;backdrop-filter:blur(2px)}
+@media(max-width:360px){.venue-panel{margin-top:115px}}

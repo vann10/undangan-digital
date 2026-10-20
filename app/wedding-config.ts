@@ -7,8 +7,8 @@ export const wedding = {
   groomFather: null as string | null,
   groomMother: null as string | null,
   date: "2026-11-14",
-  time: null as string | null, // 24-hour local time, for example "10:00"
-  timeZone: null as string | null, // IANA zone, for example "Asia/Jakarta"
+  time: "09:00" as string | null, // 24-hour local time
+  timeZone: "Asia/Jakarta" as string | null, // Confirmed WIB
   venueName: null as string | null,
   venueAddress: null as string | null,
   mapsUrl: null as string | null, // Exact Google Maps place URL

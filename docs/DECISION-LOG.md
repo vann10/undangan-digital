@@ -1,5 +1,9 @@
 # Decision Log — Rizal & Dewi Digital Invitation
 
+## 2026-10-20 — Backend choice
+
+The owner selected Google Sheets + Apps Script as primary storage, individual tokenized invitation links, final first RSVP per person, and immediate publication of one wish per person. This supersedes the earlier Supabase backend row below. See `BACKEND-GOOGLE-SHEETS.md` for the implementation contract and remaining live setup.
+
 Record decisions with dates and evidence. Do not use this file to duplicate the whole spec.
 
 ## Status vocabulary

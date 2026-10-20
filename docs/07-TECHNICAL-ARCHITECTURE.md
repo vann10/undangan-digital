@@ -1,5 +1,7 @@
 # Technical Architecture — Rizal & Dewi Digital Invitation
 
+> **Current backend decision (20 October 2026):** The owner selected Google Sheets + Apps Script as primary storage, individual invitation links, final first RSVP, and immediate wish publication. The Supabase references below describe the earlier plan. Current implementation and operating rules are in [BACKEND-GOOGLE-SHEETS.md](BACKEND-GOOGLE-SHEETS.md).
+
 **Status:** Product decisions locked; implementation details pending  
 **Purpose:** Align technical planning with confirmed project decisions without implying the backend has been implemented.
 
