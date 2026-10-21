@@ -2,7 +2,7 @@
  * Private Google Sheets backend. Deploy as a web app (execute as owner).
  * Script properties: SPREADSHEET_ID and RSVP_API_TOKEN.
  */
-const GUEST_HEADERS = ['Invitation ID', 'Full name', 'Token SHA-256', 'Active'];
+const GUEST_HEADERS = ['Invitation ID', 'Full name', 'Guest code', 'Active'];
 const RSVP_HEADERS = ['Invitation ID', 'Submitted at (UTC)', 'Attendance'];
 const WISH_HEADERS = ['Wish ID', 'Invitation ID', 'Submitted at (UTC)', 'Full name', 'Message'];
 
@@ -43,18 +43,30 @@ function rows_(sheet, width) {
   return last < 2 ? [] : sheet.getRange(2, 1, last - 1, width).getValues();
 }
 
-function hash_(token) {
-  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, token, Utilities.Charset.UTF_8)
-    .map(byte => ('0' + (byte & 255).toString(16)).slice(-2)).join('');
+function allowAttempt_(clientKey, id, valid) {
+  const client = typeof clientKey === 'string' && /^[a-f0-9]{24}$/.test(clientKey) ? clientKey : 'direct';
+  const cache = CacheService.getScriptCache();
+  const guestKey = `failed:${client}:${id}`;
+  const allKey = `failed:${client}:all`;
+  const guestFailures = Number(cache.get(guestKey) || 0);
+  const allFailures = Number(cache.get(allKey) || 0);
+  if (guestFailures >= 5 || allFailures >= 25) return false;
+  if (!valid) {
+    cache.put(guestKey, String(guestFailures + 1), 900);
+    cache.put(allKey, String(allFailures + 1), 900);
+  }
+  return true;
 }
 
-function guest_(book, id, token) {
+function guest_(book, id, token, clientKey) {
   if (typeof id !== 'string' || !/^[1-9]\d{0,9}$/.test(id)
-    || typeof token !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(token)) return null;
-  const digest = hash_(token);
+    || typeof token !== 'string' || !/^\d{4}$/.test(token)) return null;
   const matches = rows_(sheet_(book, 'Guests', GUEST_HEADERS), 4).filter(row => String(row[0]) === id);
-  if (matches.length !== 1 || String(matches[0][2]).toLowerCase() !== digest
-    || String(matches[0][3]).toLowerCase() !== 'true') return null;
+  const storedCode = matches.length === 1 ? String(matches[0][2]).trim() : '';
+  const valid = matches.length === 1 && /^\d{1,4}$/.test(storedCode) && storedCode.padStart(4, '0') === token
+    && String(matches[0][3]).toLowerCase() === 'true';
+  if (!allowAttempt_(clientKey, id, valid)) return { limited: true };
+  if (!valid) return null;
   const name = String(matches[0][1]).trim();
   return name.length >= 2 && name.length <= 100 ? { id, name } : null;
 }
@@ -96,7 +108,8 @@ function doPost(e) {
     const data = JSON.parse(e.postData.contents);
     if (data.serviceToken !== settings.token) return output_({ ok: false, code: 'unauthorized' });
     const book = SpreadsheetApp.openById(settings.id);
-    const guest = guest_(book, data.invitationId, data.invitationToken);
+    const guest = guest_(book, data.invitationId, data.invitationToken, data.clientKey);
+    if (guest && guest.limited) return output_({ ok: false, code: 'too_many_attempts' });
     if (!guest) return output_({ ok: false, code: 'invalid_invitation' });
     if (data.action === 'guest') {
       const existing = rows_(sheet_(book, 'RSVP', RSVP_HEADERS), 3).find(row => String(row[0]) === guest.id);
@@ -105,7 +118,9 @@ function doPost(e) {
     if (data.action !== 'rsvp' && data.action !== 'wish') return output_({ ok: false, code: 'invalid_request' });
     lock = LockService.getScriptLock();
     lock.waitLock(20000);
-    if (!guest_(book, data.invitationId, data.invitationToken)) return output_({ ok: false, code: 'invalid_invitation' });
+    const currentGuest = guest_(book, data.invitationId, data.invitationToken, data.clientKey);
+    if (currentGuest && currentGuest.limited) return output_({ ok: false, code: 'too_many_attempts' });
+    if (!currentGuest) return output_({ ok: false, code: 'invalid_invitation' });
     if (data.action === 'rsvp') {
       if (!['attending', 'not_attending'].includes(data.attendance)) return output_({ ok: false, code: 'invalid_request' });
       const sheet = sheet_(book, 'RSVP', RSVP_HEADERS);

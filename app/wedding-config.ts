@@ -1,30 +1,45 @@
-/** Edit these confirmed details before publishing. Leave unknown values null. */
+/** Details confirmed by the couple. Leave unknown values null. */
 export const wedding = {
   groom: "Rizal",
   bride: "Dewi",
-  groomFullName: null as string | null,
-  brideFullName: null as string | null,
-  groomFather: null as string | null,
-  groomMother: null as string | null,
-  date: "2026-11-14",
-  time: "09:00" as string | null, // 24-hour local time
-  timeZone: "Asia/Jakarta" as string | null, // Confirmed WIB
-  venueName: null as string | null,
-  venueAddress: null as string | null,
-  mapsUrl: null as string | null, // Exact Google Maps place URL
-  bankName: null as string | null,
-  bankAccountName: null as string | null,
-  bankAccountNumber: null as string | null,
-  giftDeliveryAddress: null as string | null,
+  groomFullName: "Rizal Nur Ikhsani",
+  brideFullName: "Dewi Nur Alizzah",
+  groomFather: "Rohmad",
+  groomMother: "Yuni Isnindarwati",
+  brideParents: "Mohammad Bahrodin & Mariatul Qibtiyah",
+  // Konten opsional untuk diaktifkan setelah datanya diberikan:
+  // groomBio: "",
+  // brideBio: "",
+  // groomSocialUrl: "",
+  // brideSocialUrl: "",
+  // ourStory: "",
+  // eventType: "",
+  date: "2026-11-28",
+  time: "10:00", // 24-hour local time
+  endTime: "13:00",
+  timeZone: "Asia/Jakarta", // WIB
+  venueName: "Rumah",
+  venueAddress: "Jl Manyar gg Bimo, RT 06/RW 02, Beran 1, Beran, Ngawi",
+  mapsUrl: "https://maps.app.goo.gl/rrxyNSaMfoAMDv3v5" as string | null,
+  bankName: "BRI",
+  bankAccountName: "RIZAL NUR IKHSANI",
+  bankAccountNumber: "009001079530506",
+  giftDeliveryAddress: "RIZAL NUR IKHSANI, Jl Manyar gg Bimo, RT 06/RW 02, Beran 1, Beran, Ngawi",
 };
 
-export const displayValue = (value: string | null) => value?.trim() || "XXX";
+export const dateLabel = new Intl.DateTimeFormat("id-ID", {
+  day: "numeric", month: "long", year: "numeric", timeZone: "UTC",
+}).format(new Date(`${wedding.date}T00:00:00Z`));
 
-export function eventDate() {
-  if (!wedding.time || !wedding.timeZone) return null;
-  // The confirmed date is kept independent of the still-pending event time.
+export const fullDateLabel = new Intl.DateTimeFormat("id-ID", {
+  weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC",
+}).format(new Date(`${wedding.date}T00:00:00Z`));
+
+export const timeLabel = `${wedding.time.replace(":", ".")}–${wedding.endTime.replace(":", ".")} WIB`;
+
+function eventTime(time: string) {
   const [year, month, day] = wedding.date.split("-").map(Number);
-  const [hour, minute] = wedding.time.split(":").map(Number);
+  const [hour, minute] = time.split(":").map(Number);
   if (![year, month, day, hour, minute].every(Number.isFinite)) return null;
   const localeDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -37,10 +52,12 @@ export function eventDate() {
   return new Date(localeDate.getTime() + desired - actual);
 }
 
+export function eventDate() { return eventTime(wedding.time); }
+
 export function calendarUrl() {
   const start = eventDate();
-  if (!start || !wedding.venueAddress || !wedding.venueName || !wedding.timeZone) return null;
-  const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+  const end = eventTime(wedding.endTime);
+  if (!start || !end || end <= start || !wedding.venueAddress || !wedding.venueName) return null;
   const stamp = (date: Date) => date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
   const params = new URLSearchParams({
     action: "TEMPLATE",

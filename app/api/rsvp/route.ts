@@ -9,8 +9,9 @@ export async function POST(request: Request) {
   if (!identity || !["attending", "not_attending"].includes(String(body?.attendance)))
     return error("Pilih konfirmasi kehadiran yang valid.", 400);
   try {
-    const result = await callSheets("rsvp", { ...identity, attendance: body!.attendance });
+    const result = await callSheets("rsvp", { ...identity, attendance: body!.attendance }, request);
     if (!result) return error("RSVP belum tersedia.", 503);
+    if (result.code === "too_many_attempts") return error("Terlalu banyak percobaan. Coba lagi dalam 15 menit.", 429);
     if (result.code === "invalid_invitation") return error("Tautan undangan tidak valid atau tidak aktif.", 404);
     if (result.code === "invalid_request") return error("Pilih konfirmasi kehadiran yang valid.", 400);
     if (result.code === "already_submitted") return NextResponse.json({ error: "Konfirmasi kehadiran sudah tercatat dan bersifat final.", attendance: result.attendance }, { status: 409, headers: { "Cache-Control": "no-store" } });

@@ -5,10 +5,11 @@ import "@fontsource/cormorant-garamond/500.css";
 import "@fontsource/dm-sans/400.css";
 import "@fontsource/dm-sans/500.css";
 import "./globals.css";
+import { dateLabel } from "./wedding-config";
 
 export const metadata: Metadata = {
   title: "Undangan Pernikahan Rizal & Dewi",
-  description: "Undangan pernikahan Rizal & Dewi, 14 November 2026.",
+  description: `Undangan pernikahan Rizal & Dewi, ${dateLabel}.`,
   robots: { index: false, follow: false },
 };
 

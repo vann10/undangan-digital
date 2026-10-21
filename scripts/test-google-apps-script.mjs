@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
 const sheets = new Map();
+const cache = new Map();
 function makeSheet() {
   const rows = [];
   return {
@@ -28,22 +28,21 @@ const context = vm.createContext({
   PropertiesService: { getScriptProperties: () => ({ getProperty: key => ({ SPREADSHEET_ID: 'test-sheet', RSVP_API_TOKEN: 'test-service-secret' })[key] }) },
   SpreadsheetApp: { openById: id => { assert.equal(id, 'test-sheet'); return book; }, flush: () => {} },
   LockService: { getScriptLock: () => ({ waitLock: () => { locked = true; }, hasLock: () => locked, releaseLock: () => { locked = false; } }) },
-  Utilities: {
-    DigestAlgorithm: { SHA_256: 'sha256' }, Charset: { UTF_8: 'utf8' },
-    computeDigest: (_, value) => [...createHash('sha256').update(value).digest()].map(byte => byte > 127 ? byte - 256 : byte),
-  },
+  CacheService: { getScriptCache: () => ({ get: key => cache.get(key) ?? null, put: (key, value) => cache.set(key, value), remove: key => cache.delete(key) }) },
 });
 vm.runInContext(readFileSync('google-apps-script/Code.gs', 'utf8'), context);
 const result = output => JSON.parse(output.value);
-const token = 'a'.repeat(43);
+const token = '0042';
 const identity = { invitationId: '1', invitationToken: token };
 const post = data => result(context.doPost({ postData: { contents: JSON.stringify({ serviceToken: 'test-service-secret', ...data }) } }));
 
 context.setupSheet();
 assert.deepEqual([...sheets.keys()], ['Guests', 'RSVP', 'Wishes']);
-sheets.get('Guests').appendRow(['1', 'Ade Fitriyani', createHash('sha256').update(token).digest('hex'), true]);
+sheets.get('Guests').appendRow(['1', 'Ade Fitriyani', '0042', true]);
+sheets.get('Guests').appendRow(['2', 'Tamu Kode Pendek', 88, true]);
 assert.equal(post({ action: 'guest', ...identity }).name, 'Ade Fitriyani');
-assert.equal(post({ action: 'guest', ...identity, invitationToken: 'b'.repeat(43) }).code, 'invalid_invitation');
+assert.equal(post({ action: 'guest', invitationId: '2', invitationToken: '0088' }).name, 'Tamu Kode Pendek');
+assert.equal(post({ action: 'guest', ...identity, invitationToken: '9999' }).code, 'invalid_invitation');
 assert.equal(post({ action: 'rsvp', ...identity, attendance: 'attending' }).ok, true);
 assert.equal(post({ action: 'rsvp', ...identity, attendance: 'not_attending' }).code, 'already_submitted');
 assert.equal(sheets.get('RSVP').rows.length, 2);
@@ -59,4 +58,8 @@ assert.equal(wishes.wishes[0].message, '=2+2');
 assert.equal(result(context.doGet({ parameter: { token: 'wrong' } })).code, 'unauthorized');
 sheets.get('Guests').rows[1][3] = false;
 assert.equal(post({ action: 'guest', ...identity }).code, 'invalid_invitation');
-console.log('Google Apps Script mock: PASS (identity, final RSVP, wishes, formula safety, revocation)');
+const clientKey = 'a'.repeat(24);
+for (let index = 0; index < 5; index++)
+  assert.equal(post({ action: 'guest', invitationId: '2', invitationToken: '9999', clientKey }).code, 'invalid_invitation');
+assert.equal(post({ action: 'guest', invitationId: '2', invitationToken: '0088', clientKey }).code, 'too_many_attempts');
+console.log('Google Apps Script mock: PASS (four-digit identity, final RSVP, wishes, rate limit, formula safety, revocation)');

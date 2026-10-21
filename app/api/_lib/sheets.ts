@@ -1,3 +1,4 @@
+import { createHmac } from "node:crypto";
 import { NextResponse } from "next/server";
 
 export type InvitationCredentials = { invitationId: string; invitationToken: string };
@@ -15,7 +16,7 @@ export function error(message: string, status: number) {
 
 export function credentials(body: Record<string, unknown>): InvitationCredentials | null {
   if (typeof body.invitationId !== "string" || !/^[1-9]\d{0,9}$/.test(body.invitationId)
-    || typeof body.invitationToken !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(body.invitationToken)) return null;
+    || typeof body.invitationToken !== "string" || !/^(?:[A-Za-z0-9_-]{43}|\d{4})$/.test(body.invitationToken)) return null;
   return { invitationId: body.invitationId, invitationToken: body.invitationToken };
 }
 
@@ -29,12 +30,15 @@ export async function payload(request: Request): Promise<Record<string, unknown>
   } catch { return null; }
 }
 
-export async function callSheets(action: string, body: Record<string, unknown>) {
+export async function callSheets(action: string, body: Record<string, unknown>, request: Request) {
   const config = settings();
   if (!config) return null;
+  const source = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    || request.headers.get("x-real-ip") || "unknown";
+  const clientKey = createHmac("sha256", config.token).update(source).digest("hex").slice(0, 24);
   const response = await fetch(config.url, {
     method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify({ ...body, action, serviceToken: config.token }),
+    body: JSON.stringify({ ...body, action, serviceToken: config.token, clientKey }),
     cache: "no-store", signal: AbortSignal.timeout(15000),
   });
   if (!response.ok) throw new Error(`Apps Script returned ${response.status}`);

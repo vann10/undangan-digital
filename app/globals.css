@@ -52,9 +52,10 @@
 .vine-side{position:absolute;top:0;bottom:0;width:38px;background:url('/artwork/edge-vine-review.webp') center top/114px 342px repeat-y}
 .vine-left{left:-9px}.vine-right{right:-9px;transform:scaleX(-1)}
 .vine-cross{position:absolute;left:0;right:0;height:34px;overflow:hidden}
-.vine-top{top:-6px}.vine-bottom{bottom:-6px}
+.vine-top{top:calc(-10.35cqw - 10px);height:33.333cqw}.vine-bottom{bottom:-6px}
 .vine-cross img{position:absolute;left:50%;top:50%;width:150px;height:450px;object-fit:contain;transform:translate(-50%,-50%) rotate(90deg)}
-@media(max-height:680px){.vine-side{width:29px;background-size:96px 288px}.vine-left{left:-8px}.vine-right{right:-8px}.vine-cross{height:26px}.cover-sky{height:32%}}
+.vine-top img{width:33.333cqw;height:100cqw;transform:translate(-50%,-50%) scaleY(-1) rotate(90deg)}
+@media(max-height:680px){.vine-side{width:29px;background-size:96px 288px}.vine-left{left:-8px}.vine-right{right:-8px}.vine-bottom{height:26px}.cover-sky{height:32%}}
 /* Nature cover: independent scenery, wind-swept framing and articulated wings. */
 .cover-landscape{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .cover-landscape img{position:absolute;bottom:0;width:100%;height:70%;object-fit:cover;object-position:bottom}
@@ -92,14 +93,11 @@
 .cover-botanical-left,.cover-top-spray,.animated-sprig{animation:decorative-sway 10s ease-in-out infinite alternate;transform-origin:bottom center}
 .cover-top-spray{animation-duration:14s}.animated-sprig{animation-duration:8s}
 .cover .monogram img,.cover-corner img,.fine-ornament img{animation:ornament-breathe 12s ease-in-out infinite alternate}
-.motion-toggle{display:block;margin:12px auto 0;padding:8px 12px;min-height:32px;background:var(--ivory);border:0;color:var(--emerald);font-size:10px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-.motion-paused .cover *{animation-play-state:paused!important}
 @keyframes decorative-sway{from{rotate:-1.5deg;translate:0 0}to{rotate:1.5deg;translate:0 -3px}}
 @keyframes butterfly-drift{0%,100%{transform:translate(0,0) rotate(-8deg)}50%{transform:translate(-6px,-9px) rotate(4deg)}}
 @keyframes ornament-breathe{from{scale:1}to{scale:1.018}}
 @keyframes background-drift{from{transform:translateY(0)}to{transform:translateY(-10px)}}
-@media(max-height:680px){.cover-top-spray{width:120px;left:-50px;top:65px}.cover-butterfly{top:18%;right:15px;width:35px}.motion-toggle{margin-top:6px;padding:6px 10px}.cover-eyebrow{font-size:8px}}
-@media(prefers-reduced-motion:reduce){.motion-toggle{display:none}}
+@media(max-height:680px){.cover-top-spray{width:120px;left:-50px;top:65px}.cover-butterfly{top:18%;right:15px;width:35px}.cover-eyebrow{font-size:8px}}
 /* Border-rooted botanical composition; central invitation remains clear. */
 .cover .cover-top-spray{width:260px;left:-62px;top:-68px;transform:scaleX(-1);transform-origin:left top;animation:wind-botanical 4.2s ease-in-out infinite alternate}
 .cover .cover-top-right{width:260px;right:-62px;top:-68px;transform:none;transform-origin:right top}
@@ -250,6 +248,27 @@ html{scroll-behavior:smooth}
 .gift-card p,.gift-card address{font-size:12px;font-style:normal;line-height:1.6;margin:5px 0;color:var(--ink)}
 .gift-card strong{display:block;font:400 30px var(--display);letter-spacing:.04em;color:var(--emerald);overflow-wrap:anywhere}
 .gift-card button{border:0;border-bottom:1px solid var(--emerald);padding:4px 0;margin-top:10px;background:none;color:var(--emerald);font-size:11px;cursor:pointer}
+.bank-transfer-card{padding-bottom:20px}
+.bank-transfer-card button{margin-top:18px}
+.bri-debit-card{position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:space-between;aspect-ratio:1.586;padding:17px 20px 16px;overflow:hidden;border-radius:15px;color:#fff;background:linear-gradient(119deg,#005aab 0%,#006fc3 44%,#00498d 100%);box-shadow:0 11px 22px #003a6936,inset 0 0 0 1px #ffffff40;text-align:left}
+.bri-debit-card:before{content:"";position:absolute;z-index:-1;width:140%;height:85%;right:-48%;top:20%;border:20px solid #fa9129;border-radius:50%;transform:rotate(-26deg);opacity:.93}
+.bri-debit-card:after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(125deg,#ffffff15 0 32%,transparent 32% 100%),radial-gradient(circle at 90% 84%,#002f694d,transparent 45%)}
+.bri-card-top,.bri-card-middle{display:flex;align-items:center;justify-content:space-between}
+.bri-card-top{align-items:flex-start}
+.bri-brand{font:italic 900 31px/.95 Arial,sans-serif;letter-spacing:-.08em;text-shadow:0 1px 2px #003d76aa}
+.bri-card-type{font:700 10px/1.1 Arial,sans-serif;letter-spacing:.19em;margin-top:4px}
+.bri-card-middle{margin-top:3px}
+.bri-chip{position:relative;display:block;width:37px;height:29px;border:1px solid #e9dcad;border-radius:5px;background:linear-gradient(135deg,#e9d8a0,#bea565 46%,#f4e7b8 76%,#bda46e);box-shadow:0 1px 3px #013b6980}
+.bri-chip:before,.bri-chip:after,.bri-chip span:before,.bri-chip span:after{content:"";position:absolute;border-color:#937e51aa}
+.bri-chip:before{inset:0 11px;border-left:1px solid #937e51aa;border-right:1px solid #937e51aa}
+.bri-chip:after{left:0;right:0;top:50%;border-top:1px solid #937e51aa}
+.bri-chip span:before{left:11px;right:11px;top:6px;bottom:6px;border:1px solid #937e51aa;border-radius:4px}
+.bri-chip span:after{left:0;right:0;top:7px;border-top:1px solid #937e51aa}
+.bri-contactless{width:25px;height:25px;margin-right:4px;stroke:#fff;stroke-width:1.8;stroke-linecap:round;transform:rotate(180deg);opacity:.9}
+.bri-card-details{position:relative;display:flex;flex-direction:column;gap:4px}
+.bri-card-details>span{font:600 8px/1.2 Arial,sans-serif;letter-spacing:.18em;opacity:.82}
+.gift-card .bri-card-details strong{font:600 clamp(18px,5.2cqw,22px)/1.1 Arial,sans-serif;letter-spacing:.045em;color:#fff;overflow-wrap:normal;white-space:nowrap;text-shadow:0 1px 2px #003b7077}
+.gift-card .bri-card-details p{margin:5px 0 0;color:#fff;font:600 10px/1.2 Arial,sans-serif;letter-spacing:.11em;text-transform:uppercase}
 .closing-section{min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 10%,#215657,var(--emerald) 60%,#103638);color:var(--ivory)}
 .closing-section:before{content:"";position:absolute;inset:12px;border:1px solid #b79a686e;pointer-events:none}
 .closing-section .section-ornament{width:140px;height:48px}
@@ -281,9 +300,6 @@ html{scroll-behavior:smooth}
 .music-control:focus-visible{outline:2px solid var(--champagne);outline-offset:6px}
 .music-error{position:fixed;z-index:40;right:18px;bottom:82px;max-width:190px;padding:8px 10px;background:var(--ivory);color:var(--emerald);font-size:11px;box-shadow:0 2px 12px #092d2d33}
 .music-error:empty{display:none}
-.music-credit{position:relative;display:block;margin-top:37px;color:#d5cbb9;font:10px/1.5 var(--sans)}
-.music-credit a{color:inherit;text-underline-offset:3px}
-.motion-paused .hero-tree-branch,.motion-paused .couple-floating-branch{animation-play-state:paused}
 @media(max-width:360px){.hero-tree-branch{width:275px}.hero-tree-left{left:-62px;top:-98px}.hero-tree-right{right:-88px;top:-48px}.couple-floating-branch{width:112px}}
 @media(prefers-reduced-motion:reduce){.hero-tree-branch,.couple-floating-branch{animation:none}.music-control:hover{transform:none}}
 
@@ -294,3 +310,28 @@ html{scroll-behavior:smooth}
 .venue-architecture{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center center;pointer-events:none}
 .venue-panel{z-index:1;margin-top:120px;background:#faf7f1f2;box-shadow:0 13px 32px #173d3d26;backdrop-filter:blur(2px)}
 @media(max-width:360px){.venue-panel{margin-top:115px}}
+
+/* A botanical interlude while the invitation's images, fonts and music are prepared. */
+.loading-screen{position:fixed;inset:0;z-index:100;display:grid;place-items:center;overflow:hidden;padding:28px;background:radial-gradient(circle at 50% 42%,#245455 0,#174a4a 38%,#103737 100%);color:var(--ivory);text-align:center;transition:opacity .65s ease,visibility .65s ease}
+.loading-screen:before,.loading-screen:after{content:"";position:absolute;pointer-events:none;border:1px solid #c9aa7633;border-radius:50%;width:min(85vw,530px);aspect-ratio:1}
+.loading-screen:before{transform:scale(1.45);opacity:.45}
+.loading-screen:after{transform:scale(.98);opacity:.65}
+.loading-screen-ready{opacity:0;visibility:hidden}
+.loading-screen-frame{position:absolute;inset:17px;border:1px solid #c9aa7666;pointer-events:none}
+.loading-screen-frame:before,.loading-screen-frame:after{content:"";position:absolute;left:50%;width:42px;height:9px;transform:translateX(-50%);background:var(--emerald);border-left:1px solid #c9aa7666;border-right:1px solid #c9aa7666}
+.loading-screen-frame:before{top:-5px}.loading-screen-frame:after{bottom:-5px}
+.loading-screen-inner{position:relative;z-index:1;width:min(100%,270px);display:flex;flex-direction:column;align-items:center}
+.loading-bloom{position:relative;width:230px;height:230px;display:grid;place-items:center;margin-bottom:31px}
+.loading-bloom img{display:block;width:198px;height:198px;object-fit:contain;filter:drop-shadow(0 2px 6px #0a292944);animation:loading-flower-rotate 14s linear infinite}
+.loading-bloom-orbit{position:absolute;inset:0;border:1px solid #d6ba883b;border-radius:50%}
+.loading-screen h2{margin:0 0 29px;color:var(--ivory);font:400 clamp(38px,10vw,52px)/.98 var(--display)}
+.loading-progress{width:100%;height:2px;background:#c9aa7659;overflow:hidden}
+.loading-progress>span{display:block;height:100%;background:#e4c998;transition:width .35s ease;box-shadow:0 0 13px #e4c998}
+.loading-status{min-height:20px;margin:13px 0 0;color:#e1d5c3;font:11px/1.5 var(--sans);letter-spacing:.05em}
+.loading-actions{display:flex;gap:10px;margin-top:19px}
+.loading-actions button{padding:10px 15px;border:1px solid #d3b784;background:transparent;color:var(--ivory);cursor:pointer;font-size:11px}
+.loading-actions button:hover{background:#ffffff16}
+.loading-actions button:focus-visible{outline:2px solid var(--ivory);outline-offset:3px}
+@keyframes loading-flower-rotate{to{transform:rotate(360deg)}}
+@media(max-height:640px){.loading-bloom{width:190px;height:190px;margin-bottom:18px}.loading-bloom img{width:166px;height:166px}.loading-screen h2{margin-bottom:20px}}
+@media(prefers-reduced-motion:reduce){.loading-bloom img{animation:none}.loading-screen,.loading-progress>span{transition:none}}

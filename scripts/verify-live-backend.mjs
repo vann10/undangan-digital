@@ -1,7 +1,11 @@
 import { readFileSync } from 'node:fs';
 
 const base = process.argv[2] || 'http://127.0.0.1:3020';
-const link = readFileSync('data/private/links.csv', 'utf8').match(/\/invite\/([1-9]\d*)#([A-Za-z0-9_-]{43})/);
+const migrated = process.argv.includes('--migrated');
+const linksFile = migrated ? 'data/private/links-4digit.csv' : 'data/private/links.csv';
+const link = readFileSync(linksFile, 'utf8').match(migrated
+  ? /\/invite\/([1-9]\d*)-(\d{4})/
+  : /\/invite\/([1-9]\d*)#([A-Za-z0-9_-]{43})/);
 if (!link) throw new Error('No private invitation link found');
 const body = { invitationId: link[1], invitationToken: link[2] };
 const post = async payload => {
@@ -11,7 +15,8 @@ const post = async payload => {
   return { status: response.status, data: await response.json() };
 };
 const valid = await post(body);
-const invalid = await post({ ...body, invitationToken: 'x'.repeat(43) });
+const invalidToken = migrated ? String((Number(link[2]) + 1) % 10000).padStart(4, '0') : 'x'.repeat(43);
+const invalid = await post({ ...body, invitationToken: invalidToken });
 const wishesResponse = await fetch(`${base}/api/wishes`);
 const wishes = await wishesResponse.json();
 const result = {

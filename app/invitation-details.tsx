@@ -1,13 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
-import { calendarUrl, displayValue, eventDate, wedding } from "./wedding-config";
+import { calendarUrl, dateLabel, eventDate, fullDateLabel, timeLabel, wedding } from "./wedding-config";
 
 type Wish = { id: string; name: string; message: string; createdAt: string };
 type Attendance = "attending" | "not_attending";
 type Identity = { invitationId: string; invitationToken: string };
-
-const dateLabel = "14 November 2026";
 
 function Ornament() {
   return <span className="section-ornament gold-divider" aria-hidden="true" />;
@@ -86,7 +84,7 @@ function Countdown() {
     return () => { window.clearInterval(interval); window.clearTimeout(timeout); };
   }, [active, reducedMotion, introVisible]);
   const values = counts?.map(String) ?? ["--", "--", "--", "--"];
-  const accessibleCountdown = counts ? `${counts[0]} hari, ${counts[1]} jam, ${counts[2]} menit, ${counts[3]} detik menuju ${dateLabel} pukul 09.00 WIB` : "Jam acara belum ditentukan";
+  const accessibleCountdown = counts ? `${counts[0]} hari, ${counts[1]} jam, ${counts[2]} menit, ${counts[3]} detik menuju ${dateLabel} pukul ${wedding.time.replace(":", ".")} WIB` : "Jam acara belum ditentukan";
   return <section className="countdown-section paper" aria-labelledby="countdown-heading">
     <SectionHeading eyebrow="MENUJU HARI BAHAGIA" title="Countdown" id="countdown-heading" />
     <div ref={grid} className="countdown-grid" role="timer" aria-label={accessibleCountdown}>
@@ -104,18 +102,19 @@ function EventDetails() {
     <SectionHeading eyebrow="INFORMASI PERNIKAHAN" title="The Wedding" id="event-heading" />
     <div className="event-rule" aria-hidden="true" />
     <dl className="event-list">
-      <div><dt>Mempelai pria</dt><dd>{displayValue(wedding.groomFullName)}</dd></div>
-      <div><dt>Mempelai wanita</dt><dd>{displayValue(wedding.brideFullName)}</dd></div>
-      <div><dt>Ayah mempelai pria</dt><dd>{displayValue(wedding.groomFather)}</dd></div>
-      <div><dt>Ibu mempelai pria</dt><dd>{displayValue(wedding.groomMother)}</dd></div>
-      <div><dt>Tanggal</dt><dd>{dateLabel}</dd></div>
-      <div><dt>Waktu</dt><dd>{displayValue(wedding.time)}{wedding.timeZone ? ` ${wedding.timeZone}` : ""}</dd></div>
-      <div><dt>Tempat</dt><dd>{displayValue(wedding.venueName)}</dd></div>
-      <div><dt>Alamat</dt><dd>{mapUrl && wedding.venueAddress ? <a className="address-link" href={mapUrl} target="_blank" rel="noopener noreferrer">{wedding.venueAddress}</a> : displayValue(wedding.venueAddress)}</dd></div>
+      <div><dt>Mempelai pria</dt><dd>{wedding.groomFullName}</dd></div>
+      <div><dt>Mempelai wanita</dt><dd>{wedding.brideFullName}</dd></div>
+      <div><dt>Ayah mempelai pria</dt><dd>{wedding.groomFather}</dd></div>
+      <div><dt>Ibu mempelai pria</dt><dd>{wedding.groomMother}</dd></div>
+      <div><dt>Orang tua mempelai wanita</dt><dd>{wedding.brideParents}</dd></div>
+      <div><dt>Tanggal</dt><dd>{fullDateLabel}</dd></div>
+      <div><dt>Waktu</dt><dd>{timeLabel}</dd></div>
+      <div><dt>Tempat</dt><dd>{wedding.venueName}</dd></div>
+      <div><dt>Alamat</dt><dd>{mapUrl ? <a className="address-link" href={mapUrl} target="_blank" rel="noopener noreferrer">{wedding.venueAddress}</a> : wedding.venueAddress}</dd></div>
     </dl>
     <div className="event-actions">
-      {saveUrl ? <a className="outline-link" href={saveUrl} target="_blank" rel="noopener noreferrer">Simpan ke Google Calendar</a> : <p className="pending-note">Tautan kalender tersedia setelah jam dan lokasi ditetapkan.</p>}
-      {mapUrl && wedding.venueAddress ? <a className="outline-link" href={mapUrl} target="_blank" rel="noopener noreferrer">Buka Google Maps</a> : <p className="pending-note">Peta lokasi tersedia setelah alamat ditetapkan.</p>}
+      {saveUrl && <a className="outline-link" href={saveUrl} target="_blank" rel="noopener noreferrer">Simpan ke Google Calendar</a>}
+      {mapUrl && <a className="outline-link" href={mapUrl} target="_blank" rel="noopener noreferrer">Buka Google Maps</a>}
     </div>
   </section>;
 }
@@ -126,8 +125,8 @@ function Venue() {
     <img className="venue-architecture" src="/artwork/section-venue-generated.webp" width={1024} height={1536} alt="" aria-hidden="true" loading="lazy" />
     <SectionHeading eyebrow="LOKASI ACARA" title="Venue" id="venue-heading" />
     <div className="venue-panel">
-      {wedding.venueAddress ? <p>{wedding.venueAddress}</p> : <p>Alamat lokasi: XXX</p>}
-      {mapUrl && wedding.venueAddress ? <a className="venue-link" href={mapUrl} target="_blank" rel="noopener noreferrer">Buka petunjuk arah di Google Maps</a> : <span className="pending-note">Petunjuk arah tersedia setelah lokasi ditetapkan.</span>}
+      <p>{wedding.venueAddress}</p>
+      {mapUrl && <a className="venue-link" href={mapUrl} target="_blank" rel="noopener noreferrer">Buka petunjuk arah di Google Maps</a>}
     </div>
   </section>;
 }
@@ -258,8 +257,19 @@ function Gifts() {
   }
   return <section className="gift-section paper" aria-labelledby="gift-heading">
     <SectionHeading eyebrow="TANDA KASIH" title="Wanna give us some gifts?" id="gift-heading" />
-    <div className="gift-card"><h3>Transfer bank</h3><p>{displayValue(wedding.bankName)}</p><strong>{displayValue(wedding.bankAccountNumber)}</strong><p>{displayValue(wedding.bankAccountName)}</p>{wedding.bankAccountNumber && <button type="button" onClick={copyAccount}>{copied ? "Tersalin" : "Salin nomor rekening"}</button>}</div>
-    <div className="gift-card"><h3>Alamat pengiriman hadiah</h3><address>{displayValue(wedding.giftDeliveryAddress)}</address></div>
+    <div className="gift-card bank-transfer-card">
+      <h3>Transfer bank</h3>
+      <div className="bri-debit-card" aria-label={`Rekening ${wedding.bankName} atas nama ${wedding.bankAccountName}`}>
+        <div className="bri-card-top"><span className="bri-brand">BRI</span><span className="bri-card-type">DEBIT</span></div>
+        <div className="bri-card-middle">
+          <span className="bri-chip" aria-hidden="true"><span /></span>
+          <svg className="bri-contactless" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9a5 5 0 0 1 0 6M10 6a9 9 0 0 1 0 12M14 3a13 13 0 0 1 0 18" /></svg>
+        </div>
+        <div className="bri-card-details"><span>NO. REKENING</span><strong>{wedding.bankAccountNumber}</strong><p>{wedding.bankAccountName}</p></div>
+      </div>
+      <button type="button" onClick={copyAccount}>{copied ? "Tersalin" : "Salin nomor rekening"}</button>
+    </div>
+    <div className="gift-card"><h3>Alamat pengiriman hadiah</h3><address>{wedding.giftDeliveryAddress}</address></div>
   </section>;
 }
 
@@ -270,6 +280,6 @@ export default function InvitationDetails({ identity, initialAttendance }: { ide
     <Venue />
     <RSVPAndWishes identity={identity} initialAttendance={initialAttendance} />
     <Gifts />
-    <footer className="closing-section" aria-label="Penutup undangan"><Ornament /><p>Terima kasih atas doa dan kehadiran Anda.</p><h2>Rizal <em>&</em> Dewi</h2><span>14 November 2026</span><small className="music-credit">Musik: <a href="https://www.scottbuckley.com.au/library/reverie/" target="_blank" rel="noopener noreferrer">Reverie — Scott Buckley</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></small></footer>
+    <footer className="closing-section" aria-label="Penutup undangan"><Ornament /><p>Terima kasih atas doa dan kehadiran Anda.</p><h2>Rizal <em>&</em> Dewi</h2><span>{dateLabel}</span></footer>
   </>;
 }

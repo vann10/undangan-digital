@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { Botanical } from "./botanical";
 import InvitationDetails from "./invitation-details";
+import { LoadingScreen } from "./loading-screen";
+import { useAssetPreloader } from "./use-asset-preloader";
+import { dateLabel, wedding } from "./wedding-config";
 
 function Monogram({ light = false }: { light?: boolean }) {
   return <div className={`monogram${light ? " monogram-light" : ""}`} aria-hidden="true"><img src="/artwork/monogram_RD_exact_illustration.svg" width={2048} height={1365} alt="" /></div>;
@@ -17,7 +20,7 @@ function MusicControl({ audio, playing, error, toggle, onPlaying, onPause, onErr
   toggle: () => void; onPlaying: () => void; onPause: () => void; onError: () => void;
 }) {
   return <>
-    <audio ref={audio} src="/audio/reverie-scott-buckley.mp3" preload="auto" loop onPlay={onPlaying} onPause={onPause} onError={onError} />
+    <audio ref={audio} src="/audio/reverie-scott-buckley.mp3" preload="none" loop onPlay={onPlaying} onPause={onPause} onError={onError} />
     <button className="music-control" type="button" onClick={toggle} aria-label={playing ? "Hentikan musik" : "Putar musik"} aria-pressed={playing} title={playing ? "Hentikan musik" : "Putar musik"}>
       {playing ? <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1" /></svg> : <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5 19 12 8 18.5Z" /></svg>}
     </button>
@@ -25,7 +28,7 @@ function MusicControl({ audio, playing, error, toggle, onPlaying, onPause, onErr
   </>;
 }
 
-function PersonProfile({ person, image, alt }: { person: "Dewi" | "Rizal"; image: string; alt: string }) {
+function PersonProfile({ person, fullName, image, alt }: { person: "Dewi" | "Rizal"; fullName: string; image: string; alt: string }) {
   const floral = person === "Dewi" ? "/artwork/rd-peony-accent-v1.webp" : "/artwork/botanical_ornament.svg";
   const floralWidth = person === "Dewi" ? 640 : 1024;
   const floralHeight = person === "Dewi" ? 640 : 1536;
@@ -38,18 +41,21 @@ function PersonProfile({ person, image, alt }: { person: "Dewi" | "Rizal"; image
     </figure>
     <div className="person-copy">
       <h3>{person}</h3>
-      <p className="person-pending">Nama lengkap {person} akan ditambahkan</p>
+      <p className="person-pending">{fullName}</p>
       <div className="person-rule" aria-hidden="true" />
-      <p className="person-bio">Profil {person} akan ditambahkan.</p>
-      <p className="person-social">Akun media sosial {person} akan ditambahkan.</p>
+      {/* Jika bio dan akun sosial diberikan, aktifkan kembali elemen ini dengan nilai dari wedding-config.ts.
+          <p className="person-bio">...</p>
+          <p className="person-social">...</p>
+      */}
     </div>
   </article>;
 }
 
-export default function Invitation({ invitationId }: { invitationId?: string }) {
+export default function Invitation({ invitationId, accessCode }: { invitationId?: string; accessCode?: string }) {
+  const assets = useAssetPreloader();
+  const [loadingVisible, setLoadingVisible] = useState(true);
   const [stage, setStage] = useState<"cover" | "opening" | "hero">("cover");
   const [hydrated, setHydrated] = useState(false);
-  const [motionPaused, setMotionPaused] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [musicError, setMusicError] = useState("");
   const [guestName, setGuestName] = useState("Tamu Undangan");
@@ -64,9 +70,20 @@ export default function Invitation({ invitationId }: { invitationId?: string }) 
   useEffect(() => { setHydrated(true); }, []);
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
   useEffect(() => {
+    if (assets.phase !== "ready") return;
+    const timeout = window.setTimeout(() => setLoadingVisible(false), 650);
+    return () => window.clearTimeout(timeout);
+  }, [assets.phase]);
+  useEffect(() => {
+    if (!loadingVisible) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previous; };
+  }, [loadingVisible]);
+  useEffect(() => {
     if (!invitationId) return;
-    const token = window.location.hash.slice(1);
-    if (!/^[A-Za-z0-9_-]{43}$/.test(token)) { setGuestError("Tautan undangan tidak valid."); return; }
+    const token = accessCode ?? window.location.hash.slice(1);
+    if (!/^(?:[A-Za-z0-9_-]{43}|\d{4})$/.test(token)) { setGuestError("Tautan undangan tidak valid."); return; }
     const controller = new AbortController();
     void fetch("/api/invitation", {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -80,17 +97,7 @@ export default function Invitation({ invitationId }: { invitationId?: string }) 
       setGuestError("");
     }).catch(cause => { if (!controller.signal.aborted) setGuestError(cause instanceof Error ? cause.message : "Undangan belum dapat dibuka."); });
     return () => controller.abort();
-  }, [invitationId]);
-  useEffect(() => {
-    void Promise.all([
-      "/artwork/couple-user-upload.jpg",
-      "/artwork/botanical_full_detail_hybrid.webp",
-    ].map(src => {
-      const image = new Image();
-      image.src = src;
-      return image.decode().catch(() => {});
-    }));
-  }, []);
+  }, [invitationId, accessCode]);
   useEffect(() => { if (stage === "hero") heading.current?.focus({ preventScroll: true }); }, [stage]);
 
   async function startMusic(showError: boolean) {
@@ -104,8 +111,6 @@ export default function Invitation({ invitationId }: { invitationId?: string }) 
       if (showError) setMusicError("Musik tidak dapat diputar pada perangkat ini.");
     }
   }
-  useEffect(() => { void startMusic(false); }, []);
-
   function toggleMusic() {
     const player = audio.current;
     if (!player) return;
@@ -120,7 +125,7 @@ export default function Invitation({ invitationId }: { invitationId?: string }) 
   }
 
   function openInvitation() {
-    if (stage !== "cover" || opening.current) return;
+    if (stage !== "cover" || opening.current || loadingVisible) return;
     opening.current = true;
     void startMusic(false);
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -129,14 +134,15 @@ export default function Invitation({ invitationId }: { invitationId?: string }) 
     timer.current = setTimeout(() => { setStage("hero"); window.scrollTo({ top: 0, behavior: "instant" }); }, 1250);
   }
 
-  return <div className="invitation-shell">
+  return <>
+    {loadingVisible && <LoadingScreen {...assets} onRetry={assets.retry} onContinue={assets.continueAnyway} />}
+    <div className="invitation-shell" inert={loadingVisible} aria-hidden={loadingVisible}>
     <aside className="desktop-artwork" aria-hidden="true" />
     <MusicControl audio={audio} playing={playing} error={musicError} toggle={toggleMusic} onPlaying={() => setPlaying(true)} onPause={() => setPlaying(false)} onError={() => { setPlaying(false); setMusicError("Musik tidak dapat dimuat."); }} />
-    <main className={`invitation stage-${stage}${motionPaused ? " motion-paused" : ""}`}>
+    <main className={`invitation stage-${stage}`}>
     {stage !== "hero" && <section className="cover paper" aria-label="Sampul undangan">
       <div className="cover-border" aria-hidden="true" />
       <div className="cover-corner cover-corner-left" aria-hidden="true"><img src="/artwork/monogram_RD_exact_illustration.svg" width={48} height={32} alt="" /></div>
-      <span className="edition">UNDANGAN PERNIKAHAN</span>
       <div className="cover-landscape" aria-hidden="true"><img src="/artwork/lake-landscape-review.webp" width={900} height={1350} alt="" /></div>
       <div className="cover-sky" aria-hidden="true"><img src="/artwork/cloud-canopy-review.webp" width={900} height={600} alt="" /></div>
       <div className="vine-frame" aria-hidden="true"><span className="vine-side vine-left"/><span className="vine-side vine-right"/><span className="vine-cross vine-top"><img src="/artwork/edge-vine-review.webp" width={467} height={1400} alt="" /></span><span className="vine-cross vine-bottom"><img src="/artwork/edge-vine-review.webp" width={467} height={1400} alt="" /></span></div>
@@ -153,11 +159,10 @@ export default function Invitation({ invitationId }: { invitationId?: string }) 
         <div className="fine-ornament gold-divider" aria-hidden="true" />
         <p className="guest-greeting">Yth. <span>{guestName}</span></p>
         {guestError && <p className="form-status" role="alert">{guestError}</p>}
-        <button className="open-button" onClick={openInvitation} disabled={!hydrated || stage === "opening"} aria-controls="invitation-hero">
+        <button className="open-button" onClick={openInvitation} disabled={!hydrated || loadingVisible || stage === "opening"} aria-controls="invitation-hero">
           <span>{stage === "opening" ? "MEMBUKA UNDANGAN" : "BUKA UNDANGAN"}</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-5-5 5 5-5 5"/></svg>
         </button>
-        <button className="motion-toggle" type="button" aria-pressed={motionPaused} onClick={() => setMotionPaused(!motionPaused)}>{motionPaused ? "Lanjutkan animasi" : "Jeda animasi"}</button>
       </div>
     </section>}
 
@@ -177,7 +182,7 @@ export default function Invitation({ invitationId }: { invitationId?: string }) 
         <div className="hero-content">
           <p className="hero-kicker">THE WEDDING OF</p>
           <h1 id="hero-heading" ref={heading} tabIndex={-1}>Rizal<br/><em>&</em> Dewi</h1>
-          <div className="hero-details"><p className="wedding-date">14 November 2026</p><div className="hero-divider gold-divider" aria-hidden="true" /></div>
+          <div className="hero-details"><p className="wedding-date">{dateLabel}</p><div className="hero-divider gold-divider" aria-hidden="true" /></div>
         </div>
       </div>
     </section>
@@ -189,8 +194,8 @@ export default function Invitation({ invitationId }: { invitationId?: string }) 
       <img className="couple-floating-branch couple-floating-branch-top" src="/artwork/rd-connecting-branch-v1.webp" width={640} height={960} alt="" aria-hidden="true" loading="lazy" />
       <img className="couple-floating-branch couple-floating-branch-bottom" src="/artwork/rd-connecting-branch-v1.webp" width={640} height={960} alt="" aria-hidden="true" loading="lazy" />
       <header className="couple-page-header"><h2 id="couple-heading">Mempelai</h2><span className="gold-divider" aria-hidden="true" /></header>
-      <PersonProfile person="Dewi" image="/artwork/brides-user-upload.jpg" alt="Potret seorang wanita mengenakan gaun dan veil putih" />
-      <PersonProfile person="Rizal" image="/artwork/bridesgroom-user-upload.jpg" alt="Potret seorang pria mengenakan setelan hitam" />
+      <PersonProfile person="Dewi" fullName={wedding.brideFullName} image="/artwork/brides-user-upload.jpg" alt="Potret seorang wanita mengenakan gaun dan veil putih" />
+      <PersonProfile person="Rizal" fullName={wedding.groomFullName} image="/artwork/bridesgroom-user-upload.jpg" alt="Potret seorang pria mengenakan setelan hitam" />
     </section>
     <div className="page-bridge page-bridge-after-couple" aria-hidden="true">
       <img className="page-bridge-garland" src="/artwork/page-transition-garland.png" width={2172} height={724} alt="" loading="lazy" />
@@ -198,5 +203,6 @@ export default function Invitation({ invitationId }: { invitationId?: string }) 
     <InvitationDetails identity={invitationId && invitationToken ? { invitationId, invitationToken } : null} initialAttendance={attendance} />
     </div>
     </main>
-  </div>;
+    </div>
+  </>;
 }

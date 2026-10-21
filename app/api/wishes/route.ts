@@ -31,8 +31,9 @@ export async function POST(request: Request) {
     || typeof body.message !== "string" || body.message.trim().length < 2 || body.message.trim().length > 1000)
     return error("Ucapan harus berisi 2 sampai 1000 karakter.", 400);
   try {
-    const result = await callSheets("wish", { ...identity, wishId: body.wishId, message: body.message.trim() });
+    const result = await callSheets("wish", { ...identity, wishId: body.wishId, message: body.message.trim() }, request);
     if (!result) return error("Ucapan belum tersedia.", 503);
+    if (result.code === "too_many_attempts") return error("Terlalu banyak percobaan. Coba lagi dalam 15 menit.", 429);
     if (result.code === "invalid_invitation") return error("Tautan undangan tidak valid atau tidak aktif.", 404);
     if (result.code === "invalid_request") return error("Ucapan harus berisi 2 sampai 1000 karakter tanpa karakter kendali.", 400);
     if (result.code === "wish_already_submitted") return error("Ucapan Anda sudah tercatat.", 409);

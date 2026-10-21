@@ -8,7 +8,11 @@ const env = Object.fromEntries(readFileSync('.env.local', 'utf8').split(/\r?\n/)
 const url = env.GOOGLE_APPS_SCRIPT_URL;
 const serviceToken = env.GOOGLE_APPS_SCRIPT_TOKEN;
 if (!url || !serviceToken) throw new Error('Google Apps Script environment variables are missing');
-const links = [...readFileSync('data/private/links.csv', 'utf8').matchAll(/\/invite\/([1-9]\d*)#([A-Za-z0-9_-]{43})/g)];
+const migrated = process.argv.includes('--migrated');
+const linksFile = migrated ? 'data/private/links-4digit.csv' : 'data/private/links.csv';
+const links = [...readFileSync(linksFile, 'utf8').matchAll(migrated
+  ? /\/invite\/([1-9]\d*)-(\d{4})/g
+  : /\/invite\/([1-9]\d*)#([A-Za-z0-9_-]{43})/g)];
 const names = JSON.parse(readFileSync('data/private/daftar_nama.json', 'utf8'));
 if (links.length !== names.length || links.length === 0) throw new Error('Private links do not match guest list');
 const request = async (link, invitationToken, action = 'guest', extra = {}) => {
@@ -22,7 +26,8 @@ const request = async (link, invitationToken, action = 'guest', extra = {}) => {
 try {
   const sampleIndexes = [0, Math.floor(links.length / 2), links.length - 1];
   const valid = await Promise.all(sampleIndexes.map(index => request(links[index], links[index][2])));
-  const invalid = await request(links[0], 'x'.repeat(43));
+  const invalidToken = migrated ? String((Number(links[0][2]) + 1) % 10000).padStart(4, '0') : 'x'.repeat(43);
+  const invalid = await request(links[0], invalidToken);
   const invalidRsvp = await request(links[0], links[0][2], 'rsvp', { attendance: 'invalid' });
   const invalidWish = await request(links[0], links[0][2], 'wish', { wishId: 'bad', message: 'invalid' });
   const wishesUrl = new URL(url);
