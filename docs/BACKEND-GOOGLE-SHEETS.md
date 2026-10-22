@@ -4,7 +4,7 @@
 
 - Google Sheets adalah penyimpanan utama. Apps Script hanya menerima permintaan dari server Next.js yang menyertakan `RSVP_API_TOKEN`.
 - Setiap undangan memiliki ID urut dan kode acak 4 digit yang unik di daftar tamu. Tab `Guests` menyimpan kode langsung; `GUEST_CODE_PEPPER` tidak digunakan lagi.
-- RSVP memuat satu pilihan kehadiran per individu. Respons pertama final. Ucapan dikirim terpisah, satu per individu, dan langsung tampil setelah tersimpan.
+- RSVP memuat pilihan kehadiran dan jumlah tamu (1–20 jika hadir, 0 jika tidak hadir). Respons pertama final. Ucapan dikirim terpisah, satu per individu, dan langsung tampil setelah tersimpan.
 - Tidak ada dashboard operator. Pemilik mengelola dan mengekspor Sheet secara langsung. Pemilik memilih mempertahankan akses baca melalui tautan Sheet.
 
 ## Tab dan kontrak
@@ -14,18 +14,18 @@
 | Tab | Kolom |
 | --- | --- |
 | Guests | Invitation ID, Full name, Guest code, Active |
-| RSVP | Invitation ID, Submitted at (UTC), Attendance |
+| RSVP | A–C: Invitation ID, Submitted at (UTC), Attendance; D: Full name pada Sheet live; E: Guest count |
 | Wishes | Wish ID, Invitation ID, Submitted at (UTC), Full name, Message |
 
 Impor daftar tamu dilakukan ke `Guests` mulai baris kedua. Jangan menghapus atau mengubah header. Jika tab `RSVP` lama sudah ada, pindahkan menjadi `RSVP_Legacy` sebelum setup; kode menolak format header lama.
 
-Pada Sheet live, kolom A (`Invitation ID`) di tab `RSVP` disembunyikan agar operator melihat nama tamu. Kolom D (`Full name`) mengambil nama secara otomatis dari `Guests`, dengan cadangan nama lama dari `Guests_Backup_2026-10-21`. Hasil rumus dibatasi sampai baris RSVP yang terisi agar penambahan RSVP baru tetap masuk ke baris berikutnya. ID tetap tersimpan di kolom A sebagai kunci unik; jangan hapus atau ganti kolom ini. Aturan warna Hadir/Tidak Hadir berlaku untuk A2:D1000 berdasarkan nilai `Attendance` di kolom C.
+Pada Sheet live, kolom A (`Invitation ID`) di tab `RSVP` disembunyikan agar operator melihat nama tamu. Kolom D (`Full name`) mengambil nama secara otomatis dari `Guests`, dengan cadangan nama lama dari `Guests_Backup_2026-10-21`. Kolom E (`Guest count`) menyimpan jumlah tamu tanpa mengubah rumus kolom D. RSVP lama yang belum memiliki jumlah tamu menampilkan nilai kosong. Hasil rumus dibatasi sampai baris RSVP yang terisi agar penambahan RSVP baru tetap masuk ke baris berikutnya. ID tetap tersimpan di kolom A sebagai kunci unik; jangan hapus atau ganti kolom ini. Aturan warna Hadir/Tidak Hadir berlaku untuk A2:D1000 berdasarkan nilai `Attendance` di kolom C.
 
 ## Alur permintaan
 
 1. Tamu membuka `/invite/{id}-{kode4digit}`. Halaman mengirim ID dan kode ke `/api/invitation`; server meminta Apps Script mencocokkan ID dan kode dengan baris `Guests` yang aktif.
-2. Jika cocok, server mengembalikan nama dan status RSVP tamu tersebut. Jika tidak cocok, nama dan status tidak dikembalikan.
-3. `/api/rsvp` menerima pilihan Hadir/Tidak hadir. Apps Script mengunci penulisan, mengecek ulang keaktifan tautan, dan menolak respons kedua.
+2. Jika cocok, server mengembalikan nama, status RSVP, dan jumlah tamu jika sudah tercatat. Jika tidak cocok, data tersebut tidak dikembalikan.
+3. `/api/rsvp` menerima pilihan Hadir/Tidak hadir beserta jumlah tamu. Apps Script mengunci penulisan, mengecek ulang keaktifan tautan, dan menolak respons kedua.
 4. `/api/wishes` menerima ucapan terpisah. Apps Script mengunci penulisan dan membatasi satu ucapan per tamu. Permintaan ulang dengan Wish ID yang sama aman untuk diulang.
 5. Daftar ucapan publik hanya menampilkan 100 terbaru. Teks disimpan aman dari eksekusi rumus spreadsheet dan dirender sebagai teks React.
 
@@ -40,6 +40,8 @@ Pada Sheet live, kolom A (`Invitation ID`) di tab `RSVP` disembunyikan agar oper
 - **Cadangan:** buat salinan Sheet privat sebelum impor besar atau perubahan manual. Apps Script tidak menyediakan pemulihan otomatis.
 
 ## Batasan dan prasyarat rilis
+
+Perubahan jumlah tamu pada 22 Oktober 2026 memerlukan pembaruan deployment Apps Script dan aplikasi Next.js. Kode Apps Script menambahkan header `Guest count` di E1 pada tab `RSVP` tanpa memindahkan rumus nama di kolom D. Verifikasi kolom E dan satu RSVP uji pada salinan Sheet sebelum rilis.
 
 Status migrasi 21 Oktober 2026: deployment Apps Script yang digunakan situs telah diperbarui dari versi 2 ke versi 3 dengan URL tetap. Tab `Guests` aktif berisi 193 ID, nama, dan kode 4 digit dari `guests-4digit.csv`; baris tamu uji ID 194 tidak ada. Tab `Guests_Backup_2026-10-21` berisi 193 hash lama serta ID 194 untuk pemulihan. Tab `RSVP` dan `Wishes` tetap ada. Uji langsung `verify-live-sheets.mjs --migrated` dan `verify-live-backend.mjs http://127.0.0.1:3020 --migrated` lolos untuk undangan sah, kode salah, penolakan tulis tidak sah, dan pembacaan ucapan. Tautan panjang lama tidak berlaku. Properti `GUEST_CODE_PEPPER` lama belum dihapus dan tidak dipakai oleh kode versi 3.
 

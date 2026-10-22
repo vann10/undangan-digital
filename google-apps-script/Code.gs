@@ -4,6 +4,7 @@
  */
 const GUEST_HEADERS = ['Invitation ID', 'Full name', 'Guest code', 'Active'];
 const RSVP_HEADERS = ['Invitation ID', 'Submitted at (UTC)', 'Attendance'];
+const RSVP_GUEST_COUNT_HEADER = 'Guest count'; // Column E; column D holds the live Full name formula.
 const WISH_HEADERS = ['Wish ID', 'Invitation ID', 'Submitted at (UTC)', 'Full name', 'Message'];
 
 function output_(value) {
@@ -31,10 +32,26 @@ function sheet_(book, name, headers) {
   return sheet;
 }
 
+function rsvpSheet_(book) {
+  const sheet = sheet_(book, 'RSVP', RSVP_HEADERS);
+  const cell = sheet.getRange(1, 5);
+  const current = String(cell.getValue() || '');
+  if (current && current !== RSVP_GUEST_COUNT_HEADER) throw new Error('RSVP column E has an incompatible header');
+  if (!current) cell.setValue(RSVP_GUEST_COUNT_HEADER);
+  return sheet;
+}
+
+function guestCount_(row) {
+  const value = row[4];
+  if (value === '' || value === null || value === undefined) return null;
+  const count = Number(value);
+  return Number.isInteger(count) && count >= 0 && count <= 20 ? count : null;
+}
+
 function setupSheet() {
   const book = SpreadsheetApp.openById(settings_().id);
   sheet_(book, 'Guests', GUEST_HEADERS);
-  sheet_(book, 'RSVP', RSVP_HEADERS);
+  rsvpSheet_(book);
   sheet_(book, 'Wishes', WISH_HEADERS);
 }
 
@@ -112,8 +129,8 @@ function doPost(e) {
     if (guest && guest.limited) return output_({ ok: false, code: 'too_many_attempts' });
     if (!guest) return output_({ ok: false, code: 'invalid_invitation' });
     if (data.action === 'guest') {
-      const existing = rows_(sheet_(book, 'RSVP', RSVP_HEADERS), 3).find(row => String(row[0]) === guest.id);
-      return output_({ ok: true, name: guest.name, attendance: existing ? String(existing[2]) : null });
+      const existing = rows_(rsvpSheet_(book), 5).find(row => String(row[0]) === guest.id);
+      return output_({ ok: true, name: guest.name, attendance: existing ? String(existing[2]) : null, guestCount: existing ? guestCount_(existing) : null });
     }
     if (data.action !== 'rsvp' && data.action !== 'wish') return output_({ ok: false, code: 'invalid_request' });
     lock = LockService.getScriptLock();
@@ -123,12 +140,17 @@ function doPost(e) {
     if (!currentGuest) return output_({ ok: false, code: 'invalid_invitation' });
     if (data.action === 'rsvp') {
       if (!['attending', 'not_attending'].includes(data.attendance)) return output_({ ok: false, code: 'invalid_request' });
-      const sheet = sheet_(book, 'RSVP', RSVP_HEADERS);
-      const existing = rows_(sheet, 3).find(row => String(row[0]) === guest.id);
-      if (existing) return output_({ ok: false, code: 'already_submitted', attendance: String(existing[2]) });
+      const count = data.guestCount;
+      if (!Number.isInteger(count) || (data.attendance === 'attending' ? count < 1 || count > 20 : count !== 0))
+        return output_({ ok: false, code: 'invalid_request' });
+      const sheet = rsvpSheet_(book);
+      const existing = rows_(sheet, 5).find(row => String(row[0]) === guest.id);
+      if (existing) return output_({ ok: false, code: 'already_submitted', attendance: String(existing[2]), guestCount: guestCount_(existing) });
+      const nextRow = sheet.getLastRow() + 1;
       sheet.appendRow([guest.id, new Date().toISOString(), data.attendance]);
+      sheet.getRange(nextRow, 5).setValue(count);
       SpreadsheetApp.flush();
-      return output_({ ok: true, attendance: data.attendance });
+      return output_({ ok: true, attendance: data.attendance, guestCount: count });
     }
     if (typeof data.wishId !== 'string' || !/^[a-f0-9-]{36}$/i.test(data.wishId)) return output_({ ok: false, code: 'invalid_request' });
     const message = safeText_(data.message, 1000);

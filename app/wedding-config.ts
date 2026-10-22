@@ -6,7 +6,8 @@ export const wedding = {
   brideFullName: "Dewi Nur Alizzah",
   groomFather: "Rohmad",
   groomMother: "Yuni Isnindarwati",
-  brideParents: "Mohammad Bahrodin & Mariatul Qibtiyah",
+  brideFather: "Mohammad Bahrodin",
+  brideMother: "Mariatul Qibtiyah",
   // Konten opsional untuk diaktifkan setelah datanya diberikan:
   // groomBio: "",
   // brideBio: "",
@@ -21,9 +22,11 @@ export const wedding = {
   venueName: "Rumah",
   venueAddress: "Jl Manyar gg Bimo, RT 06/RW 02, Beran 1, Beran, Ngawi",
   mapsUrl: "https://maps.app.goo.gl/rrxyNSaMfoAMDv3v5" as string | null,
-  bankName: "BRI",
-  bankAccountName: "RIZAL NUR IKHSANI",
-  bankAccountNumber: "009001079530506",
+  mapsEmbedUrl: "https://www.google.com/maps?q=-7.42037%2C111.433512&z=17&output=embed",
+  bankAccounts: [
+    { bank: "BRI", holder: "RIZAL NUR IKHSANI", number: "009001079530506" },
+    { bank: "BCA", holder: "DEWI NUR ALIZZAH", number: "2630842151" },
+  ],
   giftDeliveryAddress: "RIZAL NUR IKHSANI, Jl Manyar gg Bimo, RT 06/RW 02, Beran 1, Beran, Ngawi",
 };
 

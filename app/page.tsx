@@ -29,19 +29,18 @@ function MusicControl({ audio, playing, error, toggle, onPlaying, onPause, onErr
 }
 
 function PersonProfile({ person, fullName, image, alt }: { person: "Dewi" | "Rizal"; fullName: string; image: string; alt: string }) {
-  const floral = person === "Dewi" ? "/artwork/rd-peony-accent-v1.webp" : "/artwork/botanical_ornament.svg";
-  const floralWidth = person === "Dewi" ? 640 : 1024;
-  const floralHeight = person === "Dewi" ? 640 : 1536;
+  const dove = person === "Dewi" ? "bride-turn" : "groom";
+  const remainingName = fullName.slice(person.length).trim();
   return <article className="person-profile">
     <figure className="person-portrait">
-      <img className="person-photo" src={image} alt={alt} width={736} height={1308} />
-      <span className={`profile-floral profile-floral-${person === "Dewi" ? "bride" : "groom"}`} aria-hidden="true">
-        <img src={floral} width={floralWidth} height={floralHeight} alt="" />
+      <img className="person-photo" src={image} alt={alt} width={1000} height={1333} loading="lazy" decoding="async" />
+      <span className={`profile-dove profile-dove-${person === "Dewi" ? "bride" : "groom"}`} aria-hidden="true">
+        <img src={`/artwork/perched-dove-${dove}.webp`} width={700} height={560} alt="" loading="lazy" />
       </span>
     </figure>
     <div className="person-copy">
       <h3>{person}</h3>
-      <p className="person-pending">{fullName}</p>
+      <p className="person-surname">{remainingName}</p>
       <div className="person-rule" aria-hidden="true" />
       {/* Jika bio dan akun sosial diberikan, aktifkan kembali elemen ini dengan nilai dari wedding-config.ts.
           <p className="person-bio">...</p>
@@ -61,6 +60,7 @@ export default function Invitation({ invitationId, accessCode }: { invitationId?
   const [guestName, setGuestName] = useState("Tamu Undangan");
   const [invitationToken, setInvitationToken] = useState<string | null>(null);
   const [attendance, setAttendance] = useState<"attending" | "not_attending" | null>(null);
+  const [guestCount, setGuestCount] = useState<number | null>(null);
   const [guestError, setGuestError] = useState("");
   const audio = useRef<HTMLAudioElement>(null);
   const musicStopped = useRef(false);
@@ -93,6 +93,7 @@ export default function Invitation({ invitationId, accessCode }: { invitationId?
       if (!response.ok) throw new Error(data.error || "Undangan belum dapat dibuka.");
       setGuestName(data.name);
       setAttendance(data.attendance);
+      setGuestCount(data.guestCount);
       setInvitationToken(token);
       setGuestError("");
     }).catch(cause => { if (!controller.signal.aborted) setGuestError(cause instanceof Error ? cause.message : "Undangan belum dapat dibuka."); });
@@ -166,18 +167,18 @@ export default function Invitation({ invitationId, accessCode }: { invitationId?
       </div>
     </section>}
 
-    {stage === "opening" && <div className="opening-sweep" aria-hidden="true"><img src="/artwork/page-transition-garland.png" width={2172} height={724} alt="" /></div>}
+    {stage === "opening" && <div className="opening-sweep" aria-hidden="true"><img src="/artwork/page-transition-garland.webp" width={1100} height={367} alt="" /></div>}
 
-    <div className="opened-pages" hidden={stage === "cover"}>
+    {stage !== "cover" && <div className="opened-pages">
     <section id="invitation-hero" className="hero paper" aria-labelledby="hero-heading">
       <div className="hero-atmosphere" aria-hidden="true" />
       <div className="hero-landscape" aria-hidden="true"><img src="/artwork/lake-landscape-review.webp" width={900} height={1350} alt="" /></div>
-      <img className="hero-tree-branch hero-tree-left" src="/artwork/hero-tree-left-v1.png" width={1320} height={1192} alt="" aria-hidden="true" />
-      <img className="hero-tree-branch hero-tree-right" src="/artwork/hero-tree-right-v1.png" width={1254} height={1254} alt="" aria-hidden="true" />
+      <img className="hero-tree-branch hero-tree-left" src="/artwork/hero-tree-left-v1.webp" width={700} height={632} alt="" aria-hidden="true" />
+      <img className="hero-tree-branch hero-tree-right" src="/artwork/hero-tree-right-v1.webp" width={700} height={700} alt="" aria-hidden="true" />
       <div className="hero-layout">
         <figure className="couple-portrait">
-          <img className="portrait-photo" src="/artwork/couple-user-upload.jpg" width={735} height={987} alt="Potret dua orang berdiri bersama dengan buket bunga" />
-            <img className="portrait-ornament" src="/artwork/botanical_full_detail_hybrid.webp" width={1224} height={1285} alt="" aria-hidden="true" />
+          <img className="portrait-photo" src="/artwork/couple-user-upload.webp" width={1000} height={1501} alt="Potret Rizal dan Dewi bersama" decoding="async" />
+            <img className="portrait-ornament" src="/artwork/botanical-full-detail-display.webp" width={400} height={420} alt="" aria-hidden="true" />
         </figure>
         <div className="hero-content">
           <p className="hero-kicker">THE WEDDING OF</p>
@@ -187,21 +188,21 @@ export default function Invitation({ invitationId, accessCode }: { invitationId?
       </div>
     </section>
     <div className="page-bridge" aria-hidden="true">
-      <img className="page-bridge-garland" src="/artwork/page-transition-garland.png" width={2172} height={724} alt="" />
+      <img className="page-bridge-garland" src="/artwork/page-transition-garland.webp" width={1100} height={367} alt="" />
     </div>
     <section className="couple-page" aria-labelledby="couple-heading">
       <div className="couple-page-background" aria-hidden="true" />
       <img className="couple-floating-branch couple-floating-branch-top" src="/artwork/rd-connecting-branch-v1.webp" width={640} height={960} alt="" aria-hidden="true" loading="lazy" />
       <img className="couple-floating-branch couple-floating-branch-bottom" src="/artwork/rd-connecting-branch-v1.webp" width={640} height={960} alt="" aria-hidden="true" loading="lazy" />
       <header className="couple-page-header"><h2 id="couple-heading">Mempelai</h2><span className="gold-divider" aria-hidden="true" /></header>
-      <PersonProfile person="Dewi" fullName={wedding.brideFullName} image="/artwork/brides-user-upload.jpg" alt="Potret seorang wanita mengenakan gaun dan veil putih" />
-      <PersonProfile person="Rizal" fullName={wedding.groomFullName} image="/artwork/bridesgroom-user-upload.jpg" alt="Potret seorang pria mengenakan setelan hitam" />
+      <PersonProfile person="Dewi" fullName={wedding.brideFullName} image="/artwork/brides-user-upload.webp" alt="Potret Dewi" />
+      <PersonProfile person="Rizal" fullName={wedding.groomFullName} image="/artwork/bridesgroom-user-upload.webp" alt="Potret Rizal" />
     </section>
     <div className="page-bridge page-bridge-after-couple" aria-hidden="true">
-      <img className="page-bridge-garland" src="/artwork/page-transition-garland.png" width={2172} height={724} alt="" loading="lazy" />
+      <img className="page-bridge-garland" src="/artwork/page-transition-garland.webp" width={1100} height={367} alt="" loading="lazy" />
     </div>
-    <InvitationDetails identity={invitationId && invitationToken ? { invitationId, invitationToken } : null} initialAttendance={attendance} />
-    </div>
+    <InvitationDetails identity={invitationId && invitationToken ? { invitationId, invitationToken } : null} initialAttendance={attendance} initialGuestCount={guestCount} />
+    </div>}
     </main>
     </div>
   </>;

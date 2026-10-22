@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="id"><body>{children}</body></html>;
+  return <html lang="id"><head><link rel="stylesheet" href="https://fonts.cdnfonts.com/css/runethia" /></head><body>{children}</body></html>;
 }

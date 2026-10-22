@@ -13,6 +13,11 @@ function makeSheet() {
     setFrozenRows: () => {},
     getRange: (start, column, count, width) => ({
       setFontWeight: () => {},
+      getValue: () => rows[start - 1]?.[column - 1] ?? '',
+      setValue: value => {
+        while (rows.length < start) rows.push([]);
+        rows[start - 1][column - 1] = value;
+      },
       getValues: () => rows.slice(start - 1, start - 1 + count).map(row => row.slice(column - 1, column - 1 + width)),
     }),
   };
@@ -38,15 +43,22 @@ const post = data => result(context.doPost({ postData: { contents: JSON.stringif
 
 context.setupSheet();
 assert.deepEqual([...sheets.keys()], ['Guests', 'RSVP', 'Wishes']);
+assert.equal(sheets.get('RSVP').rows[0][4], 'Guest count');
 sheets.get('Guests').appendRow(['1', 'Ade Fitriyani', '0042', true]);
 sheets.get('Guests').appendRow(['2', 'Tamu Kode Pendek', 88, true]);
 assert.equal(post({ action: 'guest', ...identity }).name, 'Ade Fitriyani');
 assert.equal(post({ action: 'guest', invitationId: '2', invitationToken: '0088' }).name, 'Tamu Kode Pendek');
 assert.equal(post({ action: 'guest', ...identity, invitationToken: '9999' }).code, 'invalid_invitation');
-assert.equal(post({ action: 'rsvp', ...identity, attendance: 'attending' }).ok, true);
-assert.equal(post({ action: 'rsvp', ...identity, attendance: 'not_attending' }).code, 'already_submitted');
+assert.equal(post({ action: 'rsvp', ...identity, attendance: 'attending' }).code, 'invalid_request');
+assert.equal(post({ action: 'rsvp', ...identity, attendance: 'attending', guestCount: 21 }).code, 'invalid_request');
+assert.equal(post({ action: 'rsvp', ...identity, attendance: 'attending', guestCount: 1.5 }).code, 'invalid_request');
+assert.equal(post({ action: 'rsvp', ...identity, attendance: 'attending', guestCount: 2 }).ok, true);
+assert.equal(sheets.get('RSVP').rows[1][4], 2);
+assert.equal(post({ action: 'rsvp', ...identity, attendance: 'not_attending', guestCount: 0 }).code, 'already_submitted');
 assert.equal(sheets.get('RSVP').rows.length, 2);
 assert.equal(post({ action: 'guest', ...identity }).attendance, 'attending');
+assert.equal(post({ action: 'guest', ...identity }).guestCount, 2);
+assert.equal(post({ action: 'rsvp', invitationId: '2', invitationToken: '0088', attendance: 'not_attending', guestCount: 0 }).ok, true);
 const wishId = '12345678-1234-1234-1234-123456789abc';
 assert.equal(post({ action: 'wish', ...identity, wishId, message: '=2+2' }).ok, true);
 assert.equal(sheets.get('Wishes').rows[1][4], "'=2+2");
