@@ -1,0 +1,15 @@
+# Sprite sheet · generation provenance
+
+Tool: built-in `image_gen.imagegen`, transparent background enabled. No CLI or API fallback.
+
+References: `assets/butterfly-spread-review-master.png`, `assets/edge-vine-review-master.png`, and `assets/lake-landscape-review-master.png`.
+
+Original output: `assets/botanical-sprite-sheet-generated.png` (1254 × 1254 RGBA). The model returned 1254px despite the requested 1536px; each cell still supports the intended 16–40px particle and approximately 50–70px bouquet display at over 2× resolution. The original plate is retained and the specimen masters are 256 × 256 PNG.
+
+## Exact prompt
+
+Create ONE square 1536x1536 transparent raster botanical sprite sheet for a wedding invitation. The three attached images are STYLE REFERENCES only, especially the edge vine: match its fine engraving and muted faded teal/olive/cream pigment. A precise evenly spaced 4-column by 4-row grid of 16 SEPARATE isolated specimens, each fitting within its own 384x384 cell with at least 50px clear transparent padding on all sides. No touching, no paper rectangles, no text, no lines dividing cells. Row 1: four single complete leaves, alternating aged teal and sage olive, each with a very short fine stem and exquisite engraved veins. Row 2: four complete small ivory/cream botanical flowers with soft ochre centers, viewed in slightly different directions, 5–8 petals, no foliage behind them. Row 3: four isolated curved cream and sand flower petals, each only one petal. Row 4: first two cells single isolated cream/sand petals, third cell single small olive leaf, fourth cell a small ivory 5-petal flower. All specimens centered in cells, comparable scale. Vintage 19th-century natural history illustration, antique lithograph and classical scientific engraving blended with delicate watercolor. Muted desaturated aged teal, blue-green, ivory, pale cream, soft ochre, olive-brown. Intricate fine-line engraving, delicate ink outlines, visible stippling and cross-hatching at 200% zoom, fibrous watercolor shading INSIDE specimens. Crisp organic contours. Flat even illumination, no shadows, no glossy highlights, no lighting gradients. Authentic aged museum specimen print character. Truly transparent background and clean alpha; no paper texture outside subjects. NOT vector art, not flat colors, not cartoon, no thick uniform lines, no gradient mesh, no 3D, no neon, no saturated colors, no photo. Do not depict the butterfly or landscape; they are only style references. Output the sprite sheet only.
+
+## Visual review
+
+Reviewed against the vine and butterfly at normal size and magnified crops. Leaf veins, fine outlines, stipple, and interior pigment mottling remain visible. Cream petals, ochre stamens, faded teal, and olive align with the source plate. No cast shadow, specular reflection, paper rectangle, or uniform vector outline. Alpha inspected on the actual cream UI background. No color grading was applied. See `artifacts/cinematic/generated-sprites-review.jpg` and `artifacts/cinematic/raster-detail-200.png`.

@@ -1,0 +1,1300 @@
+[
+  {
+    "name": "vine-left-back",
+    "source": "A · edge-vine master; native alpha, crop/mirror",
+    "width": 450,
+    "height": 2172,
+    "bytes": 1014608,
+    "variants": [
+      {
+        "file": "vine-left-back.webp",
+        "width": 420,
+        "height": 2027,
+        "bytes": 374900
+      },
+      {
+        "file": "vine-left-back@1x.webp",
+        "width": 210,
+        "height": 1014,
+        "bytes": 115646
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "vine-left-front",
+    "source": "A · edge-vine master; native alpha, crop/mirror",
+    "width": 450,
+    "height": 2172,
+    "bytes": 1014608,
+    "variants": [
+      {
+        "file": "vine-left-front.webp",
+        "width": 420,
+        "height": 2027,
+        "bytes": 374900
+      },
+      {
+        "file": "vine-left-front@1x.webp",
+        "width": 210,
+        "height": 1014,
+        "bytes": 115646
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "vine-right-back",
+    "source": "A · edge-vine master; native alpha, crop/mirror",
+    "width": 450,
+    "height": 2172,
+    "bytes": 1012557,
+    "variants": [
+      {
+        "file": "vine-right-back.webp",
+        "width": 420,
+        "height": 2027,
+        "bytes": 375088
+      },
+      {
+        "file": "vine-right-back@1x.webp",
+        "width": 210,
+        "height": 1014,
+        "bytes": 115968
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "vine-right-front",
+    "source": "A · edge-vine master; native alpha, crop/mirror",
+    "width": 450,
+    "height": 2172,
+    "bytes": 1012557,
+    "variants": [
+      {
+        "file": "vine-right-front.webp",
+        "width": 420,
+        "height": 2027,
+        "bytes": 375088
+      },
+      {
+        "file": "vine-right-front@1x.webp",
+        "width": 210,
+        "height": 1014,
+        "bytes": 115968
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "botanical-sprite-sheet",
+    "source": "B · built-in imagegen; three supplied masters as style references",
+    "width": 1254,
+    "height": 1254,
+    "bytes": 1873328,
+    "variants": [
+      {
+        "file": "botanical-sprite-sheet.webp",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 634262
+      },
+      {
+        "file": "botanical-sprite-sheet@1x.webp",
+        "width": 627,
+        "height": 627,
+        "bytes": 179308
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "leaf-sprite-01",
+    "source": "B · generated sprite sheet, complete isolated leaf",
+    "width": 256,
+    "height": 256,
+    "bytes": 88630,
+    "variants": [
+      {
+        "file": "leaf-sprite-01.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 64268
+      },
+      {
+        "file": "leaf-sprite-01@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 16884
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "leaf-sprite-02",
+    "source": "B · generated sprite sheet, complete isolated leaf",
+    "width": 256,
+    "height": 256,
+    "bytes": 78959,
+    "variants": [
+      {
+        "file": "leaf-sprite-02.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 53754
+      },
+      {
+        "file": "leaf-sprite-02@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 14272
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "leaf-sprite-03",
+    "source": "B · generated sprite sheet, complete isolated leaf",
+    "width": 256,
+    "height": 256,
+    "bytes": 86395,
+    "variants": [
+      {
+        "file": "leaf-sprite-03.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 63498
+      },
+      {
+        "file": "leaf-sprite-03@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 16860
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "leaf-sprite-04",
+    "source": "B · generated sprite sheet, complete isolated leaf",
+    "width": 256,
+    "height": 256,
+    "bytes": 81786,
+    "variants": [
+      {
+        "file": "leaf-sprite-04.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 56202
+      },
+      {
+        "file": "leaf-sprite-04@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 14866
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "leaf-sprite-05",
+    "source": "B · generated sprite sheet, complete isolated leaf",
+    "width": 256,
+    "height": 256,
+    "bytes": 88630,
+    "variants": [
+      {
+        "file": "leaf-sprite-05.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 64268
+      },
+      {
+        "file": "leaf-sprite-05@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 16884
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "leaf-sprite-06",
+    "source": "B · generated sprite sheet, complete isolated leaf",
+    "width": 256,
+    "height": 256,
+    "bytes": 78959,
+    "variants": [
+      {
+        "file": "leaf-sprite-06.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 53754
+      },
+      {
+        "file": "leaf-sprite-06@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 14272
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "leaf-sprite-07",
+    "source": "B · generated sprite sheet, complete isolated leaf",
+    "width": 256,
+    "height": 256,
+    "bytes": 86395,
+    "variants": [
+      {
+        "file": "leaf-sprite-07.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 63498
+      },
+      {
+        "file": "leaf-sprite-07@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 16860
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "leaf-sprite-08",
+    "source": "B · generated sprite sheet, complete isolated leaf",
+    "width": 256,
+    "height": 256,
+    "bytes": 81786,
+    "variants": [
+      {
+        "file": "leaf-sprite-08.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 56202
+      },
+      {
+        "file": "leaf-sprite-08@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 14866
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "flower-sprite-01",
+    "source": "B · generated sprite sheet, complete isolated flower",
+    "width": 256,
+    "height": 256,
+    "bytes": 109457,
+    "variants": [
+      {
+        "file": "flower-sprite-01.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 76860
+      },
+      {
+        "file": "flower-sprite-01@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 21280
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "flower-sprite-02",
+    "source": "B · generated sprite sheet, complete isolated flower",
+    "width": 256,
+    "height": 256,
+    "bytes": 83734,
+    "variants": [
+      {
+        "file": "flower-sprite-02.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 59132
+      },
+      {
+        "file": "flower-sprite-02@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 16830
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "flower-sprite-03",
+    "source": "B · generated sprite sheet, complete isolated flower",
+    "width": 256,
+    "height": 256,
+    "bytes": 105583,
+    "variants": [
+      {
+        "file": "flower-sprite-03.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 74122
+      },
+      {
+        "file": "flower-sprite-03@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 20480
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "flower-sprite-04",
+    "source": "B · generated sprite sheet, complete isolated flower",
+    "width": 256,
+    "height": 256,
+    "bytes": 88089,
+    "variants": [
+      {
+        "file": "flower-sprite-04.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 62014
+      },
+      {
+        "file": "flower-sprite-04@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 17406
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "leaf-small-01",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 88630,
+    "variants": [
+      {
+        "file": "leaf-small-01.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 64268
+      },
+      {
+        "file": "leaf-small-01@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 16884
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "bouquet-leaf-01",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 88630,
+    "variants": [
+      {
+        "file": "bouquet-leaf-01.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 64268
+      },
+      {
+        "file": "bouquet-leaf-01@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 16884
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "leaf-small-02",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 78959,
+    "variants": [
+      {
+        "file": "leaf-small-02.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 53754
+      },
+      {
+        "file": "leaf-small-02@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 14272
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "bouquet-leaf-02",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 78959,
+    "variants": [
+      {
+        "file": "bouquet-leaf-02.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 53754
+      },
+      {
+        "file": "bouquet-leaf-02@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 14272
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "leaf-small-03",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 86395,
+    "variants": [
+      {
+        "file": "leaf-small-03.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 63498
+      },
+      {
+        "file": "leaf-small-03@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 16860
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "bouquet-leaf-03",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 86395,
+    "variants": [
+      {
+        "file": "bouquet-leaf-03.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 63498
+      },
+      {
+        "file": "bouquet-leaf-03@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 16860
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "leaf-small-04",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 81786,
+    "variants": [
+      {
+        "file": "leaf-small-04.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 56202
+      },
+      {
+        "file": "leaf-small-04@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 14866
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "bouquet-leaf-04",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 81786,
+    "variants": [
+      {
+        "file": "bouquet-leaf-04.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 56202
+      },
+      {
+        "file": "bouquet-leaf-04@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 14866
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "bouquet-flower-01",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 109457,
+    "variants": [
+      {
+        "file": "bouquet-flower-01.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 76860
+      },
+      {
+        "file": "bouquet-flower-01@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 21280
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "bouquet-flower-02",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 83734,
+    "variants": [
+      {
+        "file": "bouquet-flower-02.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 59132
+      },
+      {
+        "file": "bouquet-flower-02@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 16830
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "bouquet-flower-03",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 105583,
+    "variants": [
+      {
+        "file": "bouquet-flower-03.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 74122
+      },
+      {
+        "file": "bouquet-flower-03@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 20480
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "bouquet-flower-04",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 88089,
+    "variants": [
+      {
+        "file": "bouquet-flower-04.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 62014
+      },
+      {
+        "file": "bouquet-flower-04@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 17406
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "bouquet-flower-05",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 88615,
+    "variants": [
+      {
+        "file": "bouquet-flower-05.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 62926
+      },
+      {
+        "file": "bouquet-flower-05@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 17610
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "petal-01",
+    "source": "B · generated sprite sheet, single isolated petal",
+    "width": 256,
+    "height": 256,
+    "bytes": 75628,
+    "variants": [
+      {
+        "file": "petal-01.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 52090
+      },
+      {
+        "file": "petal-01@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 14288
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "monogram-petals-01",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 75628,
+    "variants": [
+      {
+        "file": "monogram-petals-01.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 52090
+      },
+      {
+        "file": "monogram-petals-01@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 14288
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "petal-02",
+    "source": "B · generated sprite sheet, single isolated petal",
+    "width": 256,
+    "height": 256,
+    "bytes": 60303,
+    "variants": [
+      {
+        "file": "petal-02.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 42120
+      },
+      {
+        "file": "petal-02@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 11808
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "monogram-petals-02",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 60303,
+    "variants": [
+      {
+        "file": "monogram-petals-02.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 42120
+      },
+      {
+        "file": "monogram-petals-02@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 11808
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "petal-03",
+    "source": "B · generated sprite sheet, single isolated petal",
+    "width": 256,
+    "height": 256,
+    "bytes": 68394,
+    "variants": [
+      {
+        "file": "petal-03.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 47902
+      },
+      {
+        "file": "petal-03@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 13276
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "monogram-petals-03",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 68394,
+    "variants": [
+      {
+        "file": "monogram-petals-03.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 47902
+      },
+      {
+        "file": "monogram-petals-03@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 13276
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "petal-04",
+    "source": "B · generated sprite sheet, single isolated petal",
+    "width": 256,
+    "height": 256,
+    "bytes": 67616,
+    "variants": [
+      {
+        "file": "petal-04.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 47730
+      },
+      {
+        "file": "petal-04@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 13006
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "monogram-petals-04",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 67616,
+    "variants": [
+      {
+        "file": "monogram-petals-04.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 47730
+      },
+      {
+        "file": "monogram-petals-04@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 13006
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "petal-05",
+    "source": "B · generated sprite sheet, single isolated petal",
+    "width": 256,
+    "height": 256,
+    "bytes": 71124,
+    "variants": [
+      {
+        "file": "petal-05.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 49124
+      },
+      {
+        "file": "petal-05@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 13194
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "monogram-petals-05",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 71124,
+    "variants": [
+      {
+        "file": "monogram-petals-05.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 49124
+      },
+      {
+        "file": "monogram-petals-05@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 13194
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "petal-06",
+    "source": "B · generated sprite sheet, single isolated petal",
+    "width": 256,
+    "height": 256,
+    "bytes": 69402,
+    "variants": [
+      {
+        "file": "petal-06.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 47940
+      },
+      {
+        "file": "petal-06@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 13314
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "monogram-petals-06",
+    "source": "B · generated sprite sheet",
+    "width": 256,
+    "height": 256,
+    "bytes": 69402,
+    "variants": [
+      {
+        "file": "monogram-petals-06.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 47940
+      },
+      {
+        "file": "monogram-petals-06@1x.webp",
+        "width": 128,
+        "height": 128,
+        "bytes": 13314
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "particle-atlas",
+    "source": "B · packed generated leaf and petal sprites",
+    "width": 512,
+    "height": 384,
+    "bytes": 147407,
+    "variants": [
+      {
+        "file": "particle-atlas.webp",
+        "width": 512,
+        "height": 384,
+        "bytes": 58224
+      },
+      {
+        "file": "particle-atlas@1x.webp",
+        "width": 256,
+        "height": 192,
+        "bytes": 21150
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "butterfly-wing-left",
+    "source": "A · butterfly master, anatomical alpha split",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 2769796,
+    "variants": [
+      {
+        "file": "butterfly-wing-left.webp",
+        "width": 600,
+        "height": 400,
+        "bytes": 44792
+      },
+      {
+        "file": "butterfly-wing-left@1x.webp",
+        "width": 300,
+        "height": 200,
+        "bytes": 14730
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "butterfly-wing-right",
+    "source": "A · butterfly master, anatomical alpha split",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 2774482,
+    "variants": [
+      {
+        "file": "butterfly-wing-right.webp",
+        "width": 600,
+        "height": 400,
+        "bytes": 45938
+      },
+      {
+        "file": "butterfly-wing-right@1x.webp",
+        "width": 300,
+        "height": 200,
+        "bytes": 15158
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "butterfly-body",
+    "source": "A · butterfly master, anatomical alpha split",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 2748536,
+    "variants": [
+      {
+        "file": "butterfly-body.webp",
+        "width": 600,
+        "height": 400,
+        "bytes": 11462
+      },
+      {
+        "file": "butterfly-body@1x.webp",
+        "width": 300,
+        "height": 200,
+        "bytes": 4716
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "monogram",
+    "source": "A · existing embedded lossless PNG, same monogram as Opening reference",
+    "width": 1286,
+    "height": 1229,
+    "bytes": 1662927,
+    "variants": [
+      {
+        "file": "monogram.webp",
+        "width": 400,
+        "height": 382,
+        "bytes": 96996
+      },
+      {
+        "file": "monogram@1x.webp",
+        "width": 200,
+        "height": 191,
+        "bytes": 33048
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "garland-top",
+    "source": "B (existing) · page-transition-garland.png; original project PNG, no new generation",
+    "width": 2172,
+    "height": 716,
+    "bytes": 1664136,
+    "variants": [
+      {
+        "file": "garland-top.webp",
+        "width": 900,
+        "height": 297,
+        "bytes": 150818
+      },
+      {
+        "file": "garland-top@1x.webp",
+        "width": 450,
+        "height": 148,
+        "bytes": 47550
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "branch-hero-left",
+    "source": "B (existing) · hero-tree-left-v1.png; original project PNG, no new generation",
+    "width": 1302,
+    "height": 1192,
+    "bytes": 1547181,
+    "variants": [
+      {
+        "file": "branch-hero-left.webp",
+        "width": 600,
+        "height": 549,
+        "bytes": 176918
+      },
+      {
+        "file": "branch-hero-left@1x.webp",
+        "width": 300,
+        "height": 275,
+        "bytes": 57952
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "branch-hero-right",
+    "source": "B (existing) · hero-tree-right-v1.png; original project PNG, no new generation",
+    "width": 1221,
+    "height": 1244,
+    "bytes": 1416230,
+    "variants": [
+      {
+        "file": "branch-hero-right.webp",
+        "width": 600,
+        "height": 611,
+        "bytes": 182736
+      },
+      {
+        "file": "branch-hero-right@1x.webp",
+        "width": 300,
+        "height": 306,
+        "bytes": 59636
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "corner-left",
+    "source": "B (existing) · botanical-ascending-review.png",
+    "width": 1011,
+    "height": 1519,
+    "bytes": 2833127,
+    "variants": [
+      {
+        "file": "corner-left.webp",
+        "width": 400,
+        "height": 601,
+        "bytes": 130836
+      },
+      {
+        "file": "corner-left@1x.webp",
+        "width": 200,
+        "height": 300,
+        "bytes": 42116
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "corner-right",
+    "source": "B (existing) · botanical-ascending-review.png",
+    "width": 1011,
+    "height": 1519,
+    "bytes": 2824681,
+    "variants": [
+      {
+        "file": "corner-right.webp",
+        "width": 400,
+        "height": 601,
+        "bytes": 130800
+      },
+      {
+        "file": "corner-right@1x.webp",
+        "width": 200,
+        "height": 300,
+        "bytes": 42182
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "paper-texture",
+    "source": "A · empty paper area of landscape master",
+    "width": 512,
+    "height": 512,
+    "bytes": 230263,
+    "variants": [
+      {
+        "file": "paper-texture.webp",
+        "width": 512,
+        "height": 512,
+        "bytes": 7060
+      },
+      {
+        "file": "paper-texture@1x.webp",
+        "width": 256,
+        "height": 256,
+        "bytes": 1018
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "landscape-far",
+    "source": "A · lake master; overlapping raster alpha bands",
+    "width": 1024,
+    "height": 946,
+    "bytes": 2465886,
+    "variants": [
+      {
+        "file": "landscape-far.webp",
+        "width": 900,
+        "height": 831,
+        "bytes": 278722
+      },
+      {
+        "file": "landscape-far@1x.webp",
+        "width": 450,
+        "height": 416,
+        "bytes": 69444
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "landscape-mid",
+    "source": "A · lake master; overlapping raster alpha bands",
+    "width": 1024,
+    "height": 946,
+    "bytes": 2412006,
+    "variants": [
+      {
+        "file": "landscape-mid.webp",
+        "width": 900,
+        "height": 831,
+        "bytes": 75062
+      },
+      {
+        "file": "landscape-mid@1x.webp",
+        "width": 450,
+        "height": 416,
+        "bytes": 19566
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "landscape-lake",
+    "source": "A · lake master; overlapping raster alpha bands",
+    "width": 1024,
+    "height": 946,
+    "bytes": 2406170,
+    "variants": [
+      {
+        "file": "landscape-lake.webp",
+        "width": 900,
+        "height": 831,
+        "bytes": 142082
+      },
+      {
+        "file": "landscape-lake@1x.webp",
+        "width": 450,
+        "height": 416,
+        "bytes": 36688
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "landscape-foreground",
+    "source": "A · lake master; overlapping raster alpha bands",
+    "width": 1024,
+    "height": 946,
+    "bytes": 2410598,
+    "variants": [
+      {
+        "file": "landscape-foreground.webp",
+        "width": 900,
+        "height": 831,
+        "bytes": 95026
+      },
+      {
+        "file": "landscape-foreground@1x.webp",
+        "width": 450,
+        "height": 416,
+        "bytes": 24078
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "fog-layer",
+    "source": "A · cloud hatching from landscape; cream tint, feathered edges",
+    "width": 1024,
+    "height": 230,
+    "bytes": 31761,
+    "variants": [
+      {
+        "file": "fog-layer.webp",
+        "width": 900,
+        "height": 202,
+        "bytes": 29224
+      },
+      {
+        "file": "fog-layer@1x.webp",
+        "width": 450,
+        "height": 101,
+        "bytes": 11812
+      }
+    ],
+    "note": ""
+  },
+  {
+    "name": "water-glimmer",
+    "source": "A · lake reflection crop",
+    "width": 844,
+    "height": 170,
+    "bytes": 323381,
+    "variants": [
+      {
+        "file": "water-glimmer.webp",
+        "width": 700,
+        "height": 141,
+        "bytes": 49674
+      },
+      {
+        "file": "water-glimmer@1x.webp",
+        "width": 350,
+        "height": 70,
+        "bytes": 12662
+      }
+    ],
+    "note": ""
+  }
+]

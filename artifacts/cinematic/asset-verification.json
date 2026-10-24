@@ -1,0 +1,10 @@
+{
+  "masters": 59,
+  "svg": [
+    "arch-frame.svg",
+    "divider.svg"
+  ],
+  "placeholders": 0,
+  "maxVineBytes": 375088,
+  "maxLandscapeBytes": 278722
+}

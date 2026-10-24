@@ -2,7 +2,7 @@ type Props = {
   progress: number;
   phase: "loading" | "ready" | "error";
   onRetry: () => void;
-  onContinue: () => void;
+  onContinue?: () => void;
 };
 
 export function LoadingScreen({ progress, phase, onRetry, onContinue }: Props) {
@@ -21,7 +21,7 @@ export function LoadingScreen({ progress, phase, onRetry, onContinue }: Props) {
         <p className="loading-status">Aset gagal dimuat.</p>
         <div className="loading-actions">
           <button type="button" onClick={onRetry}>Coba lagi</button>
-          <button type="button" onClick={onContinue}>Lanjutkan</button>
+          {onContinue && <button type="button" onClick={onContinue}>Lanjutkan</button>}
         </div>
       </> : null}
     </div>

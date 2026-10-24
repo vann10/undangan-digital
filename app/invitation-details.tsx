@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { calendarUrl, dateLabel, eventDate, fullDateLabel, timeLabel, wedding } from "./wedding-config";
+import { ChapterBackground } from './chapter-art';
+import './chapter-art.css';
 
 type Wish = { id: string; name: string; message: string; createdAt: string };
 type Attendance = "attending" | "not_attending";
@@ -102,18 +104,23 @@ function EventDetails() {
   const mapUrl = wedding.mapsUrl?.startsWith("https://www.google.com/maps/") || wedding.mapsUrl?.startsWith("https://maps.app.goo.gl/") ? wedding.mapsUrl : null;
   return <section className="event-section" aria-labelledby="event-heading">
     <SectionHeading eyebrow="INFORMASI PERNIKAHAN" title="The Wedding" id="event-heading" />
-    <dl className="event-list">
-      <div><dt>Mempelai pria</dt><dd>{wedding.groomFullName}</dd></div>
-      <div><dt>Mempelai wanita</dt><dd>{wedding.brideFullName}</dd></div>
-      <div><dt>Ayah mempelai pria</dt><dd>{wedding.groomFather}</dd></div>
-      <div><dt>Ibu mempelai pria</dt><dd>{wedding.groomMother}</dd></div>
-      <div><dt>Ayah mempelai wanita</dt><dd>{wedding.brideFather}</dd></div>
-      <div><dt>Ibu mempelai wanita</dt><dd>{wedding.brideMother}</dd></div>
-      <div><dt>Tanggal</dt><dd>{fullDateLabel}</dd></div>
-      <div><dt>Waktu</dt><dd>{timeLabel}</dd></div>
-      <div><dt>Tempat</dt><dd>{wedding.venueName}</dd></div>
-      <div><dt>Alamat</dt><dd>{mapUrl ? <a className="address-link" href={mapUrl} target="_blank" rel="noopener noreferrer">{wedding.venueAddress}</a> : wedding.venueAddress}</dd></div>
-    </dl>
+    <div className="event-list event-prose">
+      <div className="wedding-family">
+        <p className="family-role">Mempelai Pria</p>
+        <h3>{wedding.groomFullName}</h3>
+        <p>Putra dari Bapak {wedding.groomFather} dan Ibu {wedding.groomMother}</p>
+      </div>
+      <div className="wedding-family">
+        <p className="family-role">Mempelai Wanita</p>
+        <h3>{wedding.brideFullName}</h3>
+        <p>Putri dari Bapak {wedding.brideFather} dan Ibu {wedding.brideMother}</p>
+      </div>
+      <div className="wedding-schedule">
+        <p>{fullDateLabel}</p><p>{timeLabel}</p>
+        <p>{wedding.venueName}</p>
+        <p>{mapUrl ? <a className="address-link" href={mapUrl} target="_blank" rel="noopener noreferrer">{wedding.venueAddress}</a> : wedding.venueAddress}</p>
+      </div>
+    </div>
     <div className="event-actions">
       {saveUrl && <a className="outline-link" href={saveUrl} target="_blank" rel="noopener noreferrer">Simpan ke Google Calendar</a>}
     </div>
@@ -138,6 +145,7 @@ function Gallery() {
     { src: "/artwork/bridesgroom-user-upload.webp", alt: "Potret Rizal", width: 1000, height: 1333 },
   ];
   return <section className="gallery-section paper" aria-labelledby="gallery-heading">
+    <ChapterBackground name="gallery-conservatory" />
     <SectionHeading eyebrow="MOMEN KAMI" title="Gallery" id="gallery-heading" />
     <div className="gallery-grid">{photos.map((photo, index) => <figure className={`gallery-photo gallery-photo-${index + 1}`} key={photo.src}>
       <img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" />
@@ -233,6 +241,7 @@ function RSVPAndWishes({ identity, initialAttendance, initialGuestCount }: { ide
 
   return <>
     <section className="rsvp-section paper" aria-labelledby="rsvp-heading">
+      <ChapterBackground name="rsvp-correspondence" />
       <SectionHeading eyebrow="KONFIRMASI KEHADIRAN" title="RSVP" id="rsvp-heading" />
       <form className="rsvp-form" onSubmit={submitRsvp}>
         <fieldset><legend>Konfirmasi kehadiran</legend>
@@ -321,6 +330,11 @@ export default function InvitationDetails({ identity, initialAttendance, initial
     <Venue />
     <RSVPAndWishes identity={identity} initialAttendance={initialAttendance} initialGuestCount={initialGuestCount} />
     <Gifts />
-    <footer className="closing-section" aria-label="Penutup undangan"><Ornament /><p>Terima kasih atas doa dan kehadiran Anda.</p><h2>Rizal <em>&</em> Dewi</h2><span>{dateLabel}</span></footer>
+    <footer className="closing-section" aria-label="Penutup undangan">
+      <ChapterBackground name="footer-wedding-arch" />
+      <div className="closing-copy"><Ornament /><p>Terima kasih atas doa dan kehadiran Anda.</p><h2>Rizal <em>&</em> Dewi</h2>
+        <picture className="closing-monogram"><source srcSet="/transition/monogram@1x.webp 1x, /transition/monogram.webp 2x" type="image/webp" /><img src="/transition/monogram.png" width={400} height={400} alt="Monogram R&D" loading="lazy" decoding="async" /></picture>
+      </div>
+    </footer>
   </>;
 }

@@ -1,0 +1,26 @@
+{
+  "results": [
+    {
+      "viewport": "360x640",
+      "loadingWaitsForDecode": true,
+      "noPauseControls": true,
+      "sharedArchGeometry": true,
+      "botanicalsAbove": true
+    },
+    {
+      "viewport": "390x844",
+      "loadingWaitsForDecode": true,
+      "noPauseControls": true,
+      "sharedArchGeometry": true,
+      "botanicalsAbove": true
+    },
+    {
+      "viewport": "430x932",
+      "loadingWaitsForDecode": true,
+      "noPauseControls": true,
+      "sharedArchGeometry": true,
+      "botanicalsAbove": true
+    }
+  ],
+  "errors": []
+}

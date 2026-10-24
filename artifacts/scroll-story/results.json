@@ -1,0 +1,26 @@
+{
+  "results": [
+    {
+      "width": 360,
+      "scenes": 22,
+      "settled": true,
+      "vineResources": 1
+    },
+    {
+      "width": 390,
+      "scenes": 22,
+      "settled": true,
+      "vineResources": 1
+    },
+    {
+      "width": 430,
+      "scenes": 22,
+      "settled": true,
+      "vineResources": 1
+    },
+    {
+      "reducedMotion": "content visible, scroll animation disabled"
+    }
+  ],
+  "errors": []
+}
