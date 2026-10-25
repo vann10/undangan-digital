@@ -1,6 +1,6 @@
 .desktop-wedding-background{display:none}
 @media(min-width:761px){.desktop-wedding-background{display:block;position:fixed;inset:0;z-index:0;background:var(--cream) url('/chapter-art/desktop-wedding-blueprint.webp') center/cover no-repeat;pointer-events:none}.cinematic-shell .invitation{z-index:1}}
-.cin-hero-kicker,.cin-date{color:var(--hero-text)!important;text-shadow:0 1px 7px var(--teal-deep)}
+.cin-hero-kicker,.cin-date{color:var(--hero-text)!important;text-shadow:none}
 .cinematic-shell .person-copy h3{font:400 clamp(30px,8.4cqw,36px)/1.22 'Runethia',var(--display);white-space:normal;overflow-wrap:normal;margin:0 auto;max-width:100%}
 .chapter-background{position:absolute;inset:0;z-index:0;display:block;pointer-events:none;overflow:hidden}
 .chapter-background img{width:100%;height:100%;object-fit:cover;object-position:center bottom;display:block}
@@ -8,18 +8,26 @@
 .rsvp-section:before,.gallery-section:before{display:none}
 .rsvp-section>.rsvp-form,.gallery-section>.gallery-grid{z-index:1}
 .closing-section>.chapter-background{opacity:1}
-.scroll-story .closing-section{min-height:420px;aspect-ratio:2 / 3}
-.gallery-section>.chapter-background{display:flex;align-items:flex-end}
-.gallery-section>.chapter-background img{height:auto;object-fit:contain;mask-image:linear-gradient(to bottom,transparent,var(--cream) 15%)}
+.scroll-story .closing-section{min-height:420px;aspect-ratio:2 / 3;padding-block:clamp(42px,12cqw,58px) clamp(50px,14cqw,68px)}
+.gallery-section>.chapter-background{display:block}
+.gallery-section>.chapter-background img{width:100%;height:100%;object-fit:cover;object-position:center;mask-image:none}
 .closing-section>p,.closing-section>h2,.closing-section>span{position:relative;z-index:1}
 .chapter-bridge .page-bridge-garland{top:-45px;width:100%;height:auto;max-height:100px;object-fit:contain;filter:none}
 .chapter-bridge-1 img{transform:scaleX(-1)}
 .chapter-bridge-2 img{rotate:180deg}
 .cin-stage .cin-guest{top:59%;left:18%;width:64%;padding:8px 12px;color:var(--guest-text);opacity:1;background:rgba(255,255,255,var(--opacity-guestGlass));border:1px solid rgba(255,255,255,var(--opacity-guestBorder));border-radius:12px;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
 @media(max-height:700px){.cin-stage .cin-guest{top:57.8%;padding:6px 10px}}
-.closing-copy{position:relative;z-index:1;width:100%;transform:translateY(-25px)}
-.closing-monogram{position:absolute;top:calc(100% + 5px);left:50%;width:104px;height:90px;transform:translateX(-50%);display:block}
-.closing-monogram img{width:100%;height:100%;object-fit:contain;display:block}
+.closing-copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%}
+.closing-copy>.section-ornament{flex:none;width:112px;height:22px;margin:0 auto 16px}
+.closing-copy .closing-thanks{max-width:250px;margin:0 auto 20px;font:400 italic 20px/1.4 var(--display);color:var(--ivory);text-align:center}
+.closing-copy .closing-names{position:relative;display:grid;gap:14px;width:min(100%,56cqw,240px);margin:0 auto 16px;font:400 italic clamp(58px,17cqw,74px)/.92 var(--display);letter-spacing:-.045em;color:var(--ivory)}
+.closing-copy .closing-names .closing-name{display:block;font:inherit;letter-spacing:inherit;color:inherit;white-space:nowrap}
+.closing-name-groom{justify-self:start}
+.closing-name-bride{justify-self:end}
+.closing-copy .closing-names .closing-name-ampersand{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:400 italic 32px/1 var(--display);letter-spacing:0;color:var(--gold)}
+/* A tonal impression in the emerald paper, behind the closing typography. */
+.closing-monogram{position:absolute;z-index:0;display:block;left:50%;top:43%;width:min(76%,320px);aspect-ratio:1;transform:translate(-50%,-50%);opacity:.32;mix-blend-mode:soft-light;pointer-events:none}
+.closing-monogram img{width:100%;height:100%;object-fit:contain;display:block;filter:grayscale(1) contrast(.65) brightness(1.25) drop-shadow(-1px -1px 0 rgba(231,220,198,.65)) drop-shadow(1px 2px 1px rgba(5,28,27,.9))}
 .event-section .event-prose{max-width:350px;text-align:center}
 .event-section .event-prose>div{display:block;padding:20px 0;border-bottom:0}
 .event-prose .wedding-family p{margin:8px 0 0;font:400 20px/1.45 var(--display)}

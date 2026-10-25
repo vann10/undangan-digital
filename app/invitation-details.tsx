@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties, type Form
 import { calendarUrl, dateLabel, eventDate, fullDateLabel, timeLabel, wedding } from "./wedding-config";
 import { ChapterBackground } from './chapter-art';
 import './chapter-art.css';
+import WeddingGallery from './wedding-gallery';
 
 type Wish = { id: string; name: string; message: string; createdAt: string };
 type Attendance = "attending" | "not_attending";
@@ -138,21 +139,6 @@ function Venue() {
   </section>;
 }
 
-function Gallery() {
-  const photos = [
-    { src: "/artwork/couple-user-upload.webp", alt: "Potret Rizal dan Dewi bersama", width: 1000, height: 1501 },
-    { src: "/artwork/brides-user-upload.webp", alt: "Potret Dewi", width: 1000, height: 1333 },
-    { src: "/artwork/bridesgroom-user-upload.webp", alt: "Potret Rizal", width: 1000, height: 1333 },
-  ];
-  return <section className="gallery-section paper" aria-labelledby="gallery-heading">
-    <ChapterBackground name="gallery-conservatory" />
-    <SectionHeading eyebrow="MOMEN KAMI" title="Gallery" id="gallery-heading" />
-    <div className="gallery-grid">{photos.map((photo, index) => <figure className={`gallery-photo gallery-photo-${index + 1}`} key={photo.src}>
-      <img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" />
-    </figure>)}</div>
-  </section>;
-}
-
 function RSVPAndWishes({ identity, initialAttendance, initialGuestCount }: { identity: Identity | null; initialAttendance: Attendance | null; initialGuestCount: number | null }) {
   const [attendance, setAttendance] = useState<Attendance>("attending");
   const [guestCount, setGuestCount] = useState("1");
@@ -255,7 +241,7 @@ function RSVPAndWishes({ identity, initialAttendance, initialGuestCount }: { ide
         <p className="form-status" role="status" aria-live="polite">{rsvpStatus || (recordedAttendance ? `Konfirmasi Anda sudah tercatat: ${recordedAttendance === "attending" ? `Hadir${recordedGuestCount ? ` (${recordedGuestCount} tamu)` : ""}` : "Tidak hadir"}. Respons ini bersifat final.` : !identity ? "Buka tautan undangan pribadi yang valid untuk mengirim RSVP." : !configured ? "RSVP belum tersedia. Hubungkan Google Sheets sebelum membagikan undangan." : "")}</p>
       </form>
     </section>
-    <Gallery />
+    <WeddingGallery />
     <section className="wishes-section" aria-labelledby="wishes-heading">
       <SectionHeading eyebrow="DARI PARA TAMU" title="Wedding Wishes" id="wishes-heading" />
       <form className="rsvp-form" onSubmit={submitWish}>
@@ -332,8 +318,13 @@ export default function InvitationDetails({ identity, initialAttendance, initial
     <Gifts />
     <footer className="closing-section" aria-label="Penutup undangan">
       <ChapterBackground name="footer-wedding-arch" />
-      <div className="closing-copy"><Ornament /><p>Terima kasih atas doa dan kehadiran Anda.</p><h2>Rizal <em>&</em> Dewi</h2>
-        <picture className="closing-monogram"><source srcSet="/transition/monogram@1x.webp 1x, /transition/monogram.webp 2x" type="image/webp" /><img src="/transition/monogram.png" width={400} height={400} alt="Monogram R&D" loading="lazy" decoding="async" /></picture>
+      <picture className="closing-monogram" aria-hidden="true"><source srcSet="/transition/monogram@1x.webp 1x, /transition/monogram.webp 2x" type="image/webp" /><img src="/transition/monogram.png" width={400} height={400} alt="" loading="lazy" decoding="async" /></picture>
+      <div className="closing-copy"><Ornament /><p className="closing-thanks">Terima kasih atas doa<br />dan kehadiran Anda.</p>
+        <h2 className="closing-names" aria-label={`${wedding.groom} dan ${wedding.bride}`}>
+          <span className="closing-name closing-name-groom" aria-hidden="true">{wedding.groom}</span>
+          <em className="closing-name-ampersand" aria-hidden="true">&amp;</em>
+          <span className="closing-name closing-name-bride" aria-hidden="true">{wedding.bride}</span>
+        </h2>
       </div>
     </footer>
   </>;

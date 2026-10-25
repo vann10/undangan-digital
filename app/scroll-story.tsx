@@ -35,7 +35,11 @@ export default function ScrollStory({children,active=true}:{children:ReactNode;a
             if(paused.current||entry.element.contains(document.activeElement))entry.timeline.progress(1).pause();
             else entry.timeline.play();
           } else if(!entry.element.contains(document.activeElement)) {
-            entry.timeline.pause(0);entry.element.dataset.scrollState='ready';
+            if(entry.element.closest('.closing-section') && entry.timeline.progress()>0) {
+              entry.timeline.progress(1).pause();
+            } else {
+              entry.timeline.pause(0);entry.element.dataset.scrollState='ready';
+            }
           }
         }
       },{rootMargin:'0px 0px -8% 0px',threshold:0});
@@ -63,7 +67,7 @@ export default function ScrollStory({children,active=true}:{children:ReactNode;a
         tl.from(q(el,'.countdown-unit'),{y:100,rotation:(i:number)=>i%2?9:-9,scale:.85,opacity:0,stagger:.12,ease:'back.out(1.2)'},0)
           .from(q(el,'small'),{y:15,opacity:0,stagger:.1,duration:.6},.35);
       }));
-      q(host,'.chapter-background').forEach((el,i)=>scene(el,`chapter-background-${i}`,tl=>{
+      q(host,'.chapter-background:not(.gallery-section > .chapter-background)').forEach((el,i)=>scene(el,`chapter-background-${i}`,tl=>{
         tl.from(q(el,'img'),{y:30,scale:1.04,opacity:0,duration:1.5,ease:'power3.out'});
       }));
       q(host,'.event-list').forEach(el=>scene(el,'event-details',tl=>{
@@ -75,14 +79,19 @@ export default function ScrollStory({children,active=true}:{children:ReactNode;a
           .from(q(el,'iframe'),{clipPath:'inset(50% 0 50% 0)',duration:1.2,ease:'power3.inOut'},.4);
       }));
       q(host,'.gallery-grid').forEach(el=>scene(el,'gallery',tl=>{
-        tl.from(q(el,'.gallery-photo-1'),{y:70,rotation:-4,clipPath:'inset(0 0 85% 0)',duration:1.3,ease:'power3.inOut'},0)
-          .from(q(el,'.gallery-photo-2'),{x:()=>-host.clientWidth,rotation:-8,opacity:0,duration:1.2},.2)
-          .from(q(el,'.gallery-photo-3'),{x:()=>host.clientWidth,rotation:8,opacity:0,duration:1.2},.35)
-          .from(q(el,'img'),{scale:1.12,stagger:.1,duration:1.5},.1);
+        tl.from(q(el,'.gallery-photo-1'),{y:32,clipPath:'inset(0 0 85% 0)',duration:1.3,ease:'power3.inOut'},0)
+          .from(q(el,'.gallery-photo-2'),{x:-38,y:20,opacity:0,duration:1.2},.2)
+          .from(q(el,'.gallery-photo-3'),{x:38,y:20,opacity:0,duration:1.2},.35)
+          .from(q(el,'img'),{scale:1.06,stagger:.1,duration:1.5},.1);
       }));
       q(host,'.rsvp-form').forEach((el,i)=>scene(el,`form-${i}`,tl=>{
-        tl.from(q(el,':scope>label,:scope>fieldset'),{x:()=>host.clientWidth*(i?-.8:.8),opacity:0,stagger:.12},0)
-          .from(q(el,'.form-submit'),{y:35,scale:.94,opacity:0,ease:'back.out(1.2)'},.25);
+        if(el.closest('.rsvp-section')) {
+          tl.from(q(el,':scope>label,:scope>fieldset'),{x:i?-24:24,y:12,opacity:0,stagger:.12},0)
+            .from(q(el,'.form-submit'),{y:20,opacity:0,ease:'power3.out'},.25);
+        } else {
+          tl.from(q(el,':scope>label,:scope>fieldset'),{x:()=>host.clientWidth*(i?-.8:.8),opacity:0,stagger:.12},0)
+            .from(q(el,'.form-submit'),{y:35,scale:.94,opacity:0,ease:'back.out(1.2)'},.25);
+        }
       }));
       q(host,'.gift-section').forEach(el=>scene(el,'gifts',tl=>{
         tl.from(q(el,'.bank-carousel'),{y:90,rotation:4,scale:.9,opacity:0,duration:1.2,ease:'back.out(1.2)'},.15)
@@ -92,8 +101,7 @@ export default function ScrollStory({children,active=true}:{children:ReactNode;a
       q(host,'.closing-section').forEach(el=>scene(el,'closing',tl=>{
         tl.from(q(el,'.gold-divider'),{scaleX:0,opacity:0,duration:1.1},0)
           .from(q(el,'p'),{y:35,opacity:0},.15)
-          .from(q(el,'h2'),{y:80,rotation:3,scale:.8,clipPath:'inset(0 0 100% 0)',duration:1.5},.3)
-          .from(q(el,'.closing-monogram'),{y:20,scale:.85,opacity:0},.6);
+          .from(q(el,'h2'),{y:80,rotation:3,scale:.8,clipPath:'inset(0 0 100% 0)',duration:1.5},.3);
       }));
       const addCards=()=>q(host,'.wish-card').forEach((el,i)=>scene(el,`wish-${i}`,tl=>{
         tl.from(q(el,'p,cite'),{x:i%2?70:-70,y:15,opacity:0,stagger:.15});

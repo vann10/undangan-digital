@@ -17,6 +17,8 @@ html:has(.cin-stage){scrollbar-gutter:stable both-edges}
 .cin-sky picture{height:230%}.cin-sky img{object-fit:cover!important}
 .cin-opening,.cin-hero{position:absolute;inset:0;pointer-events:none}
 .cin-opening{z-index:4}.cin-hero{z-index:5;transform:translateY(var(--hero-offset))}
+/* Feather ivory into the landscape only behind the hero's text. */
+.cin-hero-haze{position:absolute;left:-12%;top:45%;width:124%;height:32%;pointer-events:none;opacity:0;visibility:hidden;background:radial-gradient(ellipse 60% 50% at 50% 50%,var(--cream) 0%,color-mix(in srgb,var(--cream) 88%,transparent) 32%,color-mix(in srgb,var(--cream) 48%,transparent) 65%,transparent 100%)}
 .cin-opening button{pointer-events:auto}
 .cin-gates{position:absolute;inset:0;pointer-events:none}
 .cin-vine{position:absolute;top:-3%;height:106%;width:auto;aspect-ratio:450 / 2172;transform-origin:50% 20%}
@@ -43,7 +45,7 @@ html:has(.cin-stage){scrollbar-gutter:stable both-edges}
 .cin-monogram-petal{position:absolute;width:10%;height:12%}
 .cin-invited{position:absolute;top:40.6%;left:10%;width:80%;text-align:center;color:var(--teal-mid);font:500 clamp(7px,2cqw,9px)/1.6 var(--sans);letter-spacing:.19em}
 .cin-names{position:absolute;z-index:8;left:0;top:44%;width:100%;height:var(--name-height);margin:0;text-align:center;white-space:nowrap;font:400 italic clamp(45px,13.2cqw,60px)/1.05 var(--display);letter-spacing:-.045em;transform-origin:50% 50%;outline:none;color:var(--teal-deep)}
-.cin-names{text-shadow:0 1px 7px rgba(23,74,74,0)}
+.cin-names{text-shadow:none}
 .cin-ampersand{--amp-base:var(--teal-mid);--amp-gold:var(--gold);--amp-sand:var(--sand);font-size:.62em;display:inline-block;font-weight:400;letter-spacing:0;margin:0 .04em;color:var(--teal-mid);background:linear-gradient(100deg,var(--amp-base) 30%,var(--amp-gold) 45%,var(--amp-sand) 50%,var(--amp-gold) 55%,var(--amp-base) 70%);background-size:250% 100%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .cin-page-bridge{z-index:30}
 .cin-divider{position:absolute;z-index:8;left:35%;top:55%;width:30%;height:var(--divider-height);overflow:visible;fill:none;stroke:var(--gold);stroke-width:.8}
@@ -77,8 +79,8 @@ html:has(.cin-stage){scrollbar-gutter:stable both-edges}
 .cin-branch{position:absolute;top:-4%;width:49%;height:27%;z-index:3;transform-origin:50% 0;visibility:hidden;opacity:0}
 .cin-branch-left{left:-11%}.cin-branch-right{right:-10%}
 .cin-hero-leaf{position:absolute;width:7%;height:5%;transform-origin:50% 0;transform:scale(0)}
-.cin-hero-kicker{position:absolute;top:52.4%;left:0;width:100%;text-align:center;font:500 8px/1.5 var(--sans);letter-spacing:.25em;color:var(--teal-mid);opacity:0;visibility:hidden}
-.cin-date{position:absolute;top:66.5%;width:100%;display:flex;gap:.3em;justify-content:center;font:400 24px/1.2 var(--display);color:var(--teal-deep);opacity:0;visibility:hidden}
+.cin-hero-kicker{position:absolute;top:52.4%;left:0;width:100%;text-align:center;font:500 9px/1.5 var(--sans);letter-spacing:.25em;color:var(--teal-mid);opacity:0;visibility:hidden}
+.cin-date{position:absolute;top:65.09%;width:100%;display:flex;gap:.3em;justify-content:center;font:400 24px/1.2 var(--display);color:var(--teal-deep);opacity:0;visibility:hidden}
 .cin-word-mask{display:block;overflow:hidden}.cin-date-word{display:inline-block}
 .cin-particles{position:absolute;inset:0;width:100%;height:100%;z-index:12;pointer-events:none}
 .cin-motion-control{position:absolute;z-index:30;bottom:21px;left:19px;min-height:36px;padding:8px 12px;border:1px solid var(--sand);border-radius:30px;background:var(--cream);color:var(--teal-deep);font-size:9px;letter-spacing:.06em}

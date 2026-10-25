@@ -1,0 +1,75 @@
+/* Refinements are limited to RSVP and Gallery. */
+.cinematic-shell :is(.rsvp-section,.gallery-section){
+  --hairline:color-mix(in srgb,var(--gold) 48%,transparent);
+  --quiet-ink:color-mix(in srgb,var(--teal-deep) 76%,transparent);
+  --paper-wash:color-mix(in srgb,var(--cream) 94%,transparent);
+  --soft-depth:0 14px 38px color-mix(in srgb,var(--teal-deep) 9%,transparent);
+  --refined-ease:cubic-bezier(.22,.61,.36,1);
+}
+.cinematic-shell :is(.rsvp-section,.gallery-section){padding-top:92px;padding-bottom:96px}
+.cinematic-shell :is(.rsvp-section,.gallery-section).paper:after{background-image:url('/transition/paper-texture@1x.webp');background-size:360px;opacity:var(--opacity-paper)}
+.cinematic-shell :is(.rsvp-section,.gallery-section) :is(button,a){-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.cinematic-shell :is(.rsvp-section,.gallery-section) :is(button,a,input,textarea):focus-visible{outline:2px solid var(--gold);outline-offset:5px}
+.cinematic-shell :is(.rsvp-section,.gallery-section) .section-heading{margin-bottom:38px}
+.cinematic-shell :is(.rsvp-section,.gallery-section) .section-heading>p{font-size:10px;letter-spacing:.2em;line-height:1.6;color:var(--teal-mid);margin-bottom:17px}
+.cinematic-shell :is(.rsvp-section,.gallery-section) .section-heading h2{font-size:clamp(46px,12.8cqw,55px);line-height:1.08;letter-spacing:-.035em;text-wrap:balance}
+.cinematic-shell :is(.rsvp-section,.gallery-section) .section-ornament.gold-divider{width:88px;height:24px;margin-top:18px;opacity:.8}
+
+/* A readable RSVP card with deliberate selected, focus, and disabled states. */
+.cinematic-shell .rsvp-section{padding-inline:28px}
+.cinematic-shell .rsvp-section>.rsvp-form{padding:29px 24px 23px;border:1px solid var(--hairline);outline:1px solid color-mix(in srgb,var(--gold) 22%,transparent);outline-offset:-7px;background:var(--paper-wash);box-shadow:var(--soft-depth);gap:25px}
+.cinematic-shell .rsvp-section .rsvp-form>label,.cinematic-shell .rsvp-section .rsvp-form fieldset{font-size:12px;line-height:1.6;letter-spacing:.01em}
+.cinematic-shell .rsvp-section .rsvp-form fieldset{grid-template-columns:1fr 1fr;gap:10px}
+.cinematic-shell .rsvp-section .rsvp-form legend{margin-bottom:13px}
+.cinematic-shell .rsvp-section .rsvp-form .radio-row{position:relative;min-height:51px;padding:10px 11px;border:1px solid var(--hairline);gap:8px;font-size:12px;color:var(--teal-deep);cursor:pointer;transition:background .2s,border-color .2s}
+.cinematic-shell .rsvp-section .rsvp-form .radio-row:has(input:checked){background:color-mix(in srgb,var(--sage) 12%,var(--cream));border-color:var(--teal-mid)}
+.cinematic-shell .rsvp-section .rsvp-form .radio-row:has(input:disabled){cursor:default}
+.cinematic-shell .rsvp-section .rsvp-form input[type=radio]{flex:0 0 15px;width:15px;height:15px;margin:0}
+.cinematic-shell .rsvp-section .rsvp-form input:not([type=radio]),.cinematic-shell .rsvp-section .rsvp-form textarea{border-color:var(--hairline);background:var(--cream);color:var(--teal-deep);padding:14px;min-height:50px;line-height:1.65;font-size:14px;transition:border-color .2s,box-shadow .2s}
+.cinematic-shell .rsvp-section .rsvp-form textarea{min-height:160px}
+.cinematic-shell .rsvp-section .rsvp-form :is(input,textarea):focus{border-color:var(--teal-mid);box-shadow:0 0 0 3px color-mix(in srgb,var(--sage) 13%,transparent)}
+.cinematic-shell .rsvp-section .rsvp-form :is(input,textarea):disabled{color:var(--quiet-ink);opacity:1}
+.cinematic-shell .rsvp-section .form-submit{min-height:50px;letter-spacing:.09em;box-shadow:inset 0 0 0 3px var(--teal-deep),inset 0 0 0 4px color-mix(in srgb,var(--gold) 32%,transparent);transition:background .3s,transform .3s var(--refined-ease)}
+.cinematic-shell .rsvp-section .form-submit:not(:disabled):hover{background:var(--teal-mid)}
+.cinematic-shell .rsvp-section .form-submit:not(:disabled):active{transform:translateY(1px)}
+.cinematic-shell .rsvp-section .form-submit:disabled{opacity:.62}
+.cinematic-shell .rsvp-section .form-status{font-size:11px;line-height:1.8;margin:0;color:var(--quiet-ink);text-wrap:pretty}
+.cinematic-shell .rsvp-section .form-status:empty{display:none}
+
+/* Photograph plates with an accessible, full-image viewing room. */
+.cinematic-shell .gallery-section{padding-inline:28px;padding-bottom:112px}
+.cinematic-shell .gallery-grid{gap:26px 16px;margin-top:42px}
+.cinematic-shell .gallery-photo{border:0;padding:0;background:none;box-shadow:none;aspect-ratio:auto;overflow:visible}
+.cinematic-shell .gallery-photo-open{position:relative;display:block;width:100%;aspect-ratio:3/4;overflow:hidden;padding:6px;border:1px solid var(--hairline);background:var(--cream);box-shadow:var(--soft-depth);cursor:zoom-in}
+.cinematic-shell .gallery-photo-1 .gallery-photo-open{aspect-ratio:4/5;padding:8px}
+.cinematic-shell .gallery-photo img{filter:none;object-position:center 30%}
+.cinematic-shell .gallery-photo-1 img{object-position:center 44%}
+.cinematic-shell .gallery-photo figcaption{font:400 11px/1.65 var(--sans);color:var(--teal-deep);margin-top:13px;letter-spacing:.025em}
+.cinematic-shell .gallery-photo-1 figcaption{font:italic 26px/1.3 var(--display);margin-top:16px}
+.cinematic-shell .gallery-view-label{position:absolute;bottom:16px;right:16px;background:var(--cream);color:var(--teal-deep);padding:8px 11px;font:500 9px/1.3 var(--sans);letter-spacing:.08em;opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s var(--refined-ease)}
+.cinematic-shell .gallery-photo-1 .gallery-view-label,.cinematic-shell .gallery-photo-open:is(:hover,:focus-visible) .gallery-view-label{opacity:1;transform:none}
+.gallery-dialog{position:fixed;inset:0;width:100%;max-width:none;height:100dvh;max-height:none;margin:0;padding:22px 24px;border:0;background:var(--teal-deep,#174a4a);color:var(--cream,#faf7f1)}
+.gallery-dialog[open]{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:22px}
+.gallery-dialog::backdrop{background:var(--teal-deep,#174a4a)}
+.gallery-dialog-top,.gallery-dialog-controls{width:min(100%,640px);margin-inline:auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.gallery-dialog-top>span{font:italic 26px/1.2 var(--display)}
+.gallery-dialog button{min-height:44px;border:0;border-bottom:1px solid var(--hairline);background:none;color:var(--cream);padding:8px 0;font:400 12px/1.4 var(--sans);cursor:pointer}
+.gallery-dialog-top button{min-width:55px}
+.gallery-dialog button:hover{color:var(--gold)}
+.gallery-dialog-photo{min-height:0;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px}
+.gallery-dialog-photo img{display:block;min-height:0;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border:1px solid var(--hairline);padding:5px;animation:gallery-photo-arrive .35s var(--refined-ease)}
+.gallery-dialog-photo figcaption{flex:none;font:400 21px/1.3 var(--display);color:var(--sand)}
+.gallery-dialog-controls>span{font:400 11px/1 var(--sans);letter-spacing:.12em;color:var(--sand)}
+@keyframes gallery-photo-arrive{from{opacity:.5;transform:scale(.99)}to{opacity:1;transform:scale(1)}}
+
+
+@media(max-width:360px){
+  .cinematic-shell .rsvp-section{padding-inline:23px}
+  .cinematic-shell .rsvp-section>.rsvp-form{padding:27px 19px 22px}
+  .cinematic-shell .rsvp-section .rsvp-form .radio-row{padding-inline:8px;font-size:11px}
+  .cinematic-shell .gallery-section{padding-inline:23px}
+}
+@media(prefers-reduced-motion:reduce){
+  .cinematic-shell :is(.rsvp-section,.gallery-section) :is(button,a,input,textarea,.gallery-view-label){transition:none}
+  .gallery-dialog-photo img{animation:none}
+}

@@ -29,8 +29,8 @@ function Vine({side,depth}:{side:'left'|'right';depth:'back'|'front'}) {
   </div>;
 }
 
-type Props = {guestName:string; guestError:string; audio:RefObject<HTMLAudioElement|null>; onBegin:()=>void; onFinish:()=>void; onReset:()=>void};
-export default function CinematicOpening({guestName,guestError,audio,onBegin,onFinish,onReset}:Props) {
+type Props = {guestName:string; guestLoading:boolean; guestError:string; onRetryGuest:()=>void; audio:RefObject<HTMLAudioElement|null>; onBegin:()=>void; onFinish:()=>void; onReset:()=>void};
+export default function CinematicOpening({guestName,guestLoading,guestError,onRetryGuest,audio,onBegin,onFinish,onReset}:Props) {
   const photoClip=useId().replace(/:/g,'');
   const root=useRef<HTMLDivElement>(null);
   const bridge=useRef<HTMLDivElement>(null);
@@ -151,7 +151,7 @@ export default function CinematicOpening({guestName,guestError,audio,onBegin,onF
   },[attempt,audio]);
 
   function open(event:MouseEvent<HTMLButtonElement>) {
-    if(!ready || runtime.current.started)return;
+    if(!ready || guestLoading || guestError || runtime.current.started)return;
     const rect=event.currentTarget.getBoundingClientRect();
     const ripple=root.current!.querySelector<HTMLElement>('.cin-ripple')!;
     gsap.set(ripple,{left:event.detail ? event.clientX-rect.left : rect.width/2,top:event.detail ? event.clientY-rect.top : rect.height/2});
@@ -178,8 +178,8 @@ export default function CinematicOpening({guestName,guestError,audio,onBegin,onF
     timeline.current?.restart();document.body.style.overflow='hidden';
   }
   return <>
-    <LoadingScreen progress={Math.round(progress)} phase={failed?'error':ready?'ready':'loading'} onRetry={()=>setAttempt(n=>n+1)} />
-    <div ref={root} inert={!ready} aria-busy={!ready} className={`cin-stage ${ended?'cin-ended':''} ${started?'cin-started':''}`} data-paused={paused} data-ready={ready} style={transitionVariables() as CSSProperties}>
+    <LoadingScreen progress={guestLoading?Math.min(95,Math.round(progress)):Math.round(progress)} phase={failed?'error':ready&&!guestLoading?'ready':'loading'} onRetry={()=>setAttempt(n=>n+1)} />
+    <div ref={root} inert={!ready||guestLoading} aria-busy={!ready||guestLoading} className={`cin-stage ${ended?'cin-ended':''} ${started?'cin-started':''}`} data-paused={paused} data-ready={ready&&!guestLoading} style={transitionVariables() as CSSProperties}>
     <div className="cin-paper" aria-hidden="true"><Art name="paper-texture" /></div>
     <div className="cin-sky" aria-hidden="true"><Art name="landscape-far" /></div>
     <div className="cin-landscape" aria-hidden="true" data-motion>
@@ -205,10 +205,10 @@ export default function CinematicOpening({guestName,guestError,audio,onBegin,onF
         {Array.from({length:6},(_,i)=><Art key={i} name={`monogram-petals-0${i+1}`} className="cin-monogram-petal" style={{left:`${35+Math.cos(i)*28}%`,top:`${40+Math.sin(i)*30}%`}}/>)}
       </div>
       <p className="cin-invited cin-exit-text cin-opening-only">YOU’RE INVITED TO THE WEDDING OF</p>
-      <div className="cin-guest cin-exit-text cin-opening-only"><span>Yth.</span><p>{guestName}</p></div>
-      {guestError && <p className="cin-guest-error" role="alert">{guestError}</p>}
+      <div className="cin-guest cin-exit-text cin-opening-only" aria-live="polite"><span>{guestName ? 'Yth.' : ''}</span><p>{guestName}</p></div>
+      {guestError && <p className="cin-guest-error" role="alert">{guestError} <button type="button" onClick={onRetryGuest}>Coba lagi</button></p>}
       <div className="cin-button-anchor cin-opening-only">
-        <button type="button" className="cin-open" onClick={open} disabled={!ready||started} aria-label="Buka Undangan" aria-controls="hero">
+        <button type="button" className="cin-open" onClick={open} disabled={!ready||guestLoading||Boolean(guestError)||started} aria-label="Buka Undangan" aria-controls="hero">
           <span className="cin-ripple" aria-hidden="true" />
           <span className="cin-button-copy">{ready?'Buka Undangan':failed?'ASET BELUM TERMUAT':'MENYIAPKAN UNDANGAN'}</span><span className="cin-arrow" aria-hidden="true">→</span>
         </button>
@@ -217,6 +217,7 @@ export default function CinematicOpening({guestName,guestError,audio,onBegin,onF
       </div>
     </section>
     <section id="hero" className="cin-hero" aria-label="Undangan pernikahan" aria-hidden={!ended}>
+      <div className="cin-hero-haze cin-hero-reveal" aria-hidden="true" />
       <div className="cin-portrait cin-hero-reveal" data-motion>
         <svg className="cin-arch" viewBox="0 0 280 354" preserveAspectRatio="none" aria-hidden="true"><path className="cin-arch-path" d="M3 351 L3 141 A137 137 0 0 1 277 141 L277 351 Z" /></svg>
         <svg width="0" height="0" className="cin-clip-defs" aria-hidden="true"><defs><clipPath id={photoClip} clipPathUnits="objectBoundingBox"><path transform="scale(.003571428571 .002824858757)" d="M3 351 L3 141 A137 137 0 0 1 277 141 L277 351 Z" /></clipPath></defs></svg>

@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type RefObject, type CSSProperties } from "react";
+import { useRef, useState, type RefObject, type CSSProperties } from "react";
 import InvitationDetails from "./invitation-details";
 import CinematicOpening from "./cinematic-opening";
 import ScrollStory from "./scroll-story";
+import "./premium-refinements.css";
 import { transitionConfig, transitionVariables } from "../transition.config";
 import { wedding } from "./wedding-config";
+import { useGuestInvitation } from "./use-guest-invitation";
 
 function MusicControl({ audio, playing, error, toggle, onPlaying, onPause, onError }: {
   audio: RefObject<HTMLAudioElement | null>; playing: boolean; error: string;
@@ -44,32 +46,9 @@ export default function Invitation({ invitationId, accessCode }: { invitationId?
   const [stage, setStage] = useState<"cover" | "hero">("cover");
   const [playing, setPlaying] = useState(false);
   const [musicError, setMusicError] = useState("");
-  const [guestName, setGuestName] = useState("Tamu Undangan");
-  const [invitationToken, setInvitationToken] = useState<string | null>(null);
-  const [attendance, setAttendance] = useState<"attending" | "not_attending" | null>(null);
-  const [guestCount, setGuestCount] = useState<number | null>(null);
-  const [guestError, setGuestError] = useState("");
+  const { guestName, invitationToken, attendance, guestCount, guestLoading, guestError, retryGuest } = useGuestInvitation(invitationId, accessCode);
   const audio = useRef<HTMLAudioElement>(null);
   const musicStopped = useRef(false);
-  useEffect(() => {
-    if (!invitationId) return;
-    const token = accessCode ?? window.location.hash.slice(1);
-    if (!/^(?:[A-Za-z0-9_-]{43}|\d{4})$/.test(token)) { setGuestError("Tautan undangan tidak valid."); return; }
-    const controller = new AbortController();
-    void fetch("/api/invitation", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ invitationId, invitationToken: token }), signal: controller.signal,
-    }).then(async response => {
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Undangan belum dapat dibuka.");
-      setGuestName(data.name);
-      setAttendance(data.attendance);
-      setGuestCount(data.guestCount);
-      setInvitationToken(token);
-      setGuestError("");
-    }).catch(cause => { if (!controller.signal.aborted) setGuestError(cause instanceof Error ? cause.message : "Undangan belum dapat dibuka."); });
-    return () => controller.abort();
-  }, [invitationId, accessCode]);
 
   async function startMusic(showError: boolean) {
     const player = audio.current;
@@ -90,7 +69,7 @@ export default function Invitation({ invitationId, accessCode }: { invitationId?
       <aside className="desktop-wedding-background" aria-hidden="true" />
       <MusicControl audio={audio} playing={playing} error={musicError} toggle={toggleMusic} onPlaying={() => setPlaying(true)} onPause={() => setPlaying(false)} onError={() => { setPlaying(false); setMusicError("Musik tidak dapat dimuat."); }} />
       <main className={`invitation stage-${stage}`}>
-        <CinematicOpening guestName={guestName} guestError={guestError} audio={audio} onBegin={() => { void startMusic(true); }} onFinish={() => setStage("hero")} onReset={() => setStage("cover")} />
+        <CinematicOpening guestName={guestName} guestLoading={guestLoading} guestError={guestError} onRetryGuest={retryGuest} audio={audio} onBegin={() => { void startMusic(true); }} onFinish={() => setStage("hero")} onReset={() => setStage("cover")} />
         <ScrollStory active={stage === "hero"}>
     <section className="couple-page" aria-labelledby="couple-heading">
       <div className="couple-page-background" aria-hidden="true" />

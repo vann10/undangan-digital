@@ -33,8 +33,16 @@ export function playOpenTransition({root,reduced,particles,audio,onUpdate,onComp
   gsap.set(q('.cin-names, .cin-landscape, .cin-photo, .cin-branch'),{force3D:true});
   gsap.set(q('.cin-fog'),{xPercent:C.motion.fogStart});
   const revealName = (duration:number,at:number) => {
-    tl.to(name,{color:C.colors.heroText,textShadow:`0px 1px 7px ${C.colors.tealDeep}`,duration},at)
+    tl.to(name,{color:C.colors.heroText,duration},at)
+      .to(q('.cin-hero-haze'),{autoAlpha:1,duration},at)
       .to(q('.cin-ampersand'),{'--amp-base':C.colors.heroText,'--amp-gold':C.colors.heroText,'--amp-sand':C.colors.heroText,webkitTextFillColor:C.colors.heroText,duration},at);
+    if(!reduced) {
+      // Blur the letters themselves during motion, without a shadow or glow.
+      tl.fromTo(name,{filter:'blur(0px)'},
+        {filter:'blur(3px)',duration:duration*.45,ease:'sine.inOut',immediateRender:false},at)
+        .to(name,{filter:'blur(0px)',duration:duration*.55,ease:'sine.inOut'},at+duration*.45)
+        .set(name,{filter:'none'},at+duration);
+    }
   };
   const finalShared = (duration:number,at:number) => {
     revealName(duration,at);
