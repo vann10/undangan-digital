@@ -15,21 +15,25 @@ try {
     const styles = await page.evaluate(motion => {
       const { timeline, config } = window.__weddingTransition;
       const name = document.querySelector('.cin-names');
+      const kicker = document.querySelector('.cin-hero-kicker');
       const initial = getComputedStyle(name).filter;
       const middleTime = motion === 'reduce' ? timeline.duration() / 2 : config.at.shared + config.duration.shared * .45;
       const result = [];
       for (let replay = 0; replay < 2; replay++) {
         timeline.pause(0).time(middleTime, false);
         const middle = getComputedStyle(name).filter;
+        const kickerMiddle = getComputedStyle(kicker).filter;
         const shadow = getComputedStyle(name).textShadow;
         timeline.progress(1, false).pause();
-        result.push({ middle, shadow, final: getComputedStyle(name).filter });
+        result.push({ middle, kickerMiddle, shadow, final: getComputedStyle(name).filter, kickerFinal: getComputedStyle(kicker).filter });
       }
       return { initial, result };
     }, reducedMotion);
     assert.equal(styles.initial, 'none');
     for (const result of styles.result) {
       assert.equal(result.final, 'none');
+      assert.equal(result.kickerFinal, 'none');
+      assert.equal(result.kickerMiddle, result.middle);
       assert.equal(result.shadow, 'none');
       if (reducedMotion === 'reduce') assert.equal(result.middle, 'none');
       else assert.equal(result.middle, 'blur(3px)');

@@ -5,6 +5,7 @@ import { calendarUrl, dateLabel, eventDate, fullDateLabel, timeLabel, wedding } 
 import { ChapterBackground } from './chapter-art';
 import './chapter-art.css';
 import WeddingGallery from './wedding-gallery';
+import { ChapterBoundary } from './chapter-boundary';
 
 type Wish = { id: string; name: string; message: string; createdAt: string };
 type Attendance = "attending" | "not_attending";
@@ -103,7 +104,9 @@ function Countdown() {
 function EventDetails() {
   const saveUrl = calendarUrl();
   const mapUrl = wedding.mapsUrl?.startsWith("https://www.google.com/maps/") || wedding.mapsUrl?.startsWith("https://maps.app.goo.gl/") ? wedding.mapsUrl : null;
-  return <section className="event-section" aria-labelledby="event-heading">
+  return <>
+    <ChapterBoundary theme="event" edge="top" />
+    <section className="event-section" aria-labelledby="event-heading">
     <SectionHeading eyebrow="INFORMASI PERNIKAHAN" title="The Wedding" id="event-heading" />
     <div className="event-list event-prose">
       <div className="wedding-family">
@@ -125,7 +128,9 @@ function EventDetails() {
     <div className="event-actions">
       {saveUrl && <a className="outline-link" href={saveUrl} target="_blank" rel="noopener noreferrer">Simpan ke Google Calendar</a>}
     </div>
-  </section>;
+    </section>
+    <ChapterBoundary theme="event" edge="bottom" />
+  </>;
 }
 
 function Venue() {
@@ -226,6 +231,7 @@ function RSVPAndWishes({ identity, initialAttendance, initialGuestCount }: { ide
   }
 
   return <>
+    <ChapterBoundary theme="rsvp" edge="top" />
     <section className="rsvp-section paper" aria-labelledby="rsvp-heading">
       <ChapterBackground name="rsvp-correspondence" />
       <SectionHeading eyebrow="KONFIRMASI KEHADIRAN" title="RSVP" id="rsvp-heading" />
@@ -241,7 +247,9 @@ function RSVPAndWishes({ identity, initialAttendance, initialGuestCount }: { ide
         <p className="form-status" role="status" aria-live="polite">{rsvpStatus || (recordedAttendance ? `Konfirmasi Anda sudah tercatat: ${recordedAttendance === "attending" ? `Hadir${recordedGuestCount ? ` (${recordedGuestCount} tamu)` : ""}` : "Tidak hadir"}. Respons ini bersifat final.` : !identity ? "Buka tautan undangan pribadi yang valid untuk mengirim RSVP." : !configured ? "RSVP belum tersedia. Hubungkan Google Sheets sebelum membagikan undangan." : "")}</p>
       </form>
     </section>
+    <ChapterBoundary theme="rsvp" edge="bottom" />
     <WeddingGallery />
+    <ChapterBoundary theme="wishes" edge="top" />
     <section className="wishes-section" aria-labelledby="wishes-heading">
       <SectionHeading eyebrow="DARI PARA TAMU" title="Wedding Wishes" id="wishes-heading" />
       <form className="rsvp-form" onSubmit={submitWish}>
@@ -253,6 +261,7 @@ function RSVPAndWishes({ identity, initialAttendance, initialGuestCount }: { ide
       {!wishesError && wishes.length === 0 && <p className="pending-note">Ucapan para tamu akan tampil di sini.</p>}
       <div className="wishes-list" aria-live="polite">{wishes.map(wish => <blockquote className="wish-card" key={wish.id}><p>“{wish.message}”</p><cite>{wish.name}</cite></blockquote>)}</div>
     </section>
+    <ChapterBoundary theme="wishes" edge="bottom" />
   </>;
 }
 
@@ -316,6 +325,7 @@ export default function InvitationDetails({ identity, initialAttendance, initial
     <Venue />
     <RSVPAndWishes identity={identity} initialAttendance={initialAttendance} initialGuestCount={initialGuestCount} />
     <Gifts />
+    <ChapterBoundary theme="footer" edge="top" />
     <footer className="closing-section" aria-label="Penutup undangan">
       <ChapterBackground name="footer-wedding-arch" />
       <picture className="closing-monogram" aria-hidden="true"><source srcSet="/transition/monogram@1x.webp 1x, /transition/monogram.webp 2x" type="image/webp" /><img src="/transition/monogram.png" width={400} height={400} alt="" loading="lazy" decoding="async" /></picture>
@@ -326,6 +336,7 @@ export default function InvitationDetails({ identity, initialAttendance, initial
           <span className="closing-name closing-name-bride" aria-hidden="true">{wedding.bride}</span>
         </h2>
       </div>
+      <ChapterBoundary theme="footer" edge="bottom" terminal />
     </footer>
   </>;
 }

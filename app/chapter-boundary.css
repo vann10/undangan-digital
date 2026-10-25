@@ -1,0 +1,10 @@
+/* Botanical edges belong to the even chapter and overlap its neighbours. */
+.chapter-boundary{position:relative;z-index:30;width:100%;height:0;pointer-events:none;clip-path:inset(-110px 0)}
+.chapter-boundary-art{position:absolute;display:block;overflow:hidden;left:50%;top:0;width:106%;transform:translate(-50%,-50%);filter:drop-shadow(0 2px 2px rgba(10,41,38,.1))}
+.chapter-boundary-art img{position:absolute;display:block;left:0;top:0;width:100%;max-width:none;height:200%}
+/* Each half of the sheet is a different drawing, never a reflected copy. */
+.chapter-boundary-bottom .chapter-boundary-art img{top:-100%}
+.chapter-boundary-rsvp .chapter-boundary-art{width:104%}
+.chapter-boundary-footer .chapter-boundary-art{width:100%}
+.chapter-boundary-terminal{position:absolute;left:0;bottom:0}
+.chapter-boundary-terminal .chapter-boundary-art{transform:translate(-50%,-95%)}

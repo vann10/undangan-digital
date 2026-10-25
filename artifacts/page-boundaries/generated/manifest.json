@@ -1,0 +1,30 @@
+{
+  "event": {
+    "src": "/chapter-art/boundaries/event-v1.webp",
+    "width": 1200,
+    "height": 800,
+    "bytes": 352382,
+    "alphaMin": 0
+  },
+  "rsvp": {
+    "src": "/chapter-art/boundaries/rsvp-v1.webp",
+    "width": 1200,
+    "height": 400,
+    "bytes": 236290,
+    "alphaMin": 0
+  },
+  "wishes": {
+    "src": "/chapter-art/boundaries/wishes-v1.webp",
+    "width": 1200,
+    "height": 400,
+    "bytes": 234192,
+    "alphaMin": 0
+  },
+  "footer": {
+    "src": "/chapter-art/boundaries/footer-v1.webp",
+    "width": 1200,
+    "height": 401,
+    "bytes": 240810,
+    "alphaMin": 0
+  }
+}
