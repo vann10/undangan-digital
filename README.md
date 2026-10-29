@@ -16,14 +16,27 @@ Buka `http://127.0.0.1:3000`. Salin `.env.example` menjadi `.env.local` setelah 
 
 ## Mengganti informasi acara
 
-Detail yang telah dikonfirmasi tersimpan di [`app/wedding-config.ts`](app/wedding-config.ts): **28 November 2026, 10.00–13.00 WIB**, nama lengkap dan orang tua kedua mempelai, lokasi acara, serta rincian hadiah. Konten opsional yang belum tersedia dicatat sebagai komentar kode dan tidak ditampilkan ke tamu. Yang masih perlu diisi:
+Detail yang telah dikonfirmasi tersimpan di [`app/wedding-config.ts`](app/wedding-config.ts), termasuk nama lengkap dan orang tua kedua mempelai serta rincian hadiah. `weddingEvents` memuat dua versi undangan yang mengikuti kolom **F — Tipe** di tab `Guests`:
 
-- URL lokasi yang tepat dari Google Maps, jika tombol petunjuk arah diinginkan.
+- **`pria`:** 28 November 2026, 10.00–13.00 WIB, di Ngawi.
+- **`wanita`:** Jumat, 20 November 2026, di Dsn. Krajan 1, RT 05/RW 06, Setail, Genteng, Banyuwangi. Akad Nikah pukul 08.00 WIB s/d Selesai dan resepsi pukul 14.00 WIB s/d Selesai. Alamat dan tautan Maps sudah diisi. Waktu akhir tetap null karena tidak ada jam selesai pasti yang diberikan.
+
+Kosong pada kolom Tipe berarti `pria`. Nama mempelai pria ditampilkan lebih dulu. Konten opsional yang belum tersedia dicatat sebagai komentar kode dan tidak ditampilkan ke tamu. Yang masih bisa ditambahkan:
+
 - Profil singkat, akun sosial, atau cerita pasangan, jika nanti ingin ditampilkan.
 
-Hitung mundur menuju 28 November 2026 pukul 10.00 WIB. Saat pertama terlihat, setiap unit menampilkan angka acak dua digit yang berganti setiap 10 ms selama sekitar 2,8 detik; setelah itu angka sebenarnya muncul tanpa nol di depan. Perubahan digit hitungan berikutnya tetap memakai putaran odometer pendek. Perangkat dengan preferensi reduced motion langsung melihat angka akhir. Tautan Google Calendar memakai jadwal 10.00–13.00 WIB. Tautan Google Maps baru muncul setelah URL lokasi yang valid diisi.
+Pratinjau manual tanpa tautan tamu atau perubahan Sheet:
 
-Tombol musik mengontrol lagu **Reverie** karya Scott Buckley yang disimpan lokal di `public/audio/`. Aset musik diunduh saat layar loading, lalu situs mencoba memutarnya saat tamu menekan **Buka Undangan**. Browser yang membatasi autoplay bersuara baru dapat memutar setelah interaksi tamu; tombol Play/Stop tetap tersedia. Lagu berlisensi CC BY 4.0; atribusinya tersedia di `public/audio/ATTRIBUTION.txt`. Ganti file dan atribusinya bersama-sama jika musik diganti.
+- `http://localhost:3000/preview/pria`
+- `http://localhost:3000/preview/wanita`
+
+Sesuaikan port dengan server lokal. Pratinjau memakai sapaan Tamu Undangan; pengiriman RSVP dan ucapan dinonaktifkan. Undangan pribadi tetap memilih acara dari tipe tamu yang terverifikasi di Sheet.
+
+Untuk membuka dari HP/perangkat lain pada Wi-Fi yang sama, jalankan `rtk proxy npm run dev:lan` (atau `rtk proxy npm run start:lan` setelah build). Gunakan `http://IP-WIFI-KOMPUTER:3000/preview/pria` atau `/preview/wanita` dari perangkat tersebut. `localhost` pada HP merujuk ke HP itu sendiri. Perintah `dev`/`start` biasa hanya menerima koneksi dari komputer ini. Jika IP Wi-Fi berubah, sesuaikan URL dan daftar `allowedDevOrigins` di `next.config.js`.
+
+Hitung mundur mengikuti acara: 28 November 2026 pukul 10.00 WIB untuk pria, atau 20 November 2026 pukul 08.00 WIB (akad) untuk wanita. Perangkat dengan preferensi reduced motion langsung melihat angka akhir; perangkat lain memakai animasi odometer. Google Calendar memakai jadwal dan alamat acara yang sesuai, dan hanya ditampilkan jika jam akhir pasti sudah tersedia. Maps memakai lokasi masing-masing acara.
+
+Tombol musik mengontrol lagu **Forever and Ever and Always (The Softer Version)** karya Ryan Mack, memakai MP3 yang diberikan pemilik pada 27 Oktober 2026. File aktif tersimpan di `public/audio/forever-and-ever-and-always.mp3` dan dipilih melalui `transitionConfig.audio.src`. Situs mencoba memutarnya saat tamu menekan **Buka Undangan**, dengan fade-in, volume 60%, dan pemutaran berulang. Browser yang membatasi autoplay bersuara baru dapat memutar setelah interaksi tamu; tombol Play/Stop tetap tersedia. Sumber dan catatan aset tersedia di `public/audio/ATTRIBUTION.txt`. Referensi lagu: https://www.youtube.com/watch?v=GRC_iiZtAkA; pemutaran memakai MP3 lokal, bukan YouTube. File Reverie lama beserta atribusinya tetap disimpan sebagai aset sebelumnya dan tidak lagi diputar.
 
 Gallery setelah RSVP memakai tiga foto yang telah diberikan: foto pasangan serta potret Dewi dan Rizal. Ganti daftar foto di `Gallery()` pada `app/invitation-details.tsx` jika foto tambahan sudah tersedia.
 

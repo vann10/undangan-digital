@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
-import { calendarUrl, dateLabel, eventDate, fullDateLabel, timeLabel, wedding } from "./wedding-config";
+import { calendarUrl, eventDate, eventLabels, wedding } from "./wedding-config";
+import { useWeddingEvent } from "./wedding-event-context";
 import { ChapterBackground } from './chapter-art';
 import './chapter-art.css';
 import WeddingGallery from './wedding-gallery';
@@ -61,6 +62,7 @@ function OdometerDigit({ digit, active, reducedMotion }: { digit: number; active
 }
 
 function Countdown() {
+  const { event, dateLabel, timeLabel } = useWeddingEvent();
   const [now, setNow] = useState<number | null>(null);
   const [active, setActive] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -83,27 +85,28 @@ function Countdown() {
     observer.observe(element);
     return () => observer.disconnect();
   }, []);
-  const target = eventDate();
+  const target = event ? eventDate(event) : null;
   const remaining = target && now ? Math.max(0, Math.floor((target.getTime() - now) / 1000)) : null;
   const counts = remaining === null ? null : [
     Math.floor(remaining / 86400), Math.floor(remaining / 3600) % 24,
     Math.floor(remaining / 60) % 60, remaining % 60,
   ];
   const values = counts?.map(String) ?? ["--", "--", "--", "--"];
-  const accessibleCountdown = counts ? `${counts[0]} hari, ${counts[1]} jam, ${counts[2]} menit, ${counts[3]} detik menuju ${dateLabel} pukul ${wedding.time.replace(":", ".")} WIB` : "Jam acara belum ditentukan";
+  const accessibleCountdown = counts ? `${counts[0]} hari, ${counts[1]} jam, ${counts[2]} menit, ${counts[3]} detik menuju ${dateLabel} pukul ${timeLabel}` : "Jadwal acara belum ditentukan";
   return <section className="countdown-section paper" aria-labelledby="countdown-heading">
     <SectionHeading eyebrow="MENUJU HARI BAHAGIA" title="Countdown" id="countdown-heading" />
     <div ref={grid} className="countdown-grid" role="timer" aria-label={accessibleCountdown}>
       {values.map((value, index) => <div className="countdown-unit" aria-hidden="true" key={index}><span className="countdown-number" data-value={value}>{value === "--" ? value : [...value].map((digit, position) => <OdometerDigit key={value.length - position - 1} digit={Number(digit)} active={active} reducedMotion={reducedMotion} />)}</span><small>{["Hari", "Jam", "Menit", "Detik"][index]}</small></div>)}
     </div>
-    {remaining === null && <p className="pending-note">Jam acara akan diumumkan. Hitung mundur aktif setelah jam ditetapkan.</p>}
+    {remaining === null && <p className="pending-note">{event ? "Jadwal acara akan diumumkan. Hitung mundur aktif setelah tanggal dan jam ditetapkan." : "Memuat jadwal acara…"}</p>}
     {remaining === 0 && <p className="pending-note">Hari yang dinantikan telah tiba.</p>}
   </section>;
 }
 
 function EventDetails() {
-  const saveUrl = calendarUrl();
-  const mapUrl = wedding.mapsUrl?.startsWith("https://www.google.com/maps/") || wedding.mapsUrl?.startsWith("https://maps.app.goo.gl/") ? wedding.mapsUrl : null;
+  const { event, fullDateLabel, timeLabel } = useWeddingEvent();
+  const saveUrl = event ? calendarUrl(event) : null;
+  const mapUrl = event?.mapsUrl?.startsWith("https://www.google.com/maps/") || event?.mapsUrl?.startsWith("https://maps.app.goo.gl/") ? event.mapsUrl : null;
   return <>
     <ChapterBoundary theme="event" edge="top" />
     <section className="event-section" aria-labelledby="event-heading">
@@ -119,14 +122,24 @@ function EventDetails() {
         <h3>{wedding.brideFullName}</h3>
         <p>Putri dari Bapak {wedding.brideFather} dan Ibu {wedding.brideMother}</p>
       </div>
-      <div className="wedding-schedule">
+      {event?.sessions?.length ? event.sessions.map(session => {
+        const labels = eventLabels(session);
+        const sessionCalendar = calendarUrl(session);
+        return <div className="wedding-schedule" key={session.title}>
+          <h3>{session.title}</h3>
+          <p>{labels.fullDateLabel}</p><p>{labels.timeLabel}</p>
+          <p>{session.venueName}</p>
+          <p>{mapUrl ? <a className="address-link" href={mapUrl} target="_blank" rel="noopener noreferrer">{session.venueAddress}</a> : session.venueAddress}</p>
+          {sessionCalendar && <a className="outline-link" href={sessionCalendar} target="_blank" rel="noopener noreferrer">Simpan {session.title} ke Google Calendar</a>}
+        </div>;
+      }) : <div className="wedding-schedule">
         <p>{fullDateLabel}</p><p>{timeLabel}</p>
-        <p>{wedding.venueName}</p>
-        <p>{mapUrl ? <a className="address-link" href={mapUrl} target="_blank" rel="noopener noreferrer">{wedding.venueAddress}</a> : wedding.venueAddress}</p>
-      </div>
+        <p>{event?.venueName ?? (event ? "Lokasi akan diumumkan" : "Memuat lokasi acara…")}</p>
+        <p>{mapUrl ? <a className="address-link" href={mapUrl} target="_blank" rel="noopener noreferrer">{event?.venueAddress}</a> : event?.venueAddress ?? (event ? "Alamat akan diumumkan" : "Memuat alamat acara…")}</p>
+      </div>}
     </div>
     <div className="event-actions">
-      {saveUrl && <a className="outline-link" href={saveUrl} target="_blank" rel="noopener noreferrer">Simpan ke Google Calendar</a>}
+      {!event?.sessions?.length && saveUrl && <a className="outline-link" href={saveUrl} target="_blank" rel="noopener noreferrer">Simpan ke Google Calendar</a>}
     </div>
     </section>
     <ChapterBoundary theme="event" edge="bottom" />
@@ -134,12 +147,13 @@ function EventDetails() {
 }
 
 function Venue() {
+  const { event } = useWeddingEvent();
   return <section className="venue-section paper" aria-labelledby="venue-heading">
     <img className="venue-architecture" src="/artwork/section-venue-generated.webp" width={1024} height={1536} alt="" aria-hidden="true" loading="lazy" />
     <SectionHeading eyebrow="LOKASI ACARA" title="Venue" id="venue-heading" />
     <div className="venue-panel">
-      <p>{wedding.venueAddress}</p>
-      <iframe className="venue-map" src={wedding.mapsEmbedUrl} title={`Peta lokasi ${wedding.venueName}, ${wedding.venueAddress}`} loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen />
+      <p>{event?.venueAddress ?? (event ? "Alamat akan diumumkan" : "Memuat alamat acara…")}</p>
+      {event?.mapsEmbedUrl && <iframe className="venue-map" src={event.mapsEmbedUrl} title={`Peta lokasi ${event.venueName}, ${event.venueAddress}`} loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen />}
     </div>
   </section>;
 }

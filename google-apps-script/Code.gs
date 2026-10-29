@@ -3,6 +3,7 @@
  * Script properties: SPREADSHEET_ID and RSVP_API_TOKEN.
  */
 const GUEST_HEADERS = ['Invitation ID', 'Full name', 'Guest code', 'Active'];
+const EVENT_TYPE_HEADER = 'Tipe'; // Guests F (E holds invitation links), RSVP F. Blank means pria.
 const RSVP_HEADERS = ['Invitation ID', 'Submitted at (UTC)', 'Attendance'];
 const RSVP_GUEST_COUNT_HEADER = 'Guest count'; // Column E; column D holds the live Full name formula.
 const WISH_HEADERS = ['Wish ID', 'Invitation ID', 'Submitted at (UTC)', 'Full name', 'Message'];
@@ -38,7 +39,26 @@ function rsvpSheet_(book) {
   const current = String(cell.getValue() || '');
   if (current && current !== RSVP_GUEST_COUNT_HEADER) throw new Error('RSVP column E has an incompatible header');
   if (!current) cell.setValue(RSVP_GUEST_COUNT_HEADER);
+  eventTypeColumn_(sheet, 6);
   return sheet;
+}
+
+function eventTypeColumn_(sheet, column) {
+  const cell = sheet.getRange(1, column);
+  const current = String(cell.getValue() || '');
+  if (current && current !== EVENT_TYPE_HEADER) throw new Error(`${column}: incompatible event type header`);
+  if (!current) cell.setValue(EVENT_TYPE_HEADER);
+}
+
+function guestsSheet_(book) {
+  const sheet = sheet_(book, 'Guests', GUEST_HEADERS);
+  eventTypeColumn_(sheet, 6);
+  return sheet;
+}
+
+function eventType_(value) {
+  const type = String(value === null || value === undefined ? '' : value).trim().toLowerCase();
+  return !type ? 'pria' : ['pria', 'wanita'].includes(type) ? type : null;
 }
 
 function guestCount_(row) {
@@ -50,9 +70,17 @@ function guestCount_(row) {
 
 function setupSheet() {
   const book = SpreadsheetApp.openById(settings_().id);
-  sheet_(book, 'Guests', GUEST_HEADERS);
-  rsvpSheet_(book);
+  const guests = guestsSheet_(book);
+  const rsvps = rsvpSheet_(book);
   sheet_(book, 'Wishes', WISH_HEADERS);
+  // Existing guests and historical RSVP responses all belong to the pria event.
+  // Only fill blanks so rerunning setup never overwrites a wanita invitation.
+  rows_(guests, 6).forEach((row, index) => {
+    if (row[0] && !String(row[5] || '').trim()) guests.getRange(index + 2, 6).setValue('pria');
+  });
+  rows_(rsvps, 6).forEach((row, index) => {
+    if (row[0] && !String(row[5] || '').trim()) rsvps.getRange(index + 2, 6).setValue('pria');
+  });
 }
 
 function rows_(sheet, width) {
@@ -78,14 +106,16 @@ function allowAttempt_(clientKey, id, valid) {
 function guest_(book, id, token, clientKey) {
   if (typeof id !== 'string' || !/^[1-9]\d{0,9}$/.test(id)
     || typeof token !== 'string' || !/^\d{4}$/.test(token)) return null;
-  const matches = rows_(sheet_(book, 'Guests', GUEST_HEADERS), 4).filter(row => String(row[0]) === id);
+  const matches = rows_(guestsSheet_(book), 6).filter(row => String(row[0]) === id);
   const storedCode = matches.length === 1 ? String(matches[0][2]).trim() : '';
   const valid = matches.length === 1 && /^\d{1,4}$/.test(storedCode) && storedCode.padStart(4, '0') === token
     && String(matches[0][3]).toLowerCase() === 'true';
   if (!allowAttempt_(clientKey, id, valid)) return { limited: true };
   if (!valid) return null;
+  const eventType = eventType_(matches[0][5]);
+  if (!eventType) return { invalidEventType: true };
   const name = String(matches[0][1]).trim();
-  return name.length >= 2 && name.length <= 100 ? { id, name } : null;
+  return name.length >= 2 && name.length <= 100 ? { id, name, eventType } : null;
 }
 
 function safeText_(value, max) {
@@ -128,9 +158,10 @@ function doPost(e) {
     const guest = guest_(book, data.invitationId, data.invitationToken, data.clientKey);
     if (guest && guest.limited) return output_({ ok: false, code: 'too_many_attempts' });
     if (!guest) return output_({ ok: false, code: 'invalid_invitation' });
+    if (guest.invalidEventType) return output_({ ok: false, code: 'invalid_event_type' });
     if (data.action === 'guest') {
-      const existing = rows_(rsvpSheet_(book), 5).find(row => String(row[0]) === guest.id);
-      return output_({ ok: true, name: guest.name, attendance: existing ? String(existing[2]) : null, guestCount: existing ? guestCount_(existing) : null });
+      const existing = rows_(rsvpSheet_(book), 6).find(row => String(row[0]) === guest.id && eventType_(row[5]) === guest.eventType);
+      return output_({ ok: true, name: guest.name, eventType: guest.eventType, attendance: existing ? String(existing[2]) : null, guestCount: existing ? guestCount_(existing) : null });
     }
     if (data.action !== 'rsvp' && data.action !== 'wish') return output_({ ok: false, code: 'invalid_request' });
     lock = LockService.getScriptLock();
@@ -138,17 +169,19 @@ function doPost(e) {
     const currentGuest = guest_(book, data.invitationId, data.invitationToken, data.clientKey);
     if (currentGuest && currentGuest.limited) return output_({ ok: false, code: 'too_many_attempts' });
     if (!currentGuest) return output_({ ok: false, code: 'invalid_invitation' });
+    if (currentGuest.invalidEventType) return output_({ ok: false, code: 'invalid_event_type' });
     if (data.action === 'rsvp') {
       if (!['attending', 'not_attending'].includes(data.attendance)) return output_({ ok: false, code: 'invalid_request' });
       const count = data.guestCount;
       if (!Number.isInteger(count) || (data.attendance === 'attending' ? count < 1 || count > 20 : count !== 0))
         return output_({ ok: false, code: 'invalid_request' });
       const sheet = rsvpSheet_(book);
-      const existing = rows_(sheet, 5).find(row => String(row[0]) === guest.id);
+      const existing = rows_(sheet, 6).find(row => String(row[0]) === currentGuest.id && eventType_(row[5]) === currentGuest.eventType);
       if (existing) return output_({ ok: false, code: 'already_submitted', attendance: String(existing[2]), guestCount: guestCount_(existing) });
       const nextRow = sheet.getLastRow() + 1;
-      sheet.appendRow([guest.id, new Date().toISOString(), data.attendance]);
+      sheet.appendRow([currentGuest.id, new Date().toISOString(), data.attendance]);
       sheet.getRange(nextRow, 5).setValue(count);
+      sheet.getRange(nextRow, 6).setValue(currentGuest.eventType);
       SpreadsheetApp.flush();
       return output_({ ok: true, attendance: data.attendance, guestCount: count });
     }

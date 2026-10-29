@@ -6,7 +6,8 @@ import CinematicOpening from "./cinematic-opening";
 import ScrollStory from "./scroll-story";
 import "./premium-refinements.css";
 import { transitionConfig, transitionVariables } from "../transition.config";
-import { wedding } from "./wedding-config";
+import { wedding, weddingEvents, type EventType } from "./wedding-config";
+import { WeddingEventContext } from "./wedding-event-context";
 import { useGuestInvitation } from "./use-guest-invitation";
 
 function MusicControl({ audio, playing, error, toggle, onPlaying, onPause, onError }: {
@@ -42,11 +43,12 @@ function PersonProfile({ person, fullName, image, alt }: { person: "Dewi" | "Riz
   </article>;
 }
 
-export default function Invitation({ invitationId, accessCode }: { invitationId?: string; accessCode?: string }) {
+export default function Invitation({ invitationId, accessCode, previewEventType }: { invitationId?: string; accessCode?: string; previewEventType?: EventType }) {
   const [stage, setStage] = useState<"cover" | "hero">("cover");
   const [playing, setPlaying] = useState(false);
   const [musicError, setMusicError] = useState("");
-  const { guestName, invitationToken, attendance, guestCount, guestLoading, guestError, retryGuest } = useGuestInvitation(invitationId, accessCode);
+  const { guestName, invitationToken, attendance, guestCount, eventType, guestLoading, guestError, retryGuest } = useGuestInvitation(invitationId, accessCode);
+  const selectedEventType = invitationId ? eventType : previewEventType ?? eventType;
   const audio = useRef<HTMLAudioElement>(null);
   const musicStopped = useRef(false);
 
@@ -64,7 +66,7 @@ export default function Invitation({ invitationId, accessCode }: { invitationId?
     player.volume = transitionConfig.audio.volume;
     void startMusic(true);
   }
-  return <>
+  return <WeddingEventContext.Provider value={selectedEventType ? weddingEvents[selectedEventType] : null}>
     <div className="invitation-shell cinematic-shell" style={transitionVariables() as CSSProperties}>
       <aside className="desktop-wedding-background" aria-hidden="true" />
       <MusicControl audio={audio} playing={playing} error={musicError} toggle={toggleMusic} onPlaying={() => setPlaying(true)} onPause={() => setPlaying(false)} onError={() => { setPlaying(false); setMusicError("Musik tidak dapat dimuat."); }} />
@@ -76,8 +78,8 @@ export default function Invitation({ invitationId, accessCode }: { invitationId?
       <img className="couple-floating-branch couple-floating-branch-top" src="/artwork/rd-connecting-branch-v1.webp" width={640} height={960} alt="" aria-hidden="true" loading="lazy" />
       <img className="couple-floating-branch couple-floating-branch-bottom" src="/artwork/rd-connecting-branch-v1.webp" width={640} height={960} alt="" aria-hidden="true" loading="lazy" />
       <header className="couple-page-header"><h2 id="couple-heading">Mempelai</h2><span className="gold-divider" aria-hidden="true" /></header>
-      <PersonProfile person="Dewi" fullName={wedding.brideFullName} image="/artwork/brides-user-upload.webp" alt="Potret Dewi" />
       <PersonProfile person="Rizal" fullName={wedding.groomFullName} image="/artwork/bridesgroom-user-upload.webp" alt="Potret Rizal" />
+      <PersonProfile person="Dewi" fullName={wedding.brideFullName} image="/artwork/brides-user-upload.webp" alt="Potret Dewi" />
     </section>
     <div className="page-bridge page-bridge-after-couple" aria-hidden="true">
       <img className="page-bridge-garland" src="/artwork/page-transition-garland.webp" width={1100} height={367} alt="" loading="lazy" decoding="async" />
@@ -86,5 +88,5 @@ export default function Invitation({ invitationId, accessCode }: { invitationId?
     </ScrollStory>
     </main>
     </div>
-  </>;
+  </WeddingEventContext.Provider>;
 }

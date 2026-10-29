@@ -5,7 +5,7 @@ import { gsap } from 'gsap';
 import { transitionConfig as C, transitionVariables } from '../transition.config';
 import { RasterParticles } from './transition-particles';
 import { playOpenTransition } from './opening-timeline';
-import { dateLabel } from './wedding-config';
+import { useWeddingEvent } from './wedding-event-context';
 import { LoadingScreen } from './loading-screen';
 import './cinematic-opening.css';
 
@@ -31,6 +31,7 @@ function Vine({side,depth}:{side:'left'|'right';depth:'back'|'front'}) {
 
 type Props = {guestName:string; guestLoading:boolean; guestError:string; onRetryGuest:()=>void; audio:RefObject<HTMLAudioElement|null>; onBegin:()=>void; onFinish:()=>void; onReset:()=>void};
 export default function CinematicOpening({guestName,guestLoading,guestError,onRetryGuest,audio,onBegin,onFinish,onReset}:Props) {
+  const { dateLabel } = useWeddingEvent();
   const photoClip=useId().replace(/:/g,'');
   const root=useRef<HTMLDivElement>(null);
   const bridge=useRef<HTMLDivElement>(null);

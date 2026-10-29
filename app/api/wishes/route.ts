@@ -35,6 +35,7 @@ export async function POST(request: Request) {
     if (!result) return error("Ucapan belum tersedia.", 503);
     if (result.code === "too_many_attempts") return error("Terlalu banyak percobaan. Coba lagi dalam 15 menit.", 429);
     if (result.code === "invalid_invitation") return error("Tautan undangan tidak valid atau tidak aktif.", 404);
+    if (result.code === "invalid_event_type") return error("Tipe acara pada undangan belum valid. Silakan hubungi mempelai.", 422);
     if (result.code === "invalid_request") return error("Ucapan harus berisi 2 sampai 1000 karakter tanpa karakter kendali.", 400);
     if (result.code === "wish_already_submitted") return error("Ucapan Anda sudah tercatat.", 409);
     if (result.ok !== true) throw new Error(`Wish rejected: ${String(result.code)}`);

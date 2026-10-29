@@ -9,7 +9,7 @@ export const transitionConfig = {
   particles: { count: 32, lowCount: 18, idleCount: 4, maxDpr: 2, fpsThreshold: 45, start: .2, end: 2.8, seed: 141126, petalWeights: [.6,.25,.05], leafWeights: [.7,.3] },
   motion: { vineExit: 45, frontScale: 1.12, backScale: 1.06, landscapeY: 0, landscapeScale: 1.2, nameScale: .91, wingMin: .35, wingDuration: .13, idleSway: 1.4, fogStart: -8, fogEnd: 8 },
   layout: { nameHeight: 6.4, nameShift: 12.09, dividerHeight: 1.9, dividerShift: 14.59, heroOffset: 0 },
-  audio: { src: '/audio/reverie-scott-buckley.mp3', volume: .6 },
+  audio: { src: '/audio/forever-and-ever-and-always.mp3', volume: .6 },
 };
 
 export function transitionVariables() {

@@ -9,6 +9,7 @@ const url = env.GOOGLE_APPS_SCRIPT_URL;
 const serviceToken = env.GOOGLE_APPS_SCRIPT_TOKEN;
 if (!url || !serviceToken) throw new Error('Google Apps Script environment variables are missing');
 const migrated = process.argv.includes('--migrated');
+const events = process.argv.includes('--events');
 const linksFile = migrated ? 'data/private/links-4digit.csv' : 'data/private/links.csv';
 const links = [...readFileSync(linksFile, 'utf8').matchAll(migrated
   ? /\/invite\/([1-9]\d*)-(\d{4})/g
@@ -35,7 +36,12 @@ try {
   const wishesResponse = await fetch(wishesUrl, { signal: AbortSignal.timeout(20000) });
   const wishes = await wishesResponse.json();
   const result = {
-    sampledInvitations: valid.every((result, sample) => result.ok === true && result.name === names[sampleIndexes[sample]].trim().replace(/\s+/g, ' ')),
+    // The event migration uses the current manually maintained Sheet; the original
+    // private import snapshot no longer reflects renamed/added guests.
+    sampledInvitations: valid.every((result, sample) => result.ok === true && (events
+      ? typeof result.name === 'string' && result.name.trim().length >= 2
+      : result.name === names[sampleIndexes[sample]].trim().replace(/\s+/g, ' '))),
+    ...(events ? { sampledEventTypes: valid.every(result => result.eventType === 'pria') } : {}),
     invalidTokenRejected: invalid.code === 'invalid_invitation' && !('name' in invalid),
     invalidWritesRejected: invalidRsvp.code === 'invalid_request' && invalidWish.code === 'invalid_request',
     wishesReadable: wishes.ok === true && Array.isArray(wishes.wishes),

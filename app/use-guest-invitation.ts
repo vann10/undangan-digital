@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { normalizeEventType, type EventType } from "./wedding-config";
 
 type Guest = {
   name: string;
   token: string;
   attendance: "attending" | "not_attending" | null;
   guestCount: number | null;
+  eventType: EventType;
 };
 
 export function useGuestInvitation(invitationId?: string, accessCode?: string) {
@@ -47,8 +49,10 @@ export function useGuestInvitation(invitationId?: string, accessCode?: string) {
           if (!response.ok) throw new Error(data.error || "Undangan belum dapat dibuka.");
           retryable = true;
           if (typeof data.name !== "string" || !data.name.trim()) throw new Error("Nama tamu belum dapat dimuat.");
+          const eventType = normalizeEventType(data.eventType);
+          if (!eventType) throw new Error("Tipe acara pada undangan belum valid. Silakan hubungi mempelai.");
           if (disposed) return;
-          setGuest({ name: data.name, token, attendance: data.attendance ?? null, guestCount: data.guestCount ?? null });
+          setGuest({ name: data.name, token, attendance: data.attendance ?? null, guestCount: data.guestCount ?? null, eventType });
           setLoading(false);
           return;
         } catch (cause) {
@@ -74,6 +78,7 @@ export function useGuestInvitation(invitationId?: string, accessCode?: string) {
     invitationToken: guest?.token ?? null,
     attendance: guest?.attendance ?? null,
     guestCount: guest?.guestCount ?? null,
+    eventType: guest?.eventType ?? (invitationId ? null : "pria" as EventType),
     guestLoading: loading,
     guestError: error,
     retryGuest: () => setAttempt(value => value + 1),

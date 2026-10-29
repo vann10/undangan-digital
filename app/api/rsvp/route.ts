@@ -16,6 +16,7 @@ export async function POST(request: Request) {
     if (!result) return error("RSVP belum tersedia.", 503);
     if (result.code === "too_many_attempts") return error("Terlalu banyak percobaan. Coba lagi dalam 15 menit.", 429);
     if (result.code === "invalid_invitation") return error("Tautan undangan tidak valid atau tidak aktif.", 404);
+    if (result.code === "invalid_event_type") return error("Tipe acara pada undangan belum valid. Silakan hubungi mempelai.", 422);
     if (result.code === "invalid_request") return error("Isi konfirmasi kehadiran dan jumlah tamu yang valid.", 400);
     if (result.code === "already_submitted") return NextResponse.json({ error: "Konfirmasi kehadiran sudah tercatat dan bersifat final.", attendance: result.attendance, guestCount: result.guestCount ?? null }, { status: 409, headers: { "Cache-Control": "no-store" } });
     if (result.ok !== true) throw new Error(`RSVP rejected: ${String(result.code)}`);

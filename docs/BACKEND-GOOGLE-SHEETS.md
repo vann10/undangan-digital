@@ -13,8 +13,8 @@
 
 | Tab | Kolom |
 | --- | --- |
-| Guests | Invitation ID, Full name, Guest code, Active |
-| RSVP | A–C: Invitation ID, Submitted at (UTC), Attendance; D: Full name pada Sheet live; E: Guest count |
+| Guests | A–D: Invitation ID, Full name, Guest code, Active; E: Link Undangan; F: Tipe (`pria` / `wanita`) |
+| RSVP | A–C: Invitation ID, Submitted at (UTC), Attendance; D: Full name pada Sheet live; E: Guest count; F: Tipe |
 | Wishes | Wish ID, Invitation ID, Submitted at (UTC), Full name, Message |
 
 Impor daftar tamu dilakukan ke `Guests` mulai baris kedua. Jangan menghapus atau mengubah header. Jika tab `RSVP` lama sudah ada, pindahkan menjadi `RSVP_Legacy` sebelum setup; kode menolak format header lama.
@@ -24,12 +24,25 @@ Pada Sheet live, kolom A (`Invitation ID`) di tab `RSVP` disembunyikan agar oper
 ## Alur permintaan
 
 1. Tamu membuka `/invite/{id}-{kode4digit}`. Halaman mengirim ID dan kode ke `/api/invitation`; server meminta Apps Script mencocokkan ID dan kode dengan baris `Guests` yang aktif.
-2. Jika cocok, server mengembalikan nama, status RSVP, dan jumlah tamu jika sudah tercatat. Jika tidak cocok, data tersebut tidak dikembalikan.
+2. Jika cocok, server mengembalikan nama, tipe acara, status RSVP, dan jumlah tamu jika sudah tercatat. Jika tidak cocok, data tersebut tidak dikembalikan.
 3. `/api/rsvp` menerima pilihan Hadir/Tidak hadir beserta jumlah tamu. Apps Script mengunci penulisan, mengecek ulang keaktifan tautan, dan menolak respons kedua.
 4. `/api/wishes` menerima ucapan terpisah. Apps Script mengunci penulisan dan membatasi satu ucapan per tamu. Permintaan ulang dengan Wish ID yang sama aman untuk diulang.
 5. Daftar ucapan publik hanya menampilkan 100 terbaru. Teks disimpan aman dari eksekusi rumus spreadsheet dan dirender sebagai teks React.
 
 ## Operasi
+
+### Dua acara (26 Oktober 2026)
+
+- Isi kolom **F (`Tipe`) pada Guests** dengan `pria` atau `wanita`. Huruf besar/kecil dan spasi tepi dinormalisasi. Kosong berarti `pria`, sehingga tautan dan daftar tamu lama tetap bekerja. Nilai lain ditolak agar tamu tidak melihat acara yang salah.
+- `setupSheet()` menambahkan header F pada Guests dan RSVP tanpa menggeser kolom yang ada. Kolom E di Guests berisi Link Undangan dan tetap utuh. Baris tamu dan RSVP lama yang tipenya kosong diisi `pria`; menjalankan ulang tidak menimpa nilai yang sudah diisi.
+- Nama dan kode tamu tetap di kolom yang sama. Tautan pribadi tidak berubah ketika tipe pada baris tamu diganti. Dua undangan untuk satu orang harus memakai dua Invitation ID berbeda.
+- Jadwal dan venue per acara diatur melalui `weddingEvents` di `app/wedding-config.ts`. Acara pria: 28 November 2026, 10.00–13.00 WIB di Ngawi. Acara wanita diperbarui pada 27 Oktober 2026: Jumat, 20 November 2026, akad pukul 08.00 WIB dan resepsi pukul 14.00 WIB, masing-masing sampai selesai, di Krajan 1, Setail, Genteng, Banyuwangi. Kedua sesi ditampilkan terpisah. Countdown acara wanita menuju akad; peta memakai titik `-8.3622471,114.1318747` dari tautan Maps yang diberikan pemilik. Kalender hanya tersedia untuk jadwal dengan jam akhir pasti; tidak ada jam akhir yang dikarang untuk acara wanita. Nilai tanggal/jam null tetap didukung sebagai placeholder bila suatu jadwal belum ditentukan.
+- Tipe berasal dari Sheet setelah verifikasi ID/kode, bukan dari parameter URL atau isian tamu. Hero, jadwal, countdown, Maps, dan kalender memakai konfigurasi yang sama. Saat identitas masih dimuat, detail acara tidak memakai cadangan acara pria.
+- RSVP menyimpan tipe acara di kolom F, berdasarkan baris tamu yang dibaca ulang di dalam lock. RSVP lama tanpa tipe dianggap pria. Respons final berlaku per Invitation ID dan tipe acara. Jangan mengubah tipe undangan setelah dibagikan; buat ID baru untuk undangan acara lain agar riwayat tetap jelas.
+- Ucapan dan rekening hadiah tetap bersama. Alamat pengiriman hadiah tetap alamat yang sudah dikonfirmasi.
+- Pengujian: `rtk npm run test:google`, `rtk npm run typecheck`, `rtk npm run build`; browser: `rtk proxy node scripts/verify-event-types.mjs http://127.0.0.1:3030` setelah menjalankan server.
+
+Status penerapan 26 Oktober 2026: `setupSheet()` berhasil dijalankan pada Sheet aktif. Kolom F1 `Tipe` di Guests terisi, dan seluruh **196** baris tamu yang sekarang ada bernilai `pria`. Link Undangan di kolom E tetap utuh. Kolom F pada RSVP menyimpan tipe, dan respons lama diisi `pria`. Deployment Apps Script yang URL-nya ada di `.env.local` diperbarui ke **versi 4**, dengan URL dan pengaturan akses tetap. Deployment aktif lainnya tidak diubah. `verify-live-sheets.mjs --migrated --events` lulus untuk sampel undangan sah/acara pria, kode salah, penolakan input tulis tidak valid, dan pembacaan ucapan. Mode `--events` memeriksa kontrak nama terbaru dari Sheet karena snapshot impor privat sudah berbeda dari daftar yang dikelola manual. Pengujian browser lokal untuk pria, wanita, dan backend lama tanpa eventType lulus; tidak ada RSVP atau ucapan nyata yang ditambahkan dalam verifikasi ini. **Frontend Vercel belum dideploy ulang**; kode pemilihan acara tersedia di proyek lokal.
 
 - **Impor baru:** `prepare-guests.mjs generate` menghasilkan kode 4 digit unik beserta `guests.csv` dan `links.csv` di folder kerja baru.
 - **Migrasi Sheet aktif:** `guests-4digit.csv` dan `links-4digit.csv` disiapkan dari 193 nama dengan ID dan kode tetap. Cadangkan Sheet, perbarui kode serta deployment Apps Script, lalu ganti isi tab `Guests` saja dengan `guests-4digit.csv`. Lakukan dua langkah terakhir berdekatan karena header lama tidak kompatibel dan tautan lama berhenti berlaku. Tab `RSVP` dan `Wishes` tetap. Jalankan `verify-live-sheets.mjs --migrated` sebelum membagikan tautan baru. Setelah domain ditentukan, jalankan `prepare-guests.mjs finalize-links https://domain-anda.id --migrated`.

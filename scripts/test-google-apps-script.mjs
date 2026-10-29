@@ -44,9 +44,12 @@ const post = data => result(context.doPost({ postData: { contents: JSON.stringif
 context.setupSheet();
 assert.deepEqual([...sheets.keys()], ['Guests', 'RSVP', 'Wishes']);
 assert.equal(sheets.get('RSVP').rows[0][4], 'Guest count');
-sheets.get('Guests').appendRow(['1', 'Ade Fitriyani', '0042', true]);
+assert.equal(sheets.get('Guests').rows[0][5], 'Tipe');
+assert.equal(sheets.get('RSVP').rows[0][5], 'Tipe');
+sheets.get('Guests').appendRow(['1', 'Ade Fitriyani', '0042', true, 'link formula preserved']);
 sheets.get('Guests').appendRow(['2', 'Tamu Kode Pendek', 88, true]);
 assert.equal(post({ action: 'guest', ...identity }).name, 'Ade Fitriyani');
+assert.equal(post({ action: 'guest', ...identity }).eventType, 'pria');
 assert.equal(post({ action: 'guest', invitationId: '2', invitationToken: '0088' }).name, 'Tamu Kode Pendek');
 assert.equal(post({ action: 'guest', ...identity, invitationToken: '9999' }).code, 'invalid_invitation');
 assert.equal(post({ action: 'rsvp', ...identity, attendance: 'attending' }).code, 'invalid_request');
@@ -54,11 +57,32 @@ assert.equal(post({ action: 'rsvp', ...identity, attendance: 'attending', guestC
 assert.equal(post({ action: 'rsvp', ...identity, attendance: 'attending', guestCount: 1.5 }).code, 'invalid_request');
 assert.equal(post({ action: 'rsvp', ...identity, attendance: 'attending', guestCount: 2 }).ok, true);
 assert.equal(sheets.get('RSVP').rows[1][4], 2);
+assert.equal(sheets.get('RSVP').rows[1][5], 'pria');
 assert.equal(post({ action: 'rsvp', ...identity, attendance: 'not_attending', guestCount: 0 }).code, 'already_submitted');
 assert.equal(sheets.get('RSVP').rows.length, 2);
 assert.equal(post({ action: 'guest', ...identity }).attendance, 'attending');
 assert.equal(post({ action: 'guest', ...identity }).guestCount, 2);
 assert.equal(post({ action: 'rsvp', invitationId: '2', invitationToken: '0088', attendance: 'not_attending', guestCount: 0 }).ok, true);
+// Type comes only from the authenticated Sheet row, never from a request field.
+sheets.get('Guests').appendRow(['3', 'Tamu Wanita', '0043', true, 'other link', ' Wanita ']);
+const woman = { invitationId: '3', invitationToken: '0043', eventType: 'pria' };
+assert.equal(post({ action: 'guest', ...woman }).eventType, 'wanita');
+assert.equal(post({ action: 'rsvp', ...woman, attendance: 'attending', guestCount: 3 }).ok, true);
+assert.equal(sheets.get('RSVP').rows[3][5], 'wanita');
+assert.equal(post({ action: 'guest', ...woman }).guestCount, 3);
+assert.equal(post({ action: 'rsvp', ...woman, attendance: 'attending', guestCount: 3 }).code, 'already_submitted');
+// Missing type on historical RSVP rows means pria, preserving final responses.
+sheets.get('RSVP').rows[1][5] = '';
+assert.equal(post({ action: 'guest', ...identity }).attendance, 'attending');
+assert.equal(post({ action: 'rsvp', ...identity, attendance: 'attending', guestCount: 1 }).code, 'already_submitted');
+sheets.get('Guests').rows[3][5] = 'typo';
+assert.equal(post({ action: 'guest', ...woman }).code, 'invalid_event_type');
+assert.equal(post({ action: 'rsvp', ...woman, attendance: 'attending', guestCount: 1 }).code, 'invalid_event_type');
+sheets.get('Guests').rows[3][5] = 'wanita';
+context.setupSheet();
+assert.equal(sheets.get('Guests').rows[3][5], 'wanita');
+assert.equal(sheets.get('Guests').rows[1][4], 'link formula preserved');
+assert.equal(sheets.get('Guests').rows[1][5], 'pria');
 const wishId = '12345678-1234-1234-1234-123456789abc';
 assert.equal(post({ action: 'wish', ...identity, wishId, message: '=2+2' }).ok, true);
 assert.equal(sheets.get('Wishes').rows[1][4], "'=2+2");
