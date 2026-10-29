@@ -1,24 +1,26 @@
-# Rizal & Dewi — Editorial Cover Documentation
+# Dokumentasi proyek
 
-This package contains the revised project documentation for the approved Editorial Cover opening experience and the couple-name update to Rizal & Dewi.
+## Operasional dan arsitektur
 
-## Files
+- [Setup, acara, tamu, dan deployment](operations/RUNBOOK.md)
+- [Arsitektur aplikasi saat ini](architecture/OVERVIEW.md)
+- [Kontrak Google Sheets dan Apps Script](architecture/BACKEND-GOOGLE-SHEETS.md)
+- [Struktur repository dan kebijakan aset](REPOSITORY.md)
+- [Panduan kontribusi](../CONTRIBUTING.md)
+- [Daftar skrip](../scripts/README.md)
 
-- `01-PROJECT-CHARTER.md`
-- `02-INFORMATION-ARCHITECTURE.md`
-- `03-OPENING-EXPERIENCE.md`
-- `04-SECTION-ART-DIRECTION.md`
-- `05-COLOR-SYSTEM.md`
-- `06-DESIGN-SYSTEM.md`
-- `07-TECHNICAL-ARCHITECTURE.md`
-- `08-CONTENT-AND-ASSET-REGISTER.md`
-- `09-QA-AND-ACCEPTANCE.md`
-- `10-Memory-Prompt.txt`
+## Desain dan aset
 
-The active Opening is an Editorial Cover with the `BUKA UNDANGAN` CTA, restrained sequential motion, and a separate Hero composition. QA remains `NOT TESTED` until the implementation is checked in a real browser.
+- [Sumber gambar dan regenerasi](../assets/README.md)
+- [Register aset transisi](design/TRANSITION-ASSETS.md)
+- [Register aset section](design/CHAPTER-ASSETS.md)
+- [Arah ilustrasi section](design/CHAPTER-ART-DIRECTION.md)
+- [Transisi Opening dan Hero](design/CINEMATIC-TRANSITION.md)
+- [Gerakan saat scroll](design/SCROLL-MOTION.md)
+- [Keputusan desain historis](design/DECISION-LOG.md)
 
----
+Dokumen desain memuat konteks revisi terdahulu. Tanggal dan konten acara mengikuti kode di app/wedding-config.ts. Panduan operasional serta kode menjadi rujukan implementasi saat ini.
 
-## Approved requirements update
+## Arsip
 
-The latest approved requirements add formal personalized greetings (`Yth. [nama]` sourced from CSV/JSON), rich but controlled organic motion, a Google Calendar Save the Date action, a separate Wedding Wishes form after RSVP, and a Send Gifts section for bank details plus a shipping address. The wedding date is defined as 14 November 2026; exact start/end time, time zone, venue, bank details, and address remain pending. These are implementation requirements, not evidence of a completed build or QA. The main-content sequence is documented in `02-INFORMATION-ARCHITECTURE.md`.
+[Arsip dokumentasi](archive/README.md) menyimpan spesifikasi awal, laporan review, checkpoint, dan prompt agen terdahulu. Catatan tersebut tidak menyatakan status implementasi atau persetujuan saat ini. Screenshot lama disimpan lokal dan tidak tersedia dalam clone baru.

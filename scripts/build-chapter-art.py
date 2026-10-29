@@ -4,13 +4,13 @@ from PIL import Image
 import shutil,json
 root=Path(__file__).resolve().parents[1]
 source=root/'assets/chapter-sources'; master=root/'assets/master'; build=root/'assets/build'; public=root/'public/chapter-art'
-public.mkdir(parents=True,exist_ok=True)
+for folder in (master,build,public):
+    folder.mkdir(parents=True,exist_ok=True)
 rows=[]
 for name in ['rsvp-correspondence','gallery-conservatory','footer-wedding-arch','chapter-garland','desktop-wedding-blueprint']:
     im=Image.open(source/f'{name}.png').convert('RGBA')
     if name=='chapter-garland':im=im.crop(im.getbbox())
     im.save(master/f'{name}.png',optimize=True)
-    shutil.copy2(master/f'{name}.png',public/f'{name}.png')
     width=min(im.width,1600 if name.startswith('desktop') else 1100 if name=='chapter-garland' else 900)
     variants=[]
     for suffix,w in [('',width),('@1x',width//2)]:
@@ -22,5 +22,5 @@ for name in ['rsvp-correspondence','gallery-conservatory','footer-wedding-arch',
 (build/'chapter-manifest.json').write_text(json.dumps(rows,indent=2),encoding='utf-8')
 lines=['# New chapter artwork','', '| Name | PNG master | WebP 2x bytes | WebP 1x bytes |','|---|---|---:|---:|']
 for r in rows:lines.append(f"| {r['name']} | {r['master'][0]}×{r['master'][1]} | {r['variants'][0]['bytes']} | {r['variants'][1]['bytes']} |")
-(root/'assets/CHAPTER-ASSETS.md').write_text('\n'.join(lines),encoding='utf-8')
+(root/'docs/design/CHAPTER-ASSETS.md').write_text('\n'.join(lines),encoding='utf-8')
 print(json.dumps(rows,indent=2))

@@ -18,7 +18,7 @@ function Art({name,className='',style}: {name:string;className?:string;style?:CS
   if(name.startsWith('monogram-petals-')) name=name.replace('monogram-petals-','petal-');
   return <picture className={className} style={style}>
     <source type="image/webp" srcSet={/^(leaf-sprite|flower-sprite|petal|bouquet)/.test(name) ? `/transition/${name}@1x.webp` : `/transition/${name}@1x.webp 1x, /transition/${name}.webp 2x`} />
-    <img src={`/transition/${name}.png`} alt="" decoding="async" draggable={false} />
+    <img src={`/transition/${name}.webp`} alt="" decoding="async" draggable={false} />
   </picture>;
 }
 function Vine({side,depth}:{side:'left'|'right';depth:'back'|'front'}) {

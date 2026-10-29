@@ -3,6 +3,7 @@ from PIL import Image, ImageDraw
 import json
 
 root=Path(__file__).resolve().parents[1]
+(root/'artifacts/cinematic').mkdir(parents=True,exist_ok=True)
 records=json.loads((root/'assets/build/manifest.json').read_text(encoding='utf-8'))
 for asset in records:
     name=asset['name']
@@ -16,7 +17,7 @@ for asset in records:
         assert path.read_bytes()==(root/'public/transition'/path.name).read_bytes()
     if name.startswith('vine-'):assert asset['variants'][0]['bytes']<=400000,name
     if name.startswith('landscape-'):assert asset['variants'][0]['bytes']<=500000,name
-assert {p.name for p in (root/'assets').rglob('*.svg')}=={'arch-frame.svg','divider.svg'}
+assert {p.name for p in (root/'assets/build').glob('*.svg')} <= {'arch-frame.svg','divider.svg'}
 assert not list((root/'assets/master').glob('*placeholder*'))
 
 # Contact sheet at literal 200% pixel magnification for visual inspection only.

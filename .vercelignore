@@ -1,0 +1,11 @@
+# Build uses committed delivery assets; sources and local evidence stay off deploys.
+.local/
+artifacts/
+assets/
+docs/
+data/private/
+.npm-cache/
+test-results/
+playwright-report/
+coverage/
+*.tsbuildinfo

@@ -342,7 +342,7 @@ export default function InvitationDetails({ identity, initialAttendance, initial
     <ChapterBoundary theme="footer" edge="top" />
     <footer className="closing-section" aria-label="Penutup undangan">
       <ChapterBackground name="footer-wedding-arch" />
-      <picture className="closing-monogram" aria-hidden="true"><source srcSet="/transition/monogram@1x.webp 1x, /transition/monogram.webp 2x" type="image/webp" /><img src="/transition/monogram.png" width={400} height={400} alt="" loading="lazy" decoding="async" /></picture>
+      <picture className="closing-monogram" aria-hidden="true"><source srcSet="/transition/monogram@1x.webp 1x, /transition/monogram.webp 2x" type="image/webp" /><img src="/transition/monogram.webp" width={400} height={400} alt="" loading="lazy" decoding="async" /></picture>
       <div className="closing-copy"><Ornament /><p className="closing-thanks">Terima kasih atas doa<br />dan kehadiran Anda.</p>
         <h2 className="closing-names" aria-label={`${wedding.groom} dan ${wedding.bride}`}>
           <span className="closing-name closing-name-groom" aria-hidden="true">{wedding.groom}</span>

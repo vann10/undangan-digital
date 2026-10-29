@@ -35,7 +35,7 @@ const context = vm.createContext({
   LockService: { getScriptLock: () => ({ waitLock: () => { locked = true; }, hasLock: () => locked, releaseLock: () => { locked = false; } }) },
   CacheService: { getScriptCache: () => ({ get: key => cache.get(key) ?? null, put: (key, value) => cache.set(key, value), remove: key => cache.delete(key) }) },
 });
-vm.runInContext(readFileSync('google-apps-script/Code.gs', 'utf8'), context);
+vm.runInContext(readFileSync('integrations/google-apps-script/Code.gs', 'utf8'), context);
 const result = output => JSON.parse(output.value);
 const token = '0042';
 const identity = { invitationId: '1', invitationToken: token };

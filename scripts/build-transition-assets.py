@@ -37,7 +37,6 @@ def save(name, im, source, width=None, note=''):
             temporary.replace(target)
         shutil.copy2(target, PUBLIC / target.name)
         variants.append({'file': target.name, 'width': out.width, 'height': out.height, 'bytes': target.stat().st_size})
-    shutil.copy2(MASTER / f'{name}.png', PUBLIC / f'{name}.png')
     records.append({'name': name, 'source': source, 'width': im.width, 'height': im.height,
                     'bytes': (MASTER / f'{name}.png').stat().st_size, 'variants': variants, 'note': note})
     return im
@@ -108,11 +107,11 @@ save('monogram',monogram,'A · existing embedded lossless PNG, same monogram as 
 # Original lossless sources already present in the project and shown in the reference.
 for name, source in [('garland-top','page-transition-garland.png'),
                      ('branch-hero-left','hero-tree-left-v1.png'),('branch-hero-right','hero-tree-right-v1.png')]:
-    im=Image.open(ROOT/'public/artwork'/source).convert('RGBA')
+    im=Image.open(ROOT/'assets/source-artwork'/source).convert('RGBA')
     im=im.crop(im.getbbox())
     save(name,im,'B (existing) · '+source+'; original project PNG, no new generation',900 if name=='garland-top' else 600)
 for side in ('left','right'):
-    corner=Image.open(ROOT/'public/artwork/botanical-ascending-review.png').convert('RGBA')
+    corner=Image.open(ROOT/'assets/source-artwork/botanical-ascending-review.png').convert('RGBA')
     if side=='right': corner=ImageOps.mirror(corner)
     save('corner-'+side,corner.crop(corner.getbbox()),'B (existing) · botanical-ascending-review.png',400)
 
@@ -151,14 +150,14 @@ save('water-glimmer',scene.crop((180,570,1024,740)),'A · lake reflection crop',
 
 (BUILD/'manifest.json').write_text(json.dumps(records,indent=2,ensure_ascii=False),encoding='utf-8')
 shutil.copy2(BUILD/'manifest.json',PUBLIC/'manifest.json')
-lines=['# Transition asset register','', 'All WebP variants are encoded once from their lossless PNG master. @1x is half the main build width. One new sprite sheet was generated with the three supplied style masters. No vectorization, denoising, sharpening, saturation or contrast adjustments. PNG fallbacks live beside WebP in public/transition.','','| Asset | Source | PNG pixels | PNG KB | WebP @2x KB | WebP @1x KB | Notes |','|---|---|---:|---:|---:|---:|---|']
+lines=['# Transition asset register','', 'WebP delivery variants are encoded from lossless PNG sources. @1x is half the main width. Generated PNG masters stay in ignored assets/master; only WebP delivery files are published in public/transition.','','| Asset | Source | PNG pixels | PNG KB | WebP @2x KB | WebP @1x KB | Notes |','|---|---|---:|---:|---:|---:|---|']
 for r in records:
     lines.append(f"| {r['name']} | {r['source']} | {r['width']}×{r['height']} | {r['bytes']/1024:.1f} | {r['variants'][0]['bytes']/1024:.1f} | {r['variants'][1]['bytes']/1024:.1f} | {r['note']} |")
-(ROOT/'assets/TRANSITION-ASSETS.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+(ROOT/'docs/design/TRANSITION-ASSETS.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
 for folder in (MASTER,BUILD,PUBLIC):
     # Remove only this pipeline's superseded, explicitly named interim fragments.
     for obsolete in folder.glob('*-placeholder*'):
         if obsolete.resolve().parent==folder.resolve() and obsolete.is_file(): obsolete.unlink()
 for geometric in ('arch-frame.svg','divider.svg'):
     if (BUILD/geometric).exists(): shutil.copy2(BUILD/geometric,PUBLIC/geometric)
-print(f'Exported {len(records)} masters and direct WebP variants; see assets/TRANSITION-ASSETS.md')
+print(f'Exported {len(records)} masters and direct WebP variants; see docs/design/TRANSITION-ASSETS.md')

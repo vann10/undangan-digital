@@ -11,9 +11,12 @@
     "typecheck": "tsc --noEmit",
     "assets:transition": "python scripts/build-transition-assets.py",
     "test:cinematic": "node scripts/verify-cinematic.mjs",
-    "test:prototype": "node scripts/verify-prototype.mjs",
     "test:google": "node scripts/test-google-apps-script.mjs && node scripts/test-guest-import.mjs && node scripts/test-wedding-config.mjs",
-    "test:browser": "node scripts/verify-complete.mjs"
+    "test:browser": "node scripts/verify-rsvp-gallery.mjs",
+    "test:legacy:prototype": "node scripts/legacy/verify-prototype.mjs",
+    "check:repository": "node scripts/verify-repository.mjs",
+    "test:assets": "node scripts/verify-delivery-assets.mjs",
+    "test:legacy:complete": "node scripts/legacy/verify-complete.mjs"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",

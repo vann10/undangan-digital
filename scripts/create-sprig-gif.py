@@ -3,8 +3,10 @@ from PIL import Image
 from pathlib import Path
 import math
 
-root = Path('public/artwork')
-source = Image.open(root / 'rd-bud-sprig-v1.webp').convert('RGBA')
+project = Path(__file__).resolve().parents[1]
+root = project / 'artifacts/sprig'
+root.mkdir(parents=True, exist_ok=True)
+source = Image.open(project / 'assets/source-artwork/rd-bud-sprig-v1.webp').convert('RGBA')
 source.thumbnail((160, 240), Image.Resampling.LANCZOS)
 canvas = Image.new('RGBA', (200, 280))
 canvas.alpha_composite(source, ((200-source.width)//2, 20))

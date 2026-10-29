@@ -8,3 +8,16 @@ out/
 data/private/*
 !data/private/.gitkeep
 test-results/
+
+# Local evidence, generated asset intermediates, and tool caches
+/.local/
+/artifacts/
+/assets/build/
+/assets/master/
+/playwright-report/
+/coverage/
+__pycache__/
+*.py[cod]
+*.log
+.DS_Store
+Thumbs.db
