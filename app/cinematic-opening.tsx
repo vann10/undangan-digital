@@ -7,6 +7,7 @@ import { RasterParticles } from './transition-particles';
 import { playOpenTransition } from './opening-timeline';
 import { useWeddingEvent } from './wedding-event-context';
 import { LoadingScreen } from './loading-screen';
+import { photoSrcSet, photoUrl } from './wedding-photos';
 import './cinematic-opening.css';
 
 function Art({name,className='',style}: {name:string;className?:string;style?:CSSProperties}) {
@@ -222,7 +223,10 @@ export default function CinematicOpening({guestName,guestLoading,guestError,onRe
       <div className="cin-portrait cin-hero-reveal" data-motion>
         <svg className="cin-arch" viewBox="0 0 280 354" preserveAspectRatio="none" aria-hidden="true"><path className="cin-arch-path" d="M3 351 L3 141 A137 137 0 0 1 277 141 L277 351 Z" /></svg>
         <svg width="0" height="0" className="cin-clip-defs" aria-hidden="true"><defs><clipPath id={photoClip} clipPathUnits="objectBoundingBox"><path transform="scale(.003571428571 .002824858757)" d="M3 351 L3 141 A137 137 0 0 1 277 141 L277 351 Z" /></clipPath></defs></svg>
-        <div className="cin-photo-reveal"><div className="cin-photo-mask" style={{clipPath:`url(#${photoClip})`}}><img className="cin-photo" src="/artwork/couple-user-upload.webp" width={1000} height={1501} alt="Rizal dan Dewi bersama" decoding="async" /></div></div>
+        <div className="cin-photo-reveal"><div className="cin-photo-mask" style={{clipPath:`url(#${photoClip})`}}>
+          <img className="cin-photo" src={photoUrl('ARY_4846', 960)} srcSet={photoSrcSet('ARY_4846', [420, 960])}
+            sizes="(max-width: 430px) 90.75vw, 391px" width={960} height={1200} alt="Rizal dan Dewi bersama" decoding="async" />
+        </div></div>
         <div className="cin-bouquet" aria-hidden="true">
           {Array.from({length:4},(_,i)=><Art name={`bouquet-leaf-0${i+1}`} key={`leaf${i}`} className={`cin-bouquet-piece cin-bouquet-leaf cin-bouquet-piece-${i}`} />)}
           {Array.from({length:5},(_,i)=><Art name={`bouquet-flower-0${i+1}`} key={`flower${i}`} className={`cin-bouquet-piece cin-bouquet-flower cin-bouquet-piece-${i+4}`} />)}

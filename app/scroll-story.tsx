@@ -79,15 +79,12 @@ export default function ScrollStory({children,active=true}:{children:ReactNode;a
           .from(q(el,'iframe'),{clipPath:'inset(50% 0 50% 0)',duration:1.2,ease:'power3.inOut'},.4);
       }));
       q(host,'.gallery-grid').forEach(el=>scene(el,'gallery',tl=>{
-        tl.from(q(el,'.gallery-photo-1'),{y:32,clipPath:'inset(0 0 85% 0)',duration:1.3,ease:'power3.inOut'},0)
-          .from(q(el,'.gallery-photo-2'),{x:-38,y:20,opacity:0,duration:1.2},.2)
-          .from(q(el,'.gallery-photo-3'),{x:38,y:20,opacity:0,duration:1.2},.35)
-          .from(q(el,'img'),{scale:1.06,stagger:.1,duration:1.5},.1);
+        tl.from(q(el,'.gallery-photo'),{opacity:0,stagger:.055,duration:.5},0)
+          .from(q(el,'.gallery-quote'),{opacity:0,duration:.45},.22);
       }));
       q(host,'.rsvp-form').forEach((el,i)=>scene(el,`form-${i}`,tl=>{
         if(el.closest('.rsvp-section')) {
-          tl.from(q(el,':scope>label,:scope>fieldset'),{x:i?-24:24,y:12,opacity:0,stagger:.12},0)
-            .from(q(el,'.form-submit'),{y:20,opacity:0,ease:'power3.out'},.25);
+          tl.from(q(el,':scope>fieldset,:scope>label,:scope>.form-submit'),{opacity:0,stagger:.12,duration:.6},0);
         } else {
           tl.from(q(el,':scope>label,:scope>fieldset'),{x:()=>host.clientWidth*(i?-.8:.8),opacity:0,stagger:.12},0)
             .from(q(el,'.form-submit'),{y:35,scale:.94,opacity:0,ease:'back.out(1.2)'},.25);

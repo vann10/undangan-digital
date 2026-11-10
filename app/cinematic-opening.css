@@ -70,7 +70,7 @@ html:has(.cin-stage){scrollbar-gutter:stable both-edges}
 .cin-clip-defs{position:absolute;pointer-events:none}
 .cin-hero-botanicals{position:absolute;inset:0;z-index:24;pointer-events:none;transform:translateY(var(--hero-offset))}
 .cin-stage:before{content:"";position:absolute;inset:0;background:url('/artwork/cloud-canopy-review.webp') center top/100% auto no-repeat;opacity:var(--opacity-sky);pointer-events:none;mask-image:linear-gradient(to bottom,var(--cream),transparent 48%)}
-.cin-photo{display:block;width:100%;height:100%;object-fit:cover;object-position:center 45%;transform-origin:50% 100%}
+.cin-photo{position:absolute;top:-18.75%;left:-18.75%;display:block;width:137.5%;height:137.5%;object-fit:cover;object-position:center 45%;transform-origin:50% 100%}
 .cin-bouquet{position:absolute;right:-19%;bottom:-13%;width:48%;height:39%;z-index:2;pointer-events:none}
 .cin-bouquet-piece{position:absolute;transform-origin:50% 75%;rotate:-25deg}
 .cin-bouquet-leaf{width:60%;height:65%}.cin-bouquet-flower{width:42%;height:40%}

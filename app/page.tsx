@@ -9,6 +9,7 @@ import { transitionConfig, transitionVariables } from "../transition.config";
 import { wedding, weddingEvents, type EventType } from "./wedding-config";
 import { WeddingEventContext } from "./wedding-event-context";
 import { useGuestInvitation } from "./use-guest-invitation";
+import { photoSrcSet, photoUrl } from "./wedding-photos";
 
 function MusicControl({ audio, playing, error, toggle, onPlaying, onPause, onError }: {
   audio: RefObject<HTMLAudioElement | null>; playing: boolean; error: string;
@@ -23,11 +24,12 @@ function MusicControl({ audio, playing, error, toggle, onPlaying, onPause, onErr
   </>;
 }
 
-function PersonProfile({ person, fullName, image, alt }: { person: "Dewi" | "Rizal"; fullName: string; image: string; alt: string }) {
+function PersonProfile({ person, fullName, photoId, photoHeight }: { person: "Dewi" | "Rizal"; fullName: string; photoId: string; photoHeight: number }) {
   const dove = person === "Dewi" ? "bride-turn" : "groom";
   return <article className="person-profile">
     <figure className="person-portrait">
-      <img className="person-photo" src={image} alt={alt} width={1000} height={1333} loading="lazy" decoding="async" />
+      <img className="person-photo" src={photoUrl(photoId, 720)} srcSet={photoSrcSet(photoId, [320, 720])}
+        sizes="246px" alt={`Potret ${person}`} width={720} height={photoHeight} loading="lazy" decoding="async" />
       <span className={`profile-dove profile-dove-${person === "Dewi" ? "bride" : "groom"}`} aria-hidden="true">
         <img src={`/artwork/perched-dove-${dove}.webp`} width={700} height={560} alt="" loading="lazy" />
       </span>
@@ -78,8 +80,8 @@ export default function Invitation({ invitationId, accessCode, previewEventType 
       <img className="couple-floating-branch couple-floating-branch-top" src="/artwork/rd-connecting-branch-v1.webp" width={640} height={960} alt="" aria-hidden="true" loading="lazy" />
       <img className="couple-floating-branch couple-floating-branch-bottom" src="/artwork/rd-connecting-branch-v1.webp" width={640} height={960} alt="" aria-hidden="true" loading="lazy" />
       <header className="couple-page-header"><h2 id="couple-heading">Mempelai</h2><span className="gold-divider" aria-hidden="true" /></header>
-      <PersonProfile person="Rizal" fullName={wedding.groomFullName} image="/artwork/bridesgroom-user-upload.webp" alt="Potret Rizal" />
-      <PersonProfile person="Dewi" fullName={wedding.brideFullName} image="/artwork/brides-user-upload.webp" alt="Potret Dewi" />
+      <PersonProfile person="Rizal" fullName={wedding.groomFullName} photoId="ARY_5282" photoHeight={960} />
+      <PersonProfile person="Dewi" fullName={wedding.brideFullName} photoId="ARY_5340" photoHeight={900} />
     </section>
     <div className="page-bridge page-bridge-after-couple" aria-hidden="true">
       <img className="page-bridge-garland" src="/artwork/page-transition-garland.webp" width={1100} height={367} alt="" loading="lazy" decoding="async" />
