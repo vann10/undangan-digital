@@ -76,7 +76,7 @@ try {
     assert.equal(await page.getByText('Semoga bahagia selalu.').count(), 1);
     assert.equal(await page.locator('.event-section a[href*="calendar.google.com"]').count(), 1);
     assert.equal(await page.locator('.wedding-date').textContent(), '28 November 2026');
-    assert.equal(await page.locator('.event-list').getByText('10.00–13.00 WIB').count(), 1);
+    assert.equal(await page.locator('.event-list').getByText('10.00 WIB s/d selesai').count(), 1);
     assert.equal(await page.locator('.event-list').getByText('Mohammad Bahrodin & Mariatul Qibtiyah').count(), 1);
     assert.equal(await page.locator('.gift-card strong').textContent(), '009001079530506');
     assert.equal(await page.getByText('14 November 2026').count(), 0);

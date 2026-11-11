@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Invitation from "../../page";
+import Invitation from "../../invitation";
 
 export const metadata: Metadata = {
   title: "Pratinjau Undangan Rizal & Dewi",

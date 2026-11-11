@@ -15,6 +15,7 @@ export function useGuestInvitation(invitationId?: string, accessCode?: string) {
   const [guest, setGuest] = useState<Guest | null>(null);
   const [loading, setLoading] = useState(Boolean(invitationId));
   const [error, setError] = useState("");
+  const [invalid, setInvalid] = useState(false);
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
@@ -22,12 +23,13 @@ export function useGuestInvitation(invitationId?: string, accessCode?: string) {
     let activeRequest: AbortController | undefined;
     setGuest(null);
     setError("");
+    setInvalid(false);
     setLoading(Boolean(invitationId));
     if (!invitationId) return;
 
     const token = accessCode ?? window.location.hash.slice(1);
     if (!/^(?:[A-Za-z0-9_-]{43}|\d{4})$/.test(token)) {
-      setError("Tautan undangan tidak valid.");
+      setInvalid(true);
       setLoading(false);
       return;
     }
@@ -44,6 +46,12 @@ export function useGuestInvitation(invitationId?: string, accessCode?: string) {
             body: JSON.stringify({ invitationId, invitationToken: token }),
             signal: activeRequest.signal, cache: "no-store",
           });
+          if (response.status === 400 || response.status === 404) {
+            if (disposed) return;
+            setInvalid(true);
+            setLoading(false);
+            return;
+          }
           retryable = response.status >= 500 || response.status === 408;
           const data = await response.json();
           if (!response.ok) throw new Error(data.error || "Undangan belum dapat dibuka.");
@@ -80,6 +88,7 @@ export function useGuestInvitation(invitationId?: string, accessCode?: string) {
     guestCount: guest?.guestCount ?? null,
     eventType: guest?.eventType ?? (invitationId ? null : "pria" as EventType),
     guestLoading: loading,
+    guestInvalid: invalid,
     guestError: error,
     retryGuest: () => setAttempt(value => value + 1),
   };

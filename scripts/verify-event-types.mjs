@@ -24,7 +24,8 @@ try {
       return route.fulfill({ json: { ok: true, attendance: 'attending', guestCount: 2 } });
     });
     await page.goto(`${baseUrl}/invite/1-0042`, { waitUntil: 'domcontentloaded' });
-    await page.waitForFunction(() => document.querySelector('.cin-date')?.getAttribute('aria-label')?.includes('Memuat tanggal'));
+    await page.locator('.invitation-notice[data-state="loading"]').waitFor();
+    assert.equal(await page.locator('.cin-stage').count(), 0, 'invitation waits for guest validation');
     assert.equal(await page.locator('.event-actions a').count(), 0, 'no wrong calendar while identity loads');
     assert.equal(await page.locator('.venue-map').count(), 0, 'no wrong map while identity loads');
     release();
@@ -37,9 +38,9 @@ try {
     if (type === 'wanita') {
       assert.match(schedule, /Jumat, 20 November 2026/);
       assert.match(schedule, /Akad Nikah/);
-      assert.match(schedule, /08.00 WIB s\/d Selesai/);
+      assert.match(schedule, /08.00 WIB s\/d selesai/);
       assert.match(schedule, /Resepsi/);
-      assert.match(schedule, /14.00 WIB s\/d Selesai/);
+      assert.match(schedule, /14.00 WIB s\/d selesai/);
       assert.match(schedule, /Setail, Genteng, Banyuwangi/);
       assert.match(schedule, /Kediaman mempelai wanita/);
       assert.doesNotMatch(schedule, /28 November|Manyar/);
@@ -51,10 +52,9 @@ try {
       assert.match(await page.locator('.countdown-grid').getAttribute('aria-label'), /20 November 2026 pukul 08.00 WIB/);
     } else {
       assert.match(schedule, /Sabtu, 28 November 2026/);
-      assert.match(schedule, /10.00–13.00 WIB/);
+      assert.match(schedule, /10.00 WIB s\/d selesai/);
       assert.match(schedule, /Manyar/);
-      const calendar = new URL(await page.locator('.event-actions a').getAttribute('href'));
-      assert.equal(calendar.searchParams.get('dates'), '20261128T030000Z/20261128T060000Z');
+      assert.equal(await page.locator('.event-actions a').count(), 0);
       assert.match(await page.locator('.venue-map').getAttribute('src'), /-7.42037/);
       assert.notEqual(await page.locator('.countdown-number').first().getAttribute('data-value'), '--');
       assert.equal((await page.locator('.cin-date').textContent()).replaceAll(' ', ''), '28November2026');

@@ -1,4 +1,4 @@
-import Invitation from "../../page";
+import Invitation from "../../invitation";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 

@@ -3,12 +3,9 @@ import { wedding, weddingEvents, normalizeEventType, eventLabels, dateLabel, ful
 
 assert.equal(dateLabel, '28 November 2026');
 assert.equal(fullDateLabel, 'Sabtu, 28 November 2026');
-assert.equal(timeLabel, '10.00–13.00 WIB');
+assert.equal(timeLabel, '10.00 WIB s/d selesai');
 assert.equal(eventDate().toISOString(), '2026-11-28T03:00:00.000Z');
-const url = new URL(calendarUrl());
-assert.equal(url.hostname, 'calendar.google.com');
-assert.equal(url.searchParams.get('dates'), '20261128T030000Z/20261128T060000Z');
-assert.equal(url.searchParams.get('location'), `${wedding.venueName}, ${wedding.venueAddress}`);
+assert.equal(calendarUrl(), null);
 assert.equal(normalizeEventType(undefined), 'pria');
 assert.equal(normalizeEventType(''), 'pria');
 assert.equal(normalizeEventType(' Wanita '), 'wanita');
@@ -20,9 +17,9 @@ assert(weddingEvents.wanita.sessions.every(session => session.venueAddress === w
 assert.equal(eventDate(weddingEvents.wanita).toISOString(), '2026-11-20T01:00:00.000Z');
 assert.equal(calendarUrl(weddingEvents.wanita), null);
 assert.equal(eventLabels(weddingEvents.wanita).fullDateLabel, 'Jumat, 20 November 2026');
-assert.equal(eventLabels(weddingEvents.wanita).timeLabel, '08.00 WIB s/d Selesai');
+assert.equal(eventLabels(weddingEvents.wanita).timeLabel, '08.00 WIB s/d selesai');
 assert.deepEqual(weddingEvents.wanita.sessions.map(session => session.title), ['Akad Nikah', 'Resepsi']);
-assert.equal(eventLabels(weddingEvents.wanita.sessions[1]).timeLabel, '14.00 WIB s/d Selesai');
+assert.equal(eventLabels(weddingEvents.wanita.sessions[1]).timeLabel, '14.00 WIB s/d selesai');
 assert.equal(eventDate(weddingEvents.wanita.sessions[1]).toISOString(), '2026-11-20T07:00:00.000Z');
 assert.match(weddingEvents.wanita.mapsEmbedUrl, /-8.3622471%2C114.1318747/);
 assert.equal(weddingEvents.wanita.mapsUrl, 'https://maps.app.goo.gl/z6gegTTCZxpLcWF9A?g_st=ic');

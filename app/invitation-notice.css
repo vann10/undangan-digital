@@ -1,0 +1,26 @@
+.invitation-notice{min-height:100svh;display:grid;place-items:center;background:var(--ivory);color:var(--emerald)}
+.notice-paper{position:relative;isolation:isolate;overflow:hidden;display:grid;place-items:center;width:min(100%,430px);min-height:100svh;padding:90px 38px 82px;background:var(--ivory);box-shadow:0 0 65px #39353412}
+.notice-paper:after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:url('/artwork/paper-grain.webp') center/320px;opacity:.14;mix-blend-mode:multiply}
+.notice-frame{position:absolute;inset:19px;border:1px solid #b79a6859;pointer-events:none}
+.notice-frame:after{content:"";position:absolute;inset:5px;border:1px solid #b79a6829}
+.notice-botanical{position:absolute;z-index:1;pointer-events:none;height:auto;mix-blend-mode:multiply}
+.notice-botanical-top{width:310px;left:-117px;top:-51px;transform:rotate(16deg);opacity:.8}
+.notice-botanical-bottom{width:235px;right:-109px;bottom:-116px;transform:rotate(-19deg);opacity:.7}
+.notice-content{position:relative;z-index:2;width:100%;text-align:center}
+.notice-eyebrow{font:500 9px/1.8 var(--sans);letter-spacing:.25em;text-transform:uppercase;margin:0 0 22px;color:var(--sage)}
+.notice-envelope{position:relative;width:min(100%,300px);aspect-ratio:360/260;margin:0 auto 27px;filter:drop-shadow(0 12px 12px #69543113)}
+.notice-envelope svg{position:absolute;inset:0;width:100%;height:100%}
+.notice-envelope-sprig{position:absolute;left:22%;top:0;width:79%;height:auto;transform:rotate(-23deg);opacity:.87}
+.notice-envelope-flower{position:absolute;left:-4%;bottom:-2%;width:52%;height:auto;transform:rotate(14deg)}
+.notice-content h1{max-width:330px;margin:0 auto;font:400 clamp(36px,10vw,45px)/1.05 var(--display);letter-spacing:-.025em;text-wrap:balance}
+.notice-divider{display:flex;align-items:center;justify-content:center;gap:9px;color:var(--champagne);margin:24px auto 21px}
+.notice-divider span{height:1px;width:29px;background:currentColor;opacity:.65}
+.notice-divider svg{width:30px;height:14px}
+.notice-description{max-width:252px;margin:0 auto;color:var(--secondary);font:400 12px/1.95 var(--sans);text-wrap:pretty;overflow-wrap:anywhere}
+.notice-signature{margin:38px 0 0;font:400 italic 31px/1.2 var(--display);letter-spacing:-.025em}
+.notice-signature em{font-size:.7em;color:var(--champagne);margin:0 .08em}
+.notice-retry{min-height:44px;border:1px solid var(--champagne);background:transparent;color:var(--emerald);padding:11px 25px;margin-top:23px;font:500 11px/1.5 var(--sans);letter-spacing:.06em;cursor:pointer}
+.notice-retry:hover{background:#b79a6814}
+@media(min-width:761px){.invitation-notice{background:var(--ivory) url('/chapter-art/desktop-wedding-blueprint.webp') center/cover fixed no-repeat}}
+@media(max-height:700px){.notice-paper{padding-block:65px 52px}.notice-eyebrow{margin-bottom:8px}.notice-envelope{width:235px;margin-bottom:17px}.notice-signature{margin-top:24px}.notice-divider{margin-block:19px 16px}}
+@media(max-width:350px){.notice-paper{padding-inline:32px}.notice-content h1{font-size:36px}.notice-description{font-size:11px}.notice-envelope{max-width:245px}.notice-botanical-top{width:235px;left:-98px;top:-64px}.notice-botanical-bottom{width:205px;right:-120px;bottom:-112px}}

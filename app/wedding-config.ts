@@ -17,7 +17,7 @@ export const wedding = {
   // eventType: "",
   date: "2026-11-28",
   time: "10:00", // 24-hour local time
-  endTime: "13:00",
+  endTime: null,
   timeZone: "Asia/Jakarta", // WIB
   venueName: "Kediaman mempelai pria",
   venueAddress: "Jl Manyar gg Bimo, RT 06/RW 02, Beran 1, Beran, Ngawi",
@@ -88,7 +88,7 @@ export function eventLabels(event: WeddingEvent) {
   }).format(new Date(`${event.date}T00:00:00Z`)) : "Tanggal akan diumumkan";
 
   const zone = { "Asia/Jakarta": "WIB", "Asia/Makassar": "WITA", "Asia/Jayapura": "WIT" }[event.timeZone] ?? event.timeZone;
-  const timeLabel = event.time ? `${event.time.replace(":", ".")}${event.endTime ? `–${event.endTime.replace(":", ".")}` : ""} ${zone}${event.endTime ? "" : " s/d Selesai"}` : "Jam akan diumumkan";
+  const timeLabel = event.time ? `${event.time.replace(":", ".")}${event.endTime ? `-${event.endTime.replace(":", ".")}` : ""} ${zone}${event.endTime ? "" : " s/d selesai"}` : "Jam akan diumumkan";
   return { dateLabel, fullDateLabel, timeLabel };
 }
 
