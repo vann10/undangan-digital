@@ -35,15 +35,27 @@ try {
 
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   let lookups = 0;
-  await page.route('**/api/invitation', route => { lookups++; return route.fulfill({ status: 404, json: { error: 'Tautan undangan tidak valid atau tidak aktif.' } }); });
+  let releaseInvalid;
+  const invalidResponse = new Promise(resolve => { releaseInvalid = resolve; });
+  await page.route('**/api/invitation', async route => {
+    lookups++;
+    await invalidResponse;
+    return route.fulfill({ status: 404, json: { error: 'Tautan undangan tidak valid atau tidak aktif.' } });
+  });
   for (const path of ['/invite/1', '/invite/1#salah', '/invite/1#12345']) {
-    await page.goto(`${base}${path}`);
+    await page.goto(`${base}${path}`, { waitUntil: 'domcontentloaded' });
     await invalidNotice(page);
   }
   assert.equal(lookups, 0, 'missing or malformed tokens never reach backend');
   for (const path of ['/invite/1-0042', `/invite/1#${'a'.repeat(43)}`]) {
     const before = lookups;
-    await page.goto(`${base}${path}`);
+    await page.goto(`${base}${path}`, { waitUntil: 'domcontentloaded' });
+    if (path === '/invite/1-0042') {
+      await page.getByRole('progressbar', { name: 'Pemeriksaan akses undangan' }).waitFor();
+      assert.equal(await page.locator('.invitation-notice').count(), 0, 'restriction only appears after invalid access is confirmed');
+      await page.screenshot({ path: 'artifacts/invitation-access/guest-validation.png' });
+      releaseInvalid();
+    }
     await invalidNotice(page);
     assert.equal(lookups, before + 1, 'inactive credentials are not retried');
   }
@@ -57,9 +69,11 @@ try {
   });
   await page.route('**/api/wishes', route => route.fulfill({ json: { wishes: [] } }));
   await page.goto(`${base}/invite/1-0042`);
-  await page.getByRole('heading', { name: 'Undangan Belum Dapat Dibuka', exact: true }).waitFor();
+  await page.locator('.loading-screen').getByText('Undangan belum tersedia.', { exact: true }).waitFor();
   assert.equal(calls, 3, 'temporary failures use existing retries');
   assert.equal(await page.locator('.cin-stage').count(), 0);
+  assert.equal(await page.locator('.invitation-notice').count(), 0, 'temporary errors stay on the loading screen');
+  assert.equal(await page.getByRole('button', { name: 'Lanjutkan', exact: true }).count(), 0, 'guest validation cannot be skipped');
   await page.getByRole('button', { name: 'Coba lagi', exact: true }).click();
   await page.locator('.cin-guest p').filter({ hasText: 'Tamu Pengujian' }).waitFor({ timeout: 60000 });
   assert.equal(calls, 4);

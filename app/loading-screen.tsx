@@ -3,9 +3,11 @@ type Props = {
   phase: "loading" | "ready" | "error";
   onRetry: () => void;
   onContinue?: () => void;
+  message?: string;
+  progressLabel?: string;
 };
 
-export function LoadingScreen({ progress, phase, onRetry, onContinue }: Props) {
+export function LoadingScreen({ progress, phase, onRetry, onContinue, message, progressLabel = "Aset undangan dimuat" }: Props) {
   return <div className={`loading-screen${phase === "ready" ? " loading-screen-ready" : ""}`} role="status" aria-live="polite" aria-label="Memuat undangan">
     <div className="loading-screen-frame" aria-hidden="true" />
     <div className="loading-screen-inner">
@@ -14,16 +16,16 @@ export function LoadingScreen({ progress, phase, onRetry, onContinue }: Props) {
         <img src="/artwork/loading-petals-lineart.svg" width={256} height={256} alt="" />
       </div>
       <h2>Loading...</h2>
-      <div className="loading-progress" role="progressbar" aria-label="Aset undangan dimuat" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
+      <div className="loading-progress" role="progressbar" aria-label={progressLabel} aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
         <span style={{ width: `${progress}%` }} />
       </div>
       {phase === "error" ? <>
-        <p className="loading-status">Aset gagal dimuat.</p>
+        <p className="loading-status">{message || "Aset gagal dimuat."}</p>
         <div className="loading-actions">
           <button type="button" onClick={onRetry}>Coba lagi</button>
           {onContinue && <button type="button" onClick={onContinue}>Lanjutkan</button>}
         </div>
-      </> : null}
+      </> : message ? <p className="loading-status">{message}</p> : null}
     </div>
   </div>;
 }

@@ -11,20 +11,27 @@ try {
     const page = await context.newPage();
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
+    await page.addInitScript(() => {
+      window.__sawRestriction = false;
+      new MutationObserver(() => {
+        if (document.querySelector('.invitation-notice')) window.__sawRestriction = true;
+      }).observe(document, { childList: true, subtree: true });
+    });
     let release;
     const ready = new Promise(resolve => { release = resolve; });
     await page.route('**/api/invitation', async route => {
       await ready;
       await route.fulfill({ json: { name: 'Tamu Pengujian', ...(type === 'legacy' ? {} : { eventType: type }), attendance: null, guestCount: null } });
     });
-    await page.route('**/api/wishes', route => route.fulfill({ json: { wishes: [] } }));
+    await page.route('**/api/wishes', route => route.fulfill({ json: { wishes: [{ id: 'wish-test', name: 'Tamu Pengujian', message: 'Selamat menempuh hidup baru.', createdAt: '2026-11-11T00:00:00Z' }] } }));
     let rsvp;
     await page.route('**/api/rsvp', route => {
       rsvp = route.request().postDataJSON();
       return route.fulfill({ json: { ok: true, attendance: 'attending', guestCount: 2 } });
     });
     await page.goto(`${baseUrl}/invite/1-0042`, { waitUntil: 'domcontentloaded' });
-    await page.locator('.invitation-notice[data-state="loading"]').waitFor();
+    await page.getByRole('progressbar', { name: 'Pemeriksaan akses undangan' }).waitFor();
+    assert.equal(await page.locator('.invitation-notice').count(), 0, 'restriction never appears during guest validation');
     assert.equal(await page.locator('.cin-stage').count(), 0, 'invitation waits for guest validation');
     assert.equal(await page.locator('.event-actions a').count(), 0, 'no wrong calendar while identity loads');
     assert.equal(await page.locator('.venue-map').count(), 0, 'no wrong map while identity loads');
@@ -32,6 +39,9 @@ try {
     await page.locator('.cin-guest p').filter({ hasText: 'Tamu Pengujian' }).waitFor({ timeout: 60000 });
     await page.getByRole('button', { name: 'Buka Undangan', exact: true }).click({ timeout: 60000 });
     await page.locator('.stage-hero').waitFor();
+    assert.equal(await page.evaluate(() => window.__sawRestriction), false, 'valid guests never see the restriction page');
+    assert.match(await page.locator('.wish-card p').first().evaluate(el => getComputedStyle(el).fontFamily), /^"Times New Roman"/);
+    assert.match(await page.locator('.wishes-section textarea').evaluate(el => getComputedStyle(el).fontFamily), /^"Times New Roman"/);
     const schedule = (await page.locator('.wedding-schedule').allTextContents()).join('\n');
     assert.equal(await page.locator('.person-profile h3').first().textContent(), 'Rizal Nur Ikhsani');
     assert.match(await page.locator('.wedding-family').last().textContent(), /Muhammad Bahrodin/);

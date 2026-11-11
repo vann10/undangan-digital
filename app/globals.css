@@ -225,7 +225,8 @@ html{scroll-behavior:smooth}
 .gallery-section:before{content:"";position:absolute;inset:0;pointer-events:none;background:url('/artwork/page-two-botanical-background.webp') center top/100% auto no-repeat;opacity:.1;mask-image:linear-gradient(#000,transparent 70%)}
 .wishes-list{position:relative;display:grid;gap:15px;max-width:360px;margin:0 auto}
 .wish-card{margin:0;padding:23px 23px 20px;border:1px solid #d2b98787;background:#0c38388a;text-align:left}
-.wish-card p{margin:0 0 14px;font:italic 23px/1.15 var(--display);overflow-wrap:anywhere}
+.wish-card p{margin:0 0 14px;font:italic 23px/1.15 "Times New Roman",Times,serif;overflow-wrap:anywhere}
+.wishes-section .rsvp-form textarea{font-family:"Times New Roman",Times,serif}
 .wish-card cite{font:11px var(--sans);font-style:normal;letter-spacing:.06em;color:#e4cfaa}
 .gift-section{padding-top:80px}
 .gift-section .section-heading h2{font-size:clamp(38px,10cqw,49px)}

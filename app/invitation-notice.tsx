@@ -1,12 +1,6 @@
 import { wedding } from "./wedding-config";
 import "./invitation-notice.css";
 
-type Props = {
-  state?: "invalid" | "loading" | "unavailable";
-  message?: string;
-  onRetry?: () => void;
-};
-
 function Envelope() {
   return <div className="notice-envelope" aria-hidden="true">
     <img className="notice-envelope-sprig" src="/artwork/botanical-spray-review-560.webp" alt="" width="560" height="373" />
@@ -27,24 +21,18 @@ function Envelope() {
   </div>;
 }
 
-export default function InvitationNotice({ state = "invalid", message, onRetry }: Props) {
-  const title = state === "loading" ? "Menyiapkan Undangan"
-    : state === "unavailable" ? "Undangan Belum Dapat Dibuka" : "Tautan Undangan Tidak Valid";
-  const description = state === "loading" ? "Mohon tunggu sejenak, kami sedang memeriksa tautan undangan Anda."
-    : state === "unavailable" ? message : "Silakan buka kembali tautan undangan yang dikirimkan kepada Anda.";
-
-  return <div className="invitation-notice" data-state={state}>
-    <main className="notice-paper" aria-labelledby="notice-title" aria-busy={state === "loading"}>
+export default function InvitationNotice() {
+  return <div className="invitation-notice" data-state="invalid">
+    <main className="notice-paper" aria-labelledby="notice-title">
       <div className="notice-frame" aria-hidden="true" />
       <img className="notice-botanical notice-botanical-top" src="/artwork/botanical-spray-review-560.webp" width="560" height="373" alt="" aria-hidden="true" />
       <img className="notice-botanical notice-botanical-bottom" src="/artwork/botanical-ascending-review-560.webp" width="560" height="840" alt="" aria-hidden="true" />
       <div className="notice-content">
         <p className="notice-eyebrow">Undangan Pernikahan</p>
         <Envelope />
-        <h1 id="notice-title">{title}</h1>
+        <h1 id="notice-title">Tautan Undangan Tidak Valid</h1>
         <div className="notice-divider" aria-hidden="true"><span /><svg viewBox="0 0 30 14" fill="none"><path d="M1 7h28M15 7q-8-11-12-3 5 7 12 3Zm0 0q8 11 12 3-5-7-12-3Z" stroke="currentColor" strokeWidth=".8" /></svg><span /></div>
-        <p className="notice-description" role={state === "loading" ? "status" : undefined}>{description}</p>
-        {state === "unavailable" && onRetry && <button className="notice-retry" type="button" onClick={onRetry}>Coba lagi</button>}
+        <p className="notice-description">Silakan buka kembali tautan undangan yang dikirimkan kepada Anda.</p>
         <p className="notice-signature">{wedding.groom} <em>&amp;</em> {wedding.bride}</p>
       </div>
     </main>

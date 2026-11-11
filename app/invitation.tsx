@@ -11,6 +11,7 @@ import { WeddingEventContext } from "./wedding-event-context";
 import { useGuestInvitation } from "./use-guest-invitation";
 import { photoSrcSet, photoUrl } from "./wedding-photos";
 import InvitationNotice from "./invitation-notice";
+import { LoadingScreen } from "./loading-screen";
 
 function MusicControl({ audio, playing, error, toggle, onPlaying, onPause, onError }: {
   audio: RefObject<HTMLAudioElement | null>; playing: boolean; error: string;
@@ -69,9 +70,11 @@ export default function Invitation({ invitationId, accessCode, previewEventType 
     player.volume = transitionConfig.audio.volume;
     void startMusic(true);
   }
-  if (guestLoading) return <InvitationNotice state="loading" />;
   if (guestInvalid || (!invitationId && !previewEventType)) return <InvitationNotice />;
-  if (guestError) return <InvitationNotice state="unavailable" message={guestError} onRetry={retryGuest} />;
+  if (guestLoading || guestError) return <main aria-label="Memuat undangan">
+    <LoadingScreen progress={0} phase={guestError ? "error" : "loading"} onRetry={retryGuest}
+      message={guestError || "Memeriksa tautan undangan Anda..."} progressLabel="Pemeriksaan akses undangan" />
+  </main>;
 
   return <WeddingEventContext.Provider value={selectedEventType ? weddingEvents[selectedEventType] : null}>
     <div className="invitation-shell cinematic-shell" style={transitionVariables() as CSSProperties}>

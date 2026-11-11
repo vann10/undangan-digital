@@ -19,8 +19,6 @@
 .notice-description{max-width:252px;margin:0 auto;color:var(--secondary);font:400 12px/1.95 var(--sans);text-wrap:pretty;overflow-wrap:anywhere}
 .notice-signature{margin:38px 0 0;font:400 italic 31px/1.2 var(--display);letter-spacing:-.025em}
 .notice-signature em{font-size:.7em;color:var(--champagne);margin:0 .08em}
-.notice-retry{min-height:44px;border:1px solid var(--champagne);background:transparent;color:var(--emerald);padding:11px 25px;margin-top:23px;font:500 11px/1.5 var(--sans);letter-spacing:.06em;cursor:pointer}
-.notice-retry:hover{background:#b79a6814}
 @media(min-width:761px){.invitation-notice{background:var(--ivory) url('/chapter-art/desktop-wedding-blueprint.webp') center/cover fixed no-repeat}}
 @media(max-height:700px){.notice-paper{padding-block:65px 52px}.notice-eyebrow{margin-bottom:8px}.notice-envelope{width:235px;margin-bottom:17px}.notice-signature{margin-top:24px}.notice-divider{margin-block:19px 16px}}
 @media(max-width:350px){.notice-paper{padding-inline:32px}.notice-content h1{font-size:36px}.notice-description{font-size:11px}.notice-envelope{max-width:245px}.notice-botanical-top{width:235px;left:-98px;top:-64px}.notice-botanical-bottom{width:205px;right:-120px;bottom:-112px}}
