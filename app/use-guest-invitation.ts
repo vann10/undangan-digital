@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { normalizeEventType, type EventType } from "./wedding-config";
+import { normalizeInvitationToken } from "./invitation-token";
 
 type Guest = {
   name: string;
@@ -27,12 +28,13 @@ export function useGuestInvitation(invitationId?: string, accessCode?: string) {
     setLoading(Boolean(invitationId));
     if (!invitationId) return;
 
-    const token = accessCode ?? window.location.hash.slice(1);
-    if (!/^(?:[A-Za-z0-9_-]{43}|\d{4})$/.test(token)) {
+    const normalizedToken = normalizeInvitationToken(accessCode ?? window.location.hash.slice(1));
+    if (normalizedToken === null) {
       setInvalid(true);
       setLoading(false);
       return;
     }
+    const token = normalizedToken;
 
     async function load() {
       // Retry temporary network/backend failures; never retry invalid credentials.

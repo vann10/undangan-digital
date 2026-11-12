@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
+import { normalizeInvitationToken } from '../app/invitation-token.ts';
 
 const sheets = new Map();
 const cache = new Map();
@@ -98,4 +99,13 @@ const clientKey = 'a'.repeat(24);
 for (let index = 0; index < 5; index++)
   assert.equal(post({ action: 'guest', invitationId: '2', invitationToken: '9999', clientKey }).code, 'invalid_invitation');
 assert.equal(post({ action: 'guest', invitationId: '2', invitationToken: '0088', clientKey }).code, 'too_many_attempts');
-console.log('Google Apps Script mock: PASS (four-digit identity, final RSVP, wishes, rate limit, formula safety, revocation)');
+sheets.get('Guests').appendRow(['4', 'Tamu Batas Kode', 1, true]);
+for (const code of [1, 9, 10, 99, 100, 999, 1000, 9999]) {
+  // Sheets may store the code as a number, dropping its leading zeroes.
+  sheets.get('Guests').rows.at(-1)[2] = code;
+  for (const token of [String(code), String(code).padStart(4, '0')]) {
+    assert.equal(post({ action: 'guest', invitationId: '4', invitationToken: normalizeInvitationToken(token) }).name, 'Tamu Batas Kode');
+  }
+}
+assert.equal(post({ action: 'guest', invitationId: '4', invitationToken: normalizeInvitationToken('9998') }).code, 'invalid_invitation');
+console.log('Google Apps Script mock: PASS (short/padded identity, final RSVP, wishes, rate limit, formula safety, revocation)');

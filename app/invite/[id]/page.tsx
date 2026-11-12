@@ -6,7 +6,7 @@ export const metadata: Metadata = { robots: { index: false, follow: false, nocac
 
 export default async function GuestInvitation({ params }: { params: Promise<{ id: string }> }) {
   const { id: segment } = await params;
-  const short = /^([1-9]\d{0,9})-(\d{4})$/.exec(segment);
+  const short = /^([1-9]\d{0,9})-(\d{1,4})$/.exec(segment);
   if (!short && !/^[1-9]\d{0,9}$/.test(segment)) notFound();
   return <Invitation invitationId={short?.[1] ?? segment} accessCode={short?.[2]} />;
 }

@@ -78,8 +78,24 @@ try {
   await page.locator('.cin-guest p').filter({ hasText: 'Tamu Pengujian' }).waitFor({ timeout: 60000 });
   assert.equal(calls, 4);
   assert.equal(await page.locator('.invitation-notice').count(), 0);
+  await page.unroute('**/api/invitation');
+  const tokens = [];
+  await page.route('**/api/invitation', route => {
+    tokens.push(route.request().postDataJSON().invitationToken);
+    return route.fulfill({ json: { name: 'Tamu Kode Pendek', eventType: 'pria' } });
+  });
+  for (const code of ['1', '9', '10', '99', '100', '999', '1000', '9999', '0042']) {
+    await page.goto(`${base}/invite/1-${code}`);
+    await page.locator('.cin-guest p').filter({ hasText: 'Tamu Kode Pendek' }).waitFor({ timeout: 60000 });
+    assert.equal(tokens.at(-1), code.padStart(4, '0'));
+    assert.equal(await page.locator('.invitation-notice').count(), 0);
+  }
+  await page.goto(`${base}/invite/1#42`);
+  await page.locator('.cin-guest p').filter({ hasText: 'Tamu Kode Pendek' }).waitFor({ timeout: 60000 });
+  assert.equal(tokens.at(-1), '0042');
+  assert.equal(tokens.length, 10, 'each short or padded code triggers one normalized lookup');
   await page.close();
-  console.log('Guest access: PASS (missing token, malformed token, inactive short/hash links, temporary error, retry recovery)');
+  console.log('Guest access: PASS (short and padded codes, missing/malformed/inactive tokens, temporary error, retry recovery)');
 } finally {
   await browser.close();
 }

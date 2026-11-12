@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "assets:transition": "python scripts/build-transition-assets.py",
     "test:cinematic": "node scripts/verify-cinematic.mjs",
-    "test:google": "node scripts/test-google-apps-script.mjs && node scripts/test-guest-import.mjs && node scripts/test-wedding-config.mjs",
+    "test:google": "node scripts/test-invitation-token.mjs && node scripts/test-google-apps-script.mjs && node scripts/test-guest-import.mjs && node scripts/test-wedding-config.mjs",
     "test:browser": "node scripts/verify-rsvp-gallery.mjs",
     "test:access": "node scripts/verify-invitation-access.mjs",
     "test:legacy:prototype": "node scripts/legacy/verify-prototype.mjs",

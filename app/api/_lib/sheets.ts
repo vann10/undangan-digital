@@ -1,5 +1,6 @@
 import { createHmac } from "node:crypto";
 import { NextResponse } from "next/server";
+import { normalizeInvitationToken } from "../../invitation-token";
 
 export type InvitationCredentials = { invitationId: string; invitationToken: string };
 
@@ -15,9 +16,10 @@ export function error(message: string, status: number) {
 }
 
 export function credentials(body: Record<string, unknown>): InvitationCredentials | null {
+  const invitationToken = normalizeInvitationToken(body.invitationToken);
   if (typeof body.invitationId !== "string" || !/^[1-9]\d{0,9}$/.test(body.invitationId)
-    || typeof body.invitationToken !== "string" || !/^(?:[A-Za-z0-9_-]{43}|\d{4})$/.test(body.invitationToken)) return null;
-  return { invitationId: body.invitationId, invitationToken: body.invitationToken };
+    || invitationToken === null) return null;
+  return { invitationId: body.invitationId, invitationToken };
 }
 
 export async function payload(request: Request): Promise<Record<string, unknown> | null> {

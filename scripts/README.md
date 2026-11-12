@@ -5,7 +5,7 @@ Jalankan dari root repository. Skrip browser menggunakan Playwright dan Chrome l
 | Kelompok | Skrip / perintah | Kegunaan |
 | --- | --- | --- |
 | Repository | `npm run check:repository` | Referensi aset statis, tautan dokumentasi aktif, dan kebijakan ignore |
-| Backend lokal | `npm run test:google` | Kontrak Apps Script, impor tamu sintetis, dan konfigurasi acara |
+| Backend lokal | `npm run test:google` | Kode undangan 1–9999, kontrak Apps Script, impor tamu sintetis, dan konfigurasi acara |
 | Browser utama | `npm run test:browser -- <base-url>` | RSVP, gallery, dan dialog foto dengan backend tiruan |
 | Akses undangan | `npm run test:access -- <base-url>` | Halaman tautan tidak valid, token tamu, gangguan sementara, dan pemulihan akses |
 | Aset browser | `npm run test:assets -- <base-url>` | URL dinamis, varian 1x/2x, dan fallback gambar di dua pratinjau acara |
